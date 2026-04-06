@@ -230,14 +230,18 @@ body { background:#fff; -webkit-font-smoothing:antialiased; }
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('H9mRJV2zi9LJ7OhBw');</script>
 <script>
+emailjs.init('H9mRJV2zi9LJ7OhBw');
+
+const SUPA_URL = 'https://twneeawhdzgnavudanud.supabase.co';
+const SUPA_KEY = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
 const params = new URLSearchParams(window.location.search);
-const idx = params.get('site');
-const sites = JSON.parse(localStorage.getItem('av_websites') || '[]');
-const s = idx !== null ? sites[parseInt(idx)] : sites[0];
+const siteId = params.get('site');
 
 const themes = {
   Modern:  { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.3)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
@@ -258,11 +262,34 @@ const defaultSvc = {
   'Other':['Quality Service','Expert Team','Customer Support','Fast Delivery']
 };
 
-if (!s) {
-  document.getElementById('site').innerHTML = `<div style="text-align:center;padding:120px 40px;font-family:'DM Sans',sans-serif"><div style="font-size:64px;margin-bottom:20px">😕</div><h2 style="font-family:'Playfair Display',serif;font-size:32px;color:#0a1628;margin-bottom:12px">Website Not Found</h2><p style="color:#64748b;margin-bottom:28px">Go back and create a website first.</p><a href="dashboard.html" style="padding:14px 28px;background:#1a56ff;color:white;border-radius:10px;text-decoration:none;font-weight:700">← Back to Dashboard</a></div>`;
-} else {
+async function loadSite() {
+  let s = null;
+  if (siteId && siteId.includes('-')) {
+    // Supabase UUID
+    const { data } = await db.from('av_websites').select('*').eq('id', siteId).single();
+    s = data;
+  } else if (siteId) {
+    // Old localStorage fallback
+    const sites = JSON.parse(localStorage.getItem('av_websites') || '[]');
+    s = sites[parseInt(siteId)];
+  }
+  renderSite(s);
+}
+
+function renderSite(s) {
+  if (!s) {
+    document.getElementById('site').innerHTML = `<div style="text-align:center;padding:120px 40px;font-family:'DM Sans',sans-serif"><div style="font-size:64px;margin-bottom:20px">😕</div><h2 style="font-family:'Playfair Display',serif;font-size:32px;color:#0a1628;margin-bottom:12px">Website Not Found</h2><p style="color:#64748b;margin-bottom:28px">Go back and create a website first.</p><a href="dashboard.html" style="padding:14px 28px;background:#1a56ff;color:white;border-radius:10px;text-decoration:none;font-weight:700">← Back to Dashboard</a></div>`;
+    return;
+  }
+
+  window.currentSite = s;
+  window.businessEmail = s.email || '';
+  window.businessName  = s.name  || '';
+
   const t = themes[s.design] || themes.Modern;
   const root = document.documentElement;
+  Object.entries(t).forEach(([k,v]) => root.style.setProperty('--'+k.replace(/([A-Z])/g,'-$1').toLowerCase(), v));
+  // Also set direct CSS vars
   root.style.setProperty('--primary', t.primary);
   root.style.setProperty('--primary-shadow', t.primaryShadow);
   root.style.setProperty('--primary-light', t.primaryLight);
@@ -282,19 +309,9 @@ if (!s) {
 
   const icon = typeIcons[s.type] || '🏢';
   const rawSvc = s.services ? s.services.split(/[,\n]/).map(x=>x.trim()).filter(Boolean).slice(0,4) : (defaultSvc[s.type] || defaultSvc['Other']);
-  const svcHTML = rawSvc.map((sv,i) => `<div class="svc-card"><div class="svc-icon-wrap">${svcIcons[i]||'✨'}</div><div class="svc-title">${sv}</div><div class="svc-desc">We deliver exceptional ${sv.toLowerCase()} with a focus on quality, reliability and customer satisfaction.</div></div>`).join('');
-  const whyHTML = [
-    {icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence to every customer.'},
-    {icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising on quality or care.'},
-    {icon:'💰',t:'Best Value',d:'Premium products and services at prices that work for you.'},
-    {icon:'🤝',t:'Personal Touch',d:'We treat every customer like family — always here for you.'},
-  ].map(w=>`<div class="why-card"><div class="why-card-icon">${w.icon}</div><div class="why-card-title">${w.t}</div><div class="why-card-text">${w.d}</div></div>`).join('');
-
+  const svcHTML = rawSvc.map((sv,i)=>`<div class="svc-card"><div class="svc-icon-wrap">${svcIcons[i]||'✨'}</div><div class="svc-title">${sv}</div><div class="svc-desc">We deliver exceptional ${sv.toLowerCase()} with a focus on quality and customer satisfaction.</div></div>`).join('');
+  const whyHTML = [{icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence.'},{icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising quality.'},{icon:'💰',t:'Best Value',d:'Premium services at prices that work for you.'},{icon:'🤝',t:'Personal Touch',d:'We treat every customer like family.'}].map(w=>`<div class="why-card"><div class="why-card-icon">${w.icon}</div><div class="why-card-title">${w.t}</div><div class="why-card-text">${w.d}</div></div>`).join('');
   const desc = s.services ? s.services.substring(0,130)+'...' : 'We are committed to providing exceptional quality and service. Your satisfaction is our highest priority.';
-
-  // Store business email for contact form
-  window.businessEmail = s.email || '';
-  window.businessName = s.name || '';
 
   document.getElementById('site').innerHTML = `
     <nav class="s-nav">
@@ -305,7 +322,6 @@ if (!s) {
         <li><a href="#" onclick="scrollSec('sec-contact');return false;" class="s-nav-cta">Contact Us</a></li>
       </ul>
     </nav>
-
     <div class="s-hero">
       <div class="hero-content">
         <div class="hero-eyebrow"><span class="eyebrow-dot"></span>${s.type}</div>
@@ -326,25 +342,22 @@ if (!s) {
         </div>
       </div>
     </div>
-
     <div class="trust-bar">
       <div class="trust-item"><div class="trust-icon">🏆</div>Award Winning Quality</div>
       <div class="trust-item"><div class="trust-icon">🔒</div>100% Trusted & Secure</div>
       <div class="trust-item"><div class="trust-icon">⚡</div>Fast & Reliable Service</div>
       <div class="trust-item"><div class="trust-icon">💬</div>24/7 Customer Support</div>
     </div>
-
     <div class="s-stats">
       <div class="stat-box"><div class="stat-big">500+</div><div class="stat-small">Happy Customers</div></div>
       <div class="stat-box"><div class="stat-big">10+</div><div class="stat-small">Years of Excellence</div></div>
       <div class="stat-box"><div class="stat-big">100%</div><div class="stat-small">Satisfaction Rate</div></div>
     </div>
-
     <div class="s-about" id="sec-about">
       <div>
         <div class="section-eyebrow">✦ About Us</div>
         <div class="section-title">The story behind <em>${s.name}</em></div>
-        <p class="section-body">We are a dedicated ${s.type.toLowerCase()} passionate about serving our community with the very best. Every product and service we offer is crafted to meet the highest standards of quality and care.</p>
+        <p class="section-body">We are a dedicated ${s.type.toLowerCase()} passionate about serving our community with the very best. Every product and service is crafted to meet the highest standards.</p>
         <ul class="check-list">
           <li><span class="cl-icon">✓</span>Trusted by hundreds of loyal customers</li>
           <li><span class="cl-icon">✓</span>Premium quality in everything we do</li>
@@ -353,48 +366,37 @@ if (!s) {
         </ul>
       </div>
       <div class="about-visual">
-        <div class="about-main-card">
-          <span class="amc-icon">${icon}</span>
-          <div class="amc-name">${s.name}</div>
-          <div class="amc-type">${s.type}${s.address?' · '+s.address:''}</div>
-        </div>
-        <div class="about-float">
-          <div class="af-icon">⭐</div>
-          <div><div class="af-num">500+</div><div class="af-label">Happy Customers</div></div>
-        </div>
+        <div class="about-main-card"><span class="amc-icon">${icon}</span><div class="amc-name">${s.name}</div><div class="amc-type">${s.type}${s.address?' · '+s.address:''}</div></div>
+        <div class="about-float"><div class="af-icon">⭐</div><div><div class="af-num">500+</div><div class="af-label">Happy Customers</div></div></div>
       </div>
     </div>
-
     <div class="s-services" id="sec-services">
       <div class="services-header">
         <div class="section-eyebrow" style="justify-content:center">✦ What We Offer</div>
         <div class="section-title" style="text-align:center">Our <em>Services</em></div>
-        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-top:10px">Everything you need, delivered with care and expertise.</p>
+        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-top:10px;text-align:center">Everything you need, delivered with care and expertise.</p>
       </div>
       <div class="services-grid">${svcHTML}</div>
     </div>
-
     <div class="s-why">
       <div>
         <div class="section-eyebrow">✦ Why Choose Us</div>
         <div class="section-title">We go <em>above and beyond</em> for you</div>
-        <p class="section-body">Our commitment to excellence combined with years of experience makes us the trusted choice for thousands of customers.</p>
+        <p class="section-body">Our commitment to excellence makes us the trusted choice for thousands of customers.</p>
         <button class="btn-hero-main" style="margin-top:8px;font-family:'DM Sans',sans-serif" onclick="scrollSec('sec-contact')">Get In Touch →</button>
       </div>
       <div class="why-grid">${whyHTML}</div>
     </div>
-
     <div class="s-testimonial">
       <div class="test-stars">★ ★ ★ ★ ★</div>
-      <div class="test-quote">"${s.name} has been absolutely incredible. The quality of service and attention to detail is unmatched. I highly recommend them to everyone!"</div>
+      <div class="test-quote">"${s.name} has been absolutely incredible. The quality of service and attention to detail is unmatched!"</div>
       <div class="test-author">— A Happy Customer, India</div>
     </div>
-
     <div class="s-contact" id="sec-contact">
       <div>
         <div class="section-eyebrow">✦ Contact Us</div>
         <div class="section-title">Let's <em>talk</em> today</div>
-        <p class="section-body" style="margin-bottom:0">We'd love to hear from you. Reach out and we'll get back to you as soon as possible.</p>
+        <p class="section-body" style="margin-bottom:0">We'd love to hear from you.</p>
         <div class="contact-info">
           ${s.phone?`<div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Phone</div><div class="ci-val">${s.phone}</div></div></div>`:''}
           ${s.email?`<div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-val">${s.email}</div></div></div>`:''}
@@ -412,7 +414,6 @@ if (!s) {
         <div id="cf-status" style="margin-top:12px;font-size:13px;display:none;padding:10px 14px;border-radius:8px;"></div>
       </div>
     </div>
-
     <div class="s-footer">
       <div class="s-footer-logo">${s.name}</div>
       <div class="s-footer-links">
@@ -426,81 +427,56 @@ if (!s) {
   document.title = s.name + ' — Preview';
 }
 
-// Smooth scroll to section
 function scrollSec(id) {
   const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-// Send contact form message via EmailJS to business owner
 function sendMessage() {
-  const name = document.getElementById('cf-name').value.trim();
+  const name    = document.getElementById('cf-name').value.trim();
   const contact = document.getElementById('cf-contact').value.trim();
   const message = document.getElementById('cf-message').value.trim();
-  const status = document.getElementById('cf-status');
-
-  if (!name || !contact || !message) {
-    status.style.display = 'block';
-    status.style.background = '#fef2f2';
-    status.style.color = '#dc2626';
-    status.style.border = '1px solid #fecaca';
-    status.textContent = '⚠️ Please fill in all fields before sending.';
-    return;
+  const status  = document.getElementById('cf-status');
+  if (!name||!contact||!message) {
+    status.style.display='block'; status.style.background='#fef2f2'; status.style.color='#dc2626'; status.style.border='1px solid #fecaca';
+    status.textContent='⚠️ Please fill in all fields.'; return;
   }
-
-  // Show sending state
   const btn = document.querySelector('.cf-submit');
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
-
-  // Send via EmailJS to business owner's email
-  emailjs.send('service_6q18vqn', 'template_8bq71z3', {
-    to_email:      window.businessEmail || 'kasmaniadnan812@gmail.com',
+  btn.textContent='Sending...'; btn.disabled=true;
+  emailjs.send('service_6q18vqn','template_8bq71z3',{
+    to_email: window.businessEmail||'kasmaniadnan812@gmail.com',
     business_name: window.businessName,
-    from_name:     name,
-    name:          name,
-    from_contact:  contact,
-    message:       message,
-    reply_to:      contact,
-    time:          new Date().toLocaleString('en-IN')
-  }).then(() => {
-    status.style.display = 'block';
-    status.style.background = '#f0fdf4';
-    status.style.color = '#16a34a';
-    status.style.border = '1px solid #bbf7d0';
-    status.textContent = '✅ Message sent! The business will contact you soon.';
-    document.getElementById('cf-name').value = '';
-    document.getElementById('cf-contact').value = '';
-    document.getElementById('cf-message').value = '';
-    btn.textContent = 'Send Message →';
-    btn.disabled = false;
-  }).catch(() => {
-    // Fallback if EmailJS not configured yet
-    status.style.display = 'block';
-    status.style.background = '#f0fdf4';
-    status.style.color = '#16a34a';
-    status.style.border = '1px solid #bbf7d0';
-    status.textContent = '✅ Message received! We will contact you within 24 hours.';
-    btn.textContent = 'Send Message →';
-    btn.disabled = false;
+    from_name: name, name: name,
+    from_contact: contact,
+    message: message,
+    reply_to: contact,
+    time: new Date().toLocaleString('en-IN')
+  }).then(()=>{
+    status.style.display='block'; status.style.background='#f0fdf4'; status.style.color='#16a34a'; status.style.border='1px solid #bbf7d0';
+    status.textContent='✅ Message sent! The business will contact you soon.';
+    document.getElementById('cf-name').value=''; document.getElementById('cf-contact').value=''; document.getElementById('cf-message').value='';
+    btn.textContent='Send Message →'; btn.disabled=false;
+  }).catch(()=>{
+    status.style.display='block'; status.style.background='#f0fdf4'; status.style.color='#16a34a'; status.style.border='1px solid #bbf7d0';
+    status.textContent='✅ Message received! We will contact you within 24 hours.';
+    btn.textContent='Send Message →'; btn.disabled=false;
   });
 }
 
 function openPayment() { document.getElementById('payModal').style.display='flex'; }
 
-function processPayment() {
+async function processPayment() {
   const user = JSON.parse(localStorage.getItem('av_user') || '{}');
+  const s = window.currentSite;
   new Razorpay({
-    key: 'rzp_test_SYeUw9pfDCmrXA',
+    key: 'rzp_live_SaJ684rRC2TUwj',
     amount: 29900, currency: 'INR',
-    name: 'AutoVision',
-    description: 'Website Activation — ₹299',
-    handler: function(res) {
+    name: 'AutoVision', description: 'Website Activation — ₹299',
+    handler: async function(res) {
       document.getElementById('payModal').style.display='none';
-      if (idx !== null) {
-        const arr = JSON.parse(localStorage.getItem('av_websites') || '[]');
-        arr[parseInt(idx)].status = 'active';
-        localStorage.setItem('av_websites', JSON.stringify(arr));
+      if (s && s.id) {
+        await db.from('av_websites').update({status:'active'}).eq('id', s.id);
+        await db.from('av_payments').insert([{ user_email: s.user_email, website_id: s.id, amount:299, payment_id: res.razorpay_payment_id, type:'activation', status:'paid' }]);
       }
       alert('🎉 Payment Successful!\nYour website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
       window.location.href = 'dashboard.html';
@@ -509,6 +485,9 @@ function processPayment() {
     theme: { color: '#1a56ff' }
   }).open();
 }
+
+// Load on page start
+loadSite();
 </script>
 </body>
 </html>
