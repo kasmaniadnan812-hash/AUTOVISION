@@ -866,36 +866,42 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+  emailjs.init('H9mRJV2zi9LJ7OhBw');
+
+  const SUPA_URL = 'https://twneeawhdzgnavudanud.supabase.co';
+  const SUPA_KEY = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+  const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
   let selectedDesign = 'Modern';
   let currentWebsite = null;
+  let currentUser    = null;
 
-  window.onload = function() {
+  window.onload = async function() {
     const user = JSON.parse(localStorage.getItem('av_user') || '{}');
-    // Check session valid and not expired
     if (!user.email || (user.expiresAt && Date.now() > user.expiresAt)) {
       localStorage.removeItem('av_user');
       window.location.href = 'login.html';
       return;
     }
-    const name = (user.name || 'there').charAt(0).toUpperCase() + (user.name || 'there').slice(1);
-    document.getElementById('userName').textContent = name;
+    currentUser = user;
+    const name = (user.name||'there').charAt(0).toUpperCase()+(user.name||'there').slice(1);
+    document.getElementById('userName').textContent  = name;
     document.getElementById('userEmail').textContent = user.email;
     document.getElementById('welcomeName').textContent = name;
-    loadStats();
-    renderWebsites('recentWebsites', 3);
+    await loadStats();
+    await renderWebsites('recentWebsites', 3);
   };
 
-  function logout() {
-    localStorage.removeItem('av_user');
-    window.location.href = 'index.html';
-  }
+  function logout() { localStorage.removeItem('av_user'); window.location.href = 'index.html'; }
 
   function showPanel(name, el) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(name + 'Panel').classList.add('active');
+    document.getElementById(name+'Panel').classList.add('active');
     if (el) el.classList.add('active');
     if (name === 'websites') renderWebsites('allWebsites');
   }
@@ -906,141 +912,172 @@
     selectedDesign = style;
   }
 
-  function getWebsites() { return JSON.parse(localStorage.getItem('av_websites') || '[]'); }
-  function saveWebsites(s) { localStorage.setItem('av_websites', JSON.stringify(s)); }
-
-  function loadStats() {
-    const s = getWebsites();
-    document.getElementById('totalSites').textContent = s.length;
-    document.getElementById('activeSites').textContent = s.filter(x => x.status === 'active').length;
-    document.getElementById('previewSites').textContent = s.filter(x => x.status === 'preview').length;
+  async function loadStats() {
+    const { data: sites } = await db.from('av_websites').select('status').eq('user_email', currentUser.email);
+    document.getElementById('totalSites').textContent   = sites?.length || 0;
+    document.getElementById('activeSites').textContent  = sites?.filter(s=>s.status==='active').length || 0;
+    document.getElementById('previewSites').textContent = sites?.filter(s=>s.status==='preview').length || 0;
   }
 
-  function renderWebsites(id, limit) {
-    const cont = document.getElementById(id);
-    const sites = getWebsites().slice(0, limit || 999);
-    if (!sites.length) {
-      cont.innerHTML = `<div class="empty-state">
-        <div class="empty-icon">🌐</div>
-        <div class="empty-title">No websites yet</div>
-        <div class="empty-sub">Create your first website for free — takes less than 2 minutes</div>
-        <button onclick="showPanel('create',null)" class="btn-blue" style="padding:12px 24px;font-size:14px">Create My First Website →</button>
-      </div>`;
+  async function renderWebsites(containerId, limit) {
+    const cont = document.getElementById(containerId);
+    cont.innerHTML = `<div style="text-align:center;padding:40px;color:#94a3b8;font-size:14px">Loading...</div>`;
+    let query = db.from('av_websites').select('*').eq('user_email', currentUser.email).order('created_at',{ascending:false});
+    if (limit) query = query.limit(limit);
+    const { data: sites } = await query;
+    if (!sites || sites.length === 0) {
+      cont.innerHTML = `<div class="empty-state"><div class="empty-icon">🌐</div><div class="empty-title">No websites yet</div><div class="empty-sub">Create your first website for free</div><button onclick="showPanel('create',null)" class="btn-blue" style="padding:12px 24px;font-size:14px">Create My First Website →</button></div>`;
       return;
     }
-    cont.innerHTML = `<div class="website-grid">${sites.map((s, i) => `
+    cont.innerHTML = `<div class="website-grid">${sites.map(s=>`
       <div class="website-card">
-        <div class="card-thumb">
-          ${s.name}
-          <div class="card-status status-${s.status}">${s.status === 'preview' ? '⏳ Preview' : s.status === 'active' ? '✅ Live' : '❌ Expired'}</div>
-        </div>
+        <div class="card-thumb">${s.name}<div class="card-status status-${s.status}">${s.status==='preview'?'⏳ Preview':s.status==='active'?'✅ Live':'❌ Expired'}</div></div>
         <div class="card-body">
           <div class="card-name">${s.name}</div>
-          <div class="card-meta">${s.type} · ${s.design} Design · ${s.date}</div>
+          <div class="card-meta">${s.type} · ${s.design} Design · ${new Date(s.created_at).toLocaleDateString('en-IN')}</div>
           <div class="card-actions">
-            <button class="card-btn cb-view" onclick="window.open('preview.html?site=${i}','_blank')">View</button>
-            ${s.status === 'preview' ? `<button class="card-btn cb-activate" onclick="openPaymentFor(${i})">Activate ₹299</button>` : ''}
+            <button class="card-btn cb-view" onclick="window.open('preview.html?site=${s.id}','_blank')">View</button>
+            ${s.status==='preview'?`<button class="card-btn cb-activate" onclick="openPaymentFor('${s.id}','${s.name}')">Activate ₹299</button>`:''}
             <button class="card-btn cb-edit" onclick="alert('Edit — ₹99 per update')">Edit</button>
-            <button class="card-btn cb-delete" onclick="deleteWebsite(${i})">Delete</button>
+            <button class="card-btn cb-delete" onclick="deleteWebsite('${s.id}','${containerId}')">Delete</button>
           </div>
         </div>
       </div>`).join('')}</div>`;
   }
 
-  function generateWebsite() {
-    const name = document.getElementById('bizName').value;
+  async function generateWebsite() {
+    const name = document.getElementById('bizName').value.trim();
     const type = document.getElementById('bizType').value;
     if (!name || !type) { alert('Please fill in Business Name and Type.'); return; }
-
     const overlay = document.getElementById('loadingOverlay');
     overlay.style.display = 'flex';
-    const msgs = ['Initialising AI engine...', 'Analysing your business...', 'Designing your layout...', 'Building your pages...', 'Finalising your website...'];
+    const msgs = ['Initialising AI engine...','Analysing your business...','Designing your layout...','Building your pages...','Finalising your website...'];
     let step = 0;
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       step++;
       const pct = step * 20;
-      document.getElementById('progressFill').style.width = pct + '%';
-      document.getElementById('progressPct').textContent = pct + '%';
+      document.getElementById('progressFill').style.width = pct+'%';
+      document.getElementById('progressPct').textContent = pct+'%';
       if (msgs[step-1]) document.getElementById('loadMsg').textContent = msgs[step-1];
       if (step >= 5) {
         clearInterval(interval);
-        setTimeout(() => {
-          overlay.style.display = 'none';
-          currentWebsite = {
-            name, type,
-            design: selectedDesign,
-            phone: document.getElementById('bizPhone').value,
-            email: document.getElementById('bizEmail').value,
-            services: document.getElementById('bizServices').value,
-            address: document.getElementById('bizAddress').value,
+        setTimeout(async () => {
+          const { data, error } = await db.from('av_websites').insert([{
+            user_email: currentUser.email,
+            name, type, design: selectedDesign,
+            phone:    document.getElementById('bizPhone').value.trim(),
+            email:    document.getElementById('bizEmail').value.trim(),
+            services: document.getElementById('bizServices').value.trim(),
+            address:  document.getElementById('bizAddress').value.trim(),
             status: 'preview',
-            date: new Date().toLocaleDateString('en-IN')
-          };
-          const sites = getWebsites();
-          sites.unshift(currentWebsite);
-          saveWebsites(sites);
-          loadStats();
-          renderWebsites('recentWebsites', 3);
+            expires_at: new Date(Date.now()+48*60*60*1000).toISOString()
+          }]).select().single();
+          overlay.style.display = 'none';
+          if (error) { alert('Error saving. Please try again.'); return; }
+          currentWebsite = data;
+          await loadStats();
+          await renderWebsites('recentWebsites', 3);
           document.getElementById('successModal').style.display = 'flex';
         }, 400);
       }
     }, 800);
   }
 
-  function openPayment() {
-    document.getElementById('successModal').style.display = 'none';
-    document.getElementById('paymentModal').style.display = 'flex';
-  }
+  function openPayment() { document.getElementById('successModal').style.display='none'; document.getElementById('paymentModal').style.display='flex'; }
+  function openPaymentFor(id, name) { currentWebsite = {id, name}; document.getElementById('paymentModal').style.display='flex'; }
+  function closeSuccess() { document.getElementById('successModal').style.display='none'; showPanel('dashboard',null); }
 
-  function openPaymentFor(i) {
-    currentWebsite = getWebsites()[i];
-    document.getElementById('paymentModal').style.display = 'flex';
-  }
-
-  function closeSuccess() {
-    document.getElementById('successModal').style.display = 'none';
-    showPanel('dashboard', null);
-  }
-
-  function processPayment() {
-    const options = {
-      key: 'rzp_test_SYeUw9pfDCmrXA',
-      amount: 29900,
-      currency: 'INR',
-      name: 'AutoVision',
-      description: 'Website Activation — ₹299',
-      handler: function(res) {
-        document.getElementById('paymentModal').style.display = 'none';
-        const sites = getWebsites();
-        const idx = sites.findIndex(s => s.name === currentWebsite?.name);
-        if (idx !== -1) { sites[idx].status = 'active'; saveWebsites(sites); }
-        loadStats();
-        renderWebsites('recentWebsites', 3);
-        alert('✅ Payment Successful!\nYour website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
+  async function processPayment() {
+    new Razorpay({
+      key: 'rzp_live_SaJ684rRC2TUwj',
+      amount: 29900, currency: 'INR',
+      name: 'AutoVision', description: 'Website Activation — ₹299',
+      handler: async function(res) {
+        document.getElementById('paymentModal').style.display='none';
+        await db.from('av_websites').update({status:'active'}).eq('id', currentWebsite.id);
+        await db.from('av_payments').insert([{ user_email: currentUser.email, website_id: currentWebsite.id, amount: 299, payment_id: res.razorpay_payment_id, type:'activation', status:'paid' }]);
+        await loadStats();
+        await renderWebsites('recentWebsites', 3);
+        alert('🎉 Payment Successful!\nYour website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
         showPanel('websites', null);
       },
-      prefill: { email: JSON.parse(localStorage.getItem('av_user') || '{}').email || '' },
+      prefill: { email: currentUser.email || '' },
       theme: { color: '#1a56ff' }
-    };
-    new Razorpay(options).open();
+    }).open();
   }
 
-  function deleteWebsite(i) {
+  async function deleteWebsite(id, containerId) {
     if (!confirm('Delete this website permanently?')) return;
-    const sites = getWebsites();
-    sites.splice(i, 1);
-    saveWebsites(sites);
-    loadStats();
-    renderWebsites('allWebsites');
-    renderWebsites('recentWebsites', 3);
+    await db.from('av_websites').delete().eq('id', id);
+    await loadStats();
+    await renderWebsites(containerId);
+    await renderWebsites('recentWebsites', 3);
   }
 
-  function submitUpgrade() {
-    const phone = document.getElementById('upPhone').value;
-    const email = document.getElementById('upEmail').value;
-    if (!phone || !email) { alert('Please fill in your phone and email.'); return; }
+  async function submitUpgrade() {
+    const phone    = document.getElementById('upPhone').value.trim();
+    const email    = document.getElementById('upEmail').value.trim();
+    const bizSize  = document.getElementById('bizSize').value;
+    const budget   = document.getElementById('budget').value;
+    const notes    = document.getElementById('upNotes').value.trim();
     const features = [...document.querySelectorAll('.feat-grid input:checked')].map(i => i.value);
-    alert('🎉 Request submitted successfully!\nOur team will contact you within 24 hours.\n\nFeatures requested: ' + (features.join(', ') || 'None selected'));
+
+    if (!phone || !email) { alert('Please fill in your phone and email.'); return; }
+
+    const btn = document.querySelector('#upgradePanel .btn-blue');
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+
+    // 1. Save to Supabase
+    const { error } = await db.from('av_upgrades').insert([{
+      user_email:    currentUser.email,
+      features:      features.join(', '),
+      business_size: bizSize,
+      budget, phone, email, notes
+    }]);
+
+    // 2. Send email to admin via EmailJS
+    // The "To Email" is already set to kasmaniadnan812@gmail.com in EmailJS template
+    const msgBody = `🚨 NEW UPGRADE REQUEST from AutoVision!\n\n👤 Account: ${currentUser.email}\n📋 Features Needed: ${features.join(', ') || 'None selected'}\n💼 Business Size: ${bizSize}\n💰 Budget: ${budget}\n📞 Phone: ${phone}\n📧 Email: ${email}\n📝 Notes: ${notes || 'None'}`;
+
+    try {
+      await emailjs.send('service_6q18vqn', 'template_8bq71z3', {
+        from_name:    currentUser.name || 'AutoVision Customer',
+        name:         currentUser.name || 'AutoVision Customer',
+        from_contact: phone + ' | ' + email,
+        business_name:'AutoVision — New Upgrade Request',
+        message:      msgBody,
+        reply_to:     email,
+        time:         new Date().toLocaleString('en-IN')
+      });
+      console.log('Admin email sent ✅');
+    } catch(e) {
+      console.log('Email error:', e);
+    }
+
+    btn.textContent = 'Submit Request →';
+    btn.disabled = false;
+
+    if (!error) {
+      document.getElementById('upgradePanel').innerHTML = `
+        <div style="text-align:center;padding:80px 40px">
+          <div style="font-size:64px;margin-bottom:20px">🎉</div>
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#0a1628;margin-bottom:12px">Request Submitted!</div>
+          <div style="font-size:16px;color:#64748b;margin-bottom:32px;line-height:1.7">
+            Thank you! Our team will review your requirements<br>and contact you within <strong>24 hours</strong>.
+          </div>
+          <div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:14px;padding:24px;max-width:400px;margin:0 auto 32px;text-align:left">
+            <div style="font-size:13px;color:#3d5470;font-weight:600;margin-bottom:8px">Your Request Summary:</div>
+            <div style="font-size:13px;color:#64748b;line-height:1.8">
+              📋 Features: ${features.join(', ') || 'None selected'}<br>
+              💼 Size: ${bizSize}<br>
+              💰 Budget: ${budget}<br>
+              📞 Contact: ${phone}
+            </div>
+          </div>
+          <button onclick="location.reload()" class="btn-blue" style="padding:13px 30px">← Back to Dashboard</button>
+        </div>`;
+    }
   }
 </script>
 </body>
