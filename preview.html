@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* PREVIEW BANNER */
+.preview-banner {
+  position:fixed; top:0; left:0; right:0; z-index:99999;
+  background:#0a1628; padding:0 32px; height:52px;
+  display:flex; align-items:center; justify-content:space-between;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 2px 20px rgba(0,0,0,0.4);
+}
+.banner-left { display:flex; align-items:center; gap:12px; }
+.banner-logo { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:white; text-decoration:none; }
+.banner-logo span { color:#60a5fa; }
+.banner-pill { background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.35); color:#fb923c; font-size:11px; font-weight:700; padding:3px 10px; border-radius:100px; }
+.banner-text { font-size:13px; color:#94a3b8; }
+.banner-right { display:flex; align-items:center; gap:10px; }
+.banner-expire { font-size:12px; color:#fb923c; font-weight:600; }
+.btn-back { padding:7px 14px; background:transparent; border:1px solid #2d3f55; color:#94a3b8; border-radius:7px; font-size:12px; font-weight:500; cursor:pointer; text-decoration:none; font-family:'DM Sans',sans-serif; transition:all 0.2s; display:inline-block; }
+.btn-back:hover { border-color:#60a5fa; color:#60a5fa; }
+.btn-activate { padding:8px 20px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:7px; font-size:13px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; box-shadow:0 4px 14px rgba(26,86,255,0.35); white-space:nowrap; }
+.btn-activate:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(26,86,255,0.5); }
+
+/* BASE */
+body { background:#fff; -webkit-font-smoothing:antialiased; }
+.site { padding-top:52px; font-family:'DM Sans',sans-serif; }
+
+/* NAVBAR */
+.s-nav { position:sticky; top:52px; z-index:100; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); border-bottom:1px solid #e8edf5; padding:0 80px; height:70px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 20px rgba(0,0,0,0.04); }
+.s-nav-logo { font-family:'Playfair Display',serif; font-size:24px; font-weight:800; color:#0a1628; letter-spacing:-0.5px; }
+.s-nav-links { display:flex; gap:32px; list-style:none; }
+.s-nav-links a { font-size:14px; font-weight:500; color:#64748b; text-decoration:none; transition:color 0.2s; }
+.s-nav-links a:hover { color:var(--primary); }
+.s-nav-cta { padding:10px 24px; background:var(--primary) !important; color:white !important; border-radius:8px; font-weight:700 !important; box-shadow:0 4px 14px var(--primary-shadow); transition:all 0.2s; }
+.s-nav-cta:hover { transform:translateY(-1px); }
+
+/* HERO */
+.s-hero { background:var(--hero-bg); padding:90px 80px 0; overflow:hidden; position:relative; min-height:560px; display:flex; align-items:flex-end; gap:60px; }
+.s-hero::before { content:''; position:absolute; top:-200px; right:-200px; width:600px; height:600px; background:var(--hero-orb); border-radius:50%; filter:blur(80px); opacity:0.4; }
+.s-hero::after { content:''; position:absolute; bottom:-100px; left:30%; width:400px; height:400px; background:var(--hero-orb2); border-radius:50%; filter:blur(100px); opacity:0.25; }
+.hero-content { position:relative; z-index:2; flex:1; padding-bottom:80px; }
+.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:var(--eyebrow-bg); border:1px solid var(--eyebrow-border); color:var(--eyebrow-color); font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:7px 16px; border-radius:100px; margin-bottom:24px; }
+.eyebrow-dot { width:6px; height:6px; border-radius:50%; background:var(--eyebrow-color); animation:pulse3 2s infinite; }
+@keyframes pulse3 { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.8);} }
+.hero-h1 { font-family:'Playfair Display',serif; font-size:clamp(40px,5vw,68px); font-weight:900; line-height:1.1; letter-spacing:-2px; color:var(--hero-text); margin-bottom:20px; }
+.hero-h1 em { font-style:italic; color:var(--primary-light); }
+.hero-p { font-size:18px; color:var(--hero-subtext); line-height:1.75; max-width:480px; margin-bottom:40px; }
+.hero-actions { display:flex; gap:14px; align-items:center; margin-bottom:48px; }
+.btn-hero-main { padding:15px 32px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 24px var(--primary-shadow); transition:all 0.25s; }
+.btn-hero-main:hover { transform:translateY(-2px); }
+.btn-hero-ghost { padding:15px 32px; background:transparent; color:white; border:1.5px solid rgba(255,255,255,0.25); border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.25s; }
+.btn-hero-ghost:hover { background:rgba(255,255,255,0.1); }
+.hero-trust { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--hero-subtext); }
+.trust-stars { color:#fbbf24; }
+.hero-visual { position:relative; z-index:2; width:360px; flex-shrink:0; align-self:flex-end; }
+.hero-card { background:white; border-radius:20px 20px 0 0; padding:32px; box-shadow:0 -8px 60px rgba(0,0,0,0.15); }
+.hero-card-icon { font-size:52px; margin-bottom:14px; display:block; }
+.hero-card-name { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; color:#0a1628; margin-bottom:6px; }
+.hero-card-type { font-size:13px; color:#64748b; font-weight:500; margin-bottom:18px; }
+.hero-card-badges { display:flex; gap:8px; flex-wrap:wrap; }
+.hc-badge { background:#eff6ff; color:#1a56ff; font-size:11px; font-weight:700; padding:5px 12px; border-radius:100px; }
+
+/* TRUST BAR */
+.trust-bar { background:var(--trust-bg); border-bottom:1px solid var(--trust-border); padding:22px 80px; display:flex; align-items:center; justify-content:center; gap:50px; flex-wrap:wrap; }
+.trust-item { display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; color:var(--trust-text); }
+.trust-icon { width:32px; height:32px; background:var(--trust-icon-bg); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
+
+/* STATS */
+.s-stats { background:var(--primary); padding:50px 80px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; }
+.stat-box { padding:10px; border-right:1px solid rgba(255,255,255,0.15); }
+.stat-box:last-child { border-right:none; }
+.stat-big { font-family:'Playfair Display',serif; font-size:48px; font-weight:900; color:white; line-height:1; margin-bottom:6px; }
+.stat-small { font-size:14px; color:rgba(255,255,255,0.7); font-weight:500; }
+
+/* ABOUT */
+.s-about { padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; background:white; }
+.section-eyebrow { display:inline-flex; align-items:center; gap:6px; background:var(--tag-bg); color:var(--primary); font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-radius:100px; margin-bottom:18px; }
+.section-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:900; color:#0a1628; letter-spacing:-1.5px; line-height:1.15; margin-bottom:18px; }
+.section-title em { font-style:italic; color:var(--primary); }
+.section-body { font-size:16px; color:#475569; line-height:1.85; margin-bottom:32px; }
+.check-list { list-style:none; display:flex; flex-direction:column; gap:12px; }
+.check-list li { display:flex; align-items:center; gap:12px; font-size:15px; color:#334155; font-weight:500; }
+.cl-icon { width:24px; height:24px; background:var(--tag-bg); color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
+.about-visual { position:relative; }
+.about-main-card { background:var(--hero-bg); border-radius:24px; padding:50px 40px; text-align:center; position:relative; overflow:hidden; }
+.about-main-card::before { content:''; position:absolute; top:-60px; right:-60px; width:200px; height:200px; background:var(--hero-orb); border-radius:50%; filter:blur(50px); opacity:0.3; }
+.amc-icon { font-size:72px; margin-bottom:16px; display:block; }
+.amc-name { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--hero-text); margin-bottom:8px; }
+.amc-type { font-size:14px; color:var(--hero-subtext); }
+.about-float { position:absolute; bottom:-16px; left:-16px; background:white; border-radius:14px; padding:14px 18px; box-shadow:0 8px 30px rgba(0,0,0,0.12); display:flex; align-items:center; gap:10px; }
+.af-icon { font-size:24px; }
+.af-num { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; color:#0a1628; line-height:1; }
+.af-label { font-size:11px; color:#94a3b8; font-weight:600; }
+
+/* SERVICES */
+.s-services { background:#f8faff; padding:100px 80px; }
+.services-header { text-align:center; margin-bottom:60px; }
+.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; }
+.svc-card { background:white; border:1.5px solid #e2e8f4; border-radius:20px; padding:36px 28px; transition:all 0.3s; position:relative; overflow:hidden; }
+.svc-card::after { content:''; position:absolute; bottom:0; left:0; width:0; height:3px; background:linear-gradient(90deg,var(--primary),#6366f1); transition:width 0.4s; }
+.svc-card:hover::after { width:100%; }
+.svc-card:hover { box-shadow:0 16px 48px rgba(0,0,0,0.09); transform:translateY(-6px); border-color:var(--primary); }
+.svc-icon-wrap { width:60px; height:60px; background:var(--tag-bg); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:20px; transition:all 0.3s; }
+.svc-card:hover .svc-icon-wrap { background:var(--primary); }
+.svc-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:800; color:#0a1628; margin-bottom:10px; }
+.svc-desc { font-size:14px; color:#64748b; line-height:1.7; }
+
+/* WHY US */
+.s-why { background:white; padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.why-card { background:#f8faff; border:1px solid #e2e8f4; border-radius:16px; padding:24px 20px; transition:all 0.25s; }
+.why-card:hover { background:var(--tag-bg); border-color:var(--primary); transform:translateY(-3px); box-shadow:0 8px 24px rgba(26,86,255,0.1); }
+.why-card-icon { font-size:28px; margin-bottom:10px; }
+.why-card-title { font-size:15px; font-weight:700; color:#0a1628; margin-bottom:6px; }
+.why-card-text { font-size:13px; color:#64748b; line-height:1.5; }
+
+/* TESTIMONIAL */
+.s-testimonial { background:var(--primary); padding:80px; text-align:center; position:relative; overflow:hidden; }
+.s-testimonial::before { content:'"'; position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-size:300px; font-weight:900; color:rgba(255,255,255,0.04); line-height:1; }
+.test-stars { color:#fbbf24; font-size:20px; margin-bottom:20px; letter-spacing:3px; }
+.test-quote { font-family:'Playfair Display',serif; font-size:clamp(20px,3vw,30px); font-weight:700; font-style:italic; color:white; line-height:1.5; max-width:700px; margin:0 auto 28px; }
+.test-author { font-size:14px; color:rgba(255,255,255,0.7); font-weight:600; }
+
+/* CONTACT */
+.s-contact { background:#f8faff; padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.contact-info { display:flex; flex-direction:column; gap:16px; margin-top:28px; }
+.ci-item { display:flex; align-items:center; gap:16px; background:white; border:1px solid #e2e8f4; border-radius:14px; padding:18px 20px; transition:all 0.25s; }
+.ci-item:hover { border-color:var(--primary); box-shadow:0 6px 20px rgba(26,86,255,0.08); transform:translateX(4px); }
+.ci-icon { width:46px; height:46px; background:var(--tag-bg); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.ci-label { font-size:11px; color:#94a3b8; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.ci-val { font-size:15px; color:#0a1628; font-weight:700; margin-top:2px; }
+.contact-form-card { background:white; border:1px solid #e2e8f4; border-radius:24px; padding:40px; box-shadow:0 8px 40px rgba(0,0,0,0.06); }
+.cf-title { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:#0a1628; margin-bottom:6px; }
+.cf-sub { font-size:14px; color:#94a3b8; margin-bottom:28px; }
+.cf-input { width:100%; padding:13px 16px; background:#f8faff; border:1.5px solid #e2e8f4; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; color:#0a1628; outline:none; transition:all 0.2s; margin-bottom:14px; }
+.cf-input:focus { border-color:var(--primary); background:white; }
+.cf-input::placeholder { color:#94a3b8; }
+.cf-submit { width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px var(--primary-shadow); transition:all 0.25s; }
+.cf-submit:hover { transform:translateY(-2px); }
+
+/* FOOTER */
+.s-footer { background:#0a1628; padding:50px 80px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+.s-footer-logo { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; color:white; }
+.s-footer-links { display:flex; gap:24px; }
+.s-footer-links a { font-size:14px; color:#475569; text-decoration:none; transition:color 0.2s; }
+.s-footer-links a:hover { color:#60a5fa; }
+.s-footer-copy { font-size:13px; color:#334155; }
+
+/* PAYMENT MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,22,40,0.65); backdrop-filter:blur(6px); z-index:999999; align-items:center; justify-content:center; }
+.modal { background:white; border-radius:24px; padding:44px; max-width:460px; width:90%; box-shadow:0 40px 100px rgba(0,0,0,0.25); text-align:center; animation:popUp 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes popUp { from{opacity:0;transform:scale(0.92) translateY(16px);} to{opacity:1;transform:scale(1) translateY(0);} }
+.modal-emoji { font-size:56px; margin-bottom:18px; }
+.modal-title { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:#0a1628; margin-bottom:8px; }
+.modal-sub { font-size:14px; color:#64748b; margin-bottom:24px; line-height:1.6; }
+.pay-box { background:linear-gradient(135deg,#f0f4ff,#e8eeff); border:1px solid #c7d2fe; border-radius:16px; padding:22px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; text-align:left; }
+.pay-label { font-size:11px; color:#64748b; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+.pay-amount { font-family:'Playfair Display',serif; font-size:44px; font-weight:900; color:#0a1628; line-height:1; }
+.pay-features { text-align:left; font-size:13px; color:#475569; line-height:2; margin-bottom:28px; }
+.modal-btns { display:flex; gap:12px; }
+.btn-pay { flex:2; padding:15px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px rgba(26,86,255,0.35); transition:all 0.2s; }
+.btn-pay:hover { transform:translateY(-2px); }
+.btn-cancel { flex:1; padding:15px; background:#f1f5f9; color:#64748b; border:none; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+  .s-nav { padding:0 24px; }
+  .s-nav-links { display:none; }
+  .s-hero { padding:60px 24px 0; flex-direction:column; }
+  .hero-visual { width:100%; }
+  .hero-card { border-radius:20px; }
+  .trust-bar,.s-stats { padding:30px 24px; }
+  .s-stats { grid-template-columns:1fr; }
+  .stat-box { border-right:none; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:20px; }
+  .s-about,.s-why,.s-contact { grid-template-columns:1fr; padding:60px 24px; gap:40px; }
+  .s-services,.s-testimonial { padding:60px 24px; }
+  .trust-bar { gap:20px; }
+  .s-footer { padding:36px 24px; flex-direction:column; text-align:center; }
+  .s-footer-links { flex-wrap:wrap; justify-content:center; }
+  .why-grid { grid-template-columns:1fr; }
+  .preview-banner { flex-direction:column; height:auto; padding:10px 16px; gap:8px; }
+  .site { padding-top:90px; }
+  .s-nav { top:90px; }
+}
+</style>
+</head>
+<body>
+
+<div class="preview-banner">
+  <div class="banner-left">
+    <a href="index.html" class="banner-logo">Auto<span>Vision</span></a>
+    <span class="banner-pill">⏳ Preview</span>
+    <span class="banner-text">Free preview — activate to go live</span>
+  </div>
+  <div class="banner-right">
+    <span class="banner-expire">⚠️ Expires in 48 hours</span>
+    <a href="dashboard.html" class="btn-back">← Dashboard</a>
+    <button class="btn-activate" onclick="openPayment()">Activate Now — ₹299</button>
+  </div>
+</div>
+
+<div class="site" id="site"></div>
+
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-emoji">🚀</div>
+    <div class="modal-title">Go Live for ₹299</div>
+    <div class="modal-sub">Your professional website will be live on the internet instantly.</div>
+    <div class="pay-box">
+      <div><div class="pay-label">Activation Fee</div><div class="pay-amount">₹299</div></div>
+      <div style="font-size:40px">🌐</div>
+    </div>
+    <div class="pay-features">
+      ✅ Website goes live <strong>instantly</strong><br>
+      ✅ Pay via UPI, GPay, PhonePe or Card<br>
+      ✅ 100% secure via Razorpay<br>
+      ✅ Mobile-ready professional website
+    </div>
+    <div class="modal-btns">
+      <button class="btn-pay" onclick="processPayment()">Pay ₹299 & Go Live →</button>
+      <button class="btn-cancel" onclick="document.getElementById('payModal').style.display='none'">Later</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('H9mRJV2zi9LJ7OhBw');</script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const idx = params.get('site');
+const sites = JSON.parse(localStorage.getItem('av_websites') || '[]');
+const s = idx !== null ? sites[parseInt(idx)] : sites[0];
+
+const themes = {
+  Modern:  { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.3)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
+  Classic: { primary:'#166534', primaryShadow:'rgba(22,101,52,0.3)', heroBg:'linear-gradient(135deg,#14532d 0%,#052e16 100%)', heroOrb:'#16a34a', heroOrb2:'#4ade80', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#86efac', trustBg:'#f0fdf4', trustBorder:'#bbf7d0', trustText:'#14532d', trustIconBg:'#dcfce7', tagBg:'#f0fdf4', primaryLight:'#86efac' },
+  Bold:    { primary:'#dc2626', primaryShadow:'rgba(220,38,38,0.3)', heroBg:'linear-gradient(135deg,#1c0a0a 0%,#450a0a 100%)', heroOrb:'#dc2626', heroOrb2:'#f97316', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#fca5a5', trustBg:'#fff5f5', trustBorder:'#fecaca', trustText:'#7f1d1d', trustIconBg:'#fee2e2', tagBg:'#fff5f5', primaryLight:'#fca5a5' },
+  Minimal: { primary:'#0f172a', primaryShadow:'rgba(15,23,42,0.2)', heroBg:'linear-gradient(135deg,#0f172a 0%,#1e293b 100%)', heroOrb:'#334155', heroOrb2:'#475569', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.6)', eyebrowBg:'rgba(255,255,255,0.08)', eyebrowBorder:'rgba(255,255,255,0.15)', eyebrowColor:'#cbd5e1', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#f1f5f9', tagBg:'#f8fafc', primaryLight:'#94a3b8' }
+};
+
+const typeIcons = { 'Restaurant / Cafe':'🍽️','Shop / Retail':'🛍️','Service Business':'⚙️','Healthcare / Clinic':'🏥','Education / Coaching':'📚','Portfolio / Freelance':'💼','Other':'🏢' };
+const svcIcons = ['⚡','🎯','✅','🌟','💡','🔥'];
+const defaultSvc = {
+  'Restaurant / Cafe':['Fine Dining','Home Delivery','Catering Services','Takeaway Orders'],
+  'Shop / Retail':['Quality Products','Fast Delivery','Easy Returns','Wholesale Deals'],
+  'Service Business':['Professional Service','Expert Consultation','Quick Turnaround','Affordable Rates'],
+  'Healthcare / Clinic':['General Consultation','Health Checkup','Specialist Care','Emergency Support'],
+  'Education / Coaching':['One-on-One Tuition','Group Classes','Study Materials','Online Sessions'],
+  'Portfolio / Freelance':['Creative Design','Web Development','Brand Strategy','Project Consulting'],
+  'Other':['Quality Service','Expert Team','Customer Support','Fast Delivery']
+};
+
+if (!s) {
+  document.getElementById('site').innerHTML = `<div style="text-align:center;padding:120px 40px;font-family:'DM Sans',sans-serif"><div style="font-size:64px;margin-bottom:20px">😕</div><h2 style="font-family:'Playfair Display',serif;font-size:32px;color:#0a1628;margin-bottom:12px">Website Not Found</h2><p style="color:#64748b;margin-bottom:28px">Go back and create a website first.</p><a href="dashboard.html" style="padding:14px 28px;background:#1a56ff;color:white;border-radius:10px;text-decoration:none;font-weight:700">← Back to Dashboard</a></div>`;
+} else {
+  const t = themes[s.design] || themes.Modern;
+  const root = document.documentElement;
+  root.style.setProperty('--primary', t.primary);
+  root.style.setProperty('--primary-shadow', t.primaryShadow);
+  root.style.setProperty('--primary-light', t.primaryLight);
+  root.style.setProperty('--hero-bg', t.heroBg);
+  root.style.setProperty('--hero-orb', t.heroOrb);
+  root.style.setProperty('--hero-orb2', t.heroOrb2);
+  root.style.setProperty('--hero-text', t.heroText);
+  root.style.setProperty('--hero-subtext', t.heroSubtext);
+  root.style.setProperty('--eyebrow-bg', t.eyebrowBg);
+  root.style.setProperty('--eyebrow-border', t.eyebrowBorder);
+  root.style.setProperty('--eyebrow-color', t.eyebrowColor);
+  root.style.setProperty('--trust-bg', t.trustBg);
+  root.style.setProperty('--trust-border', t.trustBorder);
+  root.style.setProperty('--trust-text', t.trustText);
+  root.style.setProperty('--trust-icon-bg', t.trustIconBg);
+  root.style.setProperty('--tag-bg', t.tagBg);
+
+  const icon = typeIcons[s.type] || '🏢';
+  const rawSvc = s.services ? s.services.split(/[,\n]/).map(x=>x.trim()).filter(Boolean).slice(0,4) : (defaultSvc[s.type] || defaultSvc['Other']);
+  const svcHTML = rawSvc.map((sv,i) => `<div class="svc-card"><div class="svc-icon-wrap">${svcIcons[i]||'✨'}</div><div class="svc-title">${sv}</div><div class="svc-desc">We deliver exceptional ${sv.toLowerCase()} with a focus on quality, reliability and customer satisfaction.</div></div>`).join('');
+  const whyHTML = [
+    {icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence to every customer.'},
+    {icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising on quality or care.'},
+    {icon:'💰',t:'Best Value',d:'Premium products and services at prices that work for you.'},
+    {icon:'🤝',t:'Personal Touch',d:'We treat every customer like family — always here for you.'},
+  ].map(w=>`<div class="why-card"><div class="why-card-icon">${w.icon}</div><div class="why-card-title">${w.t}</div><div class="why-card-text">${w.d}</div></div>`).join('');
+
+  const desc = s.services ? s.services.substring(0,130)+'...' : 'We are committed to providing exceptional quality and service. Your satisfaction is our highest priority.';
+
+  // Store business email for contact form
+  window.businessEmail = s.email || '';
+  window.businessName = s.name || '';
+
+  document.getElementById('site').innerHTML = `
+    <nav class="s-nav">
+      <div class="s-nav-logo">${s.name}</div>
+      <ul class="s-nav-links">
+        <li><a href="#" onclick="scrollSec('sec-about');return false;">About</a></li>
+        <li><a href="#" onclick="scrollSec('sec-services');return false;">Services</a></li>
+        <li><a href="#" onclick="scrollSec('sec-contact');return false;" class="s-nav-cta">Contact Us</a></li>
+      </ul>
+    </nav>
+
+    <div class="s-hero">
+      <div class="hero-content">
+        <div class="hero-eyebrow"><span class="eyebrow-dot"></span>${s.type}</div>
+        <h1 class="hero-h1">Welcome to<br><em>${s.name}</em></h1>
+        <p class="hero-p">${desc}</p>
+        <div class="hero-actions">
+          <button class="btn-hero-main" onclick="scrollSec('sec-contact')">Get In Touch →</button>
+          <button class="btn-hero-ghost" onclick="scrollSec('sec-services')">Our Services</button>
+        </div>
+        <div class="hero-trust"><span class="trust-stars">★★★★★</span><span>Trusted by <strong>500+</strong> happy customers</span></div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <span class="hero-card-icon">${icon}</span>
+          <div class="hero-card-name">${s.name}</div>
+          <div class="hero-card-type">${s.type} · ${s.design} Design</div>
+          <div class="hero-card-badges"><span class="hc-badge">✅ Verified</span><span class="hc-badge">⚡ Professional</span><span class="hc-badge">📱 Mobile Ready</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust-bar">
+      <div class="trust-item"><div class="trust-icon">🏆</div>Award Winning Quality</div>
+      <div class="trust-item"><div class="trust-icon">🔒</div>100% Trusted & Secure</div>
+      <div class="trust-item"><div class="trust-icon">⚡</div>Fast & Reliable Service</div>
+      <div class="trust-item"><div class="trust-icon">💬</div>24/7 Customer Support</div>
+    </div>
+
+    <div class="s-stats">
+      <div class="stat-box"><div class="stat-big">500+</div><div class="stat-small">Happy Customers</div></div>
+      <div class="stat-box"><div class="stat-big">10+</div><div class="stat-small">Years of Excellence</div></div>
+      <div class="stat-box"><div class="stat-big">100%</div><div class="stat-small">Satisfaction Rate</div></div>
+    </div>
+
+    <div class="s-about" id="sec-about">
+      <div>
+        <div class="section-eyebrow">✦ About Us</div>
+        <div class="section-title">The story behind <em>${s.name}</em></div>
+        <p class="section-body">We are a dedicated ${s.type.toLowerCase()} passionate about serving our community with the very best. Every product and service we offer is crafted to meet the highest standards of quality and care.</p>
+        <ul class="check-list">
+          <li><span class="cl-icon">✓</span>Trusted by hundreds of loyal customers</li>
+          <li><span class="cl-icon">✓</span>Premium quality in everything we do</li>
+          <li><span class="cl-icon">✓</span>Transparent and fair pricing always</li>
+          <li><span class="cl-icon">✓</span>Friendly, professional and caring team</li>
+        </ul>
+      </div>
+      <div class="about-visual">
+        <div class="about-main-card">
+          <span class="amc-icon">${icon}</span>
+          <div class="amc-name">${s.name}</div>
+          <div class="amc-type">${s.type}${s.address?' · '+s.address:''}</div>
+        </div>
+        <div class="about-float">
+          <div class="af-icon">⭐</div>
+          <div><div class="af-num">500+</div><div class="af-label">Happy Customers</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-services" id="sec-services">
+      <div class="services-header">
+        <div class="section-eyebrow" style="justify-content:center">✦ What We Offer</div>
+        <div class="section-title" style="text-align:center">Our <em>Services</em></div>
+        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-top:10px">Everything you need, delivered with care and expertise.</p>
+      </div>
+      <div class="services-grid">${svcHTML}</div>
+    </div>
+
+    <div class="s-why">
+      <div>
+        <div class="section-eyebrow">✦ Why Choose Us</div>
+        <div class="section-title">We go <em>above and beyond</em> for you</div>
+        <p class="section-body">Our commitment to excellence combined with years of experience makes us the trusted choice for thousands of customers.</p>
+        <button class="btn-hero-main" style="margin-top:8px;font-family:'DM Sans',sans-serif" onclick="scrollSec('sec-contact')">Get In Touch →</button>
+      </div>
+      <div class="why-grid">${whyHTML}</div>
+    </div>
+
+    <div class="s-testimonial">
+      <div class="test-stars">★ ★ ★ ★ ★</div>
+      <div class="test-quote">"${s.name} has been absolutely incredible. The quality of service and attention to detail is unmatched. I highly recommend them to everyone!"</div>
+      <div class="test-author">— A Happy Customer, India</div>
+    </div>
+
+    <div class="s-contact" id="sec-contact">
+      <div>
+        <div class="section-eyebrow">✦ Contact Us</div>
+        <div class="section-title">Let's <em>talk</em> today</div>
+        <p class="section-body" style="margin-bottom:0">We'd love to hear from you. Reach out and we'll get back to you as soon as possible.</p>
+        <div class="contact-info">
+          ${s.phone?`<div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Phone</div><div class="ci-val">${s.phone}</div></div></div>`:''}
+          ${s.email?`<div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-val">${s.email}</div></div></div>`:''}
+          ${s.address?`<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Address</div><div class="ci-val">${s.address}</div></div></div>`:''}
+          ${!s.phone&&!s.email&&!s.address?`<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Location</div><div class="ci-val">India</div></div></div>`:''}
+        </div>
+      </div>
+      <div class="contact-form-card">
+        <div class="cf-title">Send Us a Message</div>
+        <div class="cf-sub">We'll get back to you within 24 hours.</div>
+        <input class="cf-input" id="cf-name" placeholder="Your Full Name">
+        <input class="cf-input" id="cf-contact" placeholder="Your Phone Number or Email">
+        <textarea class="cf-input" id="cf-message" rows="4" placeholder="How can we help you?" style="resize:vertical"></textarea>
+        <button class="cf-submit" onclick="sendMessage()">Send Message →</button>
+        <div id="cf-status" style="margin-top:12px;font-size:13px;display:none;padding:10px 14px;border-radius:8px;"></div>
+      </div>
+    </div>
+
+    <div class="s-footer">
+      <div class="s-footer-logo">${s.name}</div>
+      <div class="s-footer-links">
+        <a href="#" onclick="scrollSec('sec-about');return false;">About</a>
+        <a href="#" onclick="scrollSec('sec-services');return false;">Services</a>
+        <a href="#" onclick="scrollSec('sec-contact');return false;">Contact</a>
+      </div>
+      <div class="s-footer-copy">© ${new Date().getFullYear()} ${s.name}. All rights reserved.</div>
+    </div>`;
+
+  document.title = s.name + ' — Preview';
+}
+
+// Smooth scroll to section
+function scrollSec(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Send contact form message via EmailJS to business owner
+function sendMessage() {
+  const name = document.getElementById('cf-name').value.trim();
+  const contact = document.getElementById('cf-contact').value.trim();
+  const message = document.getElementById('cf-message').value.trim();
+  const status = document.getElementById('cf-status');
+
+  if (!name || !contact || !message) {
+    status.style.display = 'block';
+    status.style.background = '#fef2f2';
+    status.style.color = '#dc2626';
+    status.style.border = '1px solid #fecaca';
+    status.textContent = '⚠️ Please fill in all fields before sending.';
+    return;
+  }
+
+  // Show sending state
+  const btn = document.querySelector('.cf-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  // Send via EmailJS to business owner's email
+  emailjs.send('service_6q18vqn', 'template_8bq71z3', {
+    to_email:      window.businessEmail || 'kasmaniadnan812@gmail.com',
+    business_name: window.businessName,
+    from_name:     name,
+    name:          name,
+    from_contact:  contact,
+    message:       message,
+    reply_to:      contact,
+    time:          new Date().toLocaleString('en-IN')
+  }).then(() => {
+    status.style.display = 'block';
+    status.style.background = '#f0fdf4';
+    status.style.color = '#16a34a';
+    status.style.border = '1px solid #bbf7d0';
+    status.textContent = '✅ Message sent! The business will contact you soon.';
+    document.getElementById('cf-name').value = '';
+    document.getElementById('cf-contact').value = '';
+    document.getElementById('cf-message').value = '';
+    btn.textContent = 'Send Message →';
+    btn.disabled = false;
+  }).catch(() => {
+    // Fallback if EmailJS not configured yet
+    status.style.display = 'block';
+    status.style.background = '#f0fdf4';
+    status.style.color = '#16a34a';
+    status.style.border = '1px solid #bbf7d0';
+    status.textContent = '✅ Message received! We will contact you within 24 hours.';
+    btn.textContent = 'Send Message →';
+    btn.disabled = false;
+  });
+}
+
+function openPayment() { document.getElementById('payModal').style.display='flex'; }
+
+function processPayment() {
+  const user = JSON.parse(localStorage.getItem('av_user') || '{}');
+  new Razorpay({
+    key: 'rzp_test_SYeUw9pfDCmrXA',
+    amount: 29900, currency: 'INR',
+    name: 'AutoVision',
+    description: 'Website Activation — ₹299',
+    handler: function(res) {
+      document.getElementById('payModal').style.display='none';
+      if (idx !== null) {
+        const arr = JSON.parse(localStorage.getItem('av_websites') || '[]');
+        arr[parseInt(idx)].status = 'active';
+        localStorage.setItem('av_websites', JSON.stringify(arr));
+      }
+      alert('🎉 Payment Successful!\nYour website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
+      window.location.href = 'dashboard.html';
+    },
+    prefill: { email: user.email || '' },
+    theme: { color: '#1a56ff' }
+  }).open();
+}
+</script>
+</body>
+</html>

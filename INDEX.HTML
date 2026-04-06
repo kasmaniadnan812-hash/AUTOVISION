@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoVision — Professional AI Website Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --off-white: #f8f9fc;
+    --light: #f0f4ff;
+    --blue: #1a56ff;
+    --blue-dark: #1040d8;
+    --blue-light: #e8eeff;
+    --navy: #0a1628;
+    --navy-mid: #162040;
+    --text: #0a1628;
+    --text-mid: #3d5470;
+    --text-light: #7a93b0;
+    --border: #e2e8f4;
+    --border-dark: #c8d4e8;
+    --gold: #c9a84c;
+    --gold-light: #f5ecd6;
+    --shadow-sm: 0 2px 8px rgba(26,86,255,0.06);
+    --shadow-md: 0 8px 30px rgba(26,86,255,0.1);
+    --shadow-lg: 0 20px 60px rgba(26,86,255,0.15);
+    --shadow-xl: 0 30px 80px rgba(10,22,40,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 60px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--blue); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-mid);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--blue); }
+
+  .nav-actions { display: flex; align-items: center; gap: 12px; }
+
+  .btn-ghost {
+    padding: 9px 20px;
+    color: var(--text-mid);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost:hover { background: var(--light); color: var(--blue); }
+
+  .btn-blue {
+    padding: 10px 22px;
+    background: var(--blue);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(26,86,255,0.25);
+    display: inline-block;
+  }
+
+  .btn-blue:hover {
+    background: var(--blue-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(26,86,255,0.35);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 160px 60px 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .hero-left { animation: fadeUp 0.9s ease forwards; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue-light);
+    border: 1px solid rgba(26,86,255,0.15);
+    padding: 6px 14px 6px 8px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+    letter-spacing: 0.3px;
+    margin-bottom: 28px;
+  }
+
+  .badge-dot {
+    width: 20px; height: 20px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: white;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 5vw, 64px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    color: var(--navy);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--blue);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-mid);
+    line-height: 1.75;
+    margin-bottom: 40px;
+    font-weight: 400;
+    max-width: 460px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 50px;
+  }
+
+  .btn-blue-lg {
+    padding: 15px 32px;
+    background: var(--blue);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 6px 20px rgba(26,86,255,0.3);
+    transition: all 0.25s;
+  }
+
+  .btn-blue-lg:hover {
+    background: var(--blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(26,86,255,0.4);
+  }
+
+  .btn-outline-lg {
+    padding: 15px 32px;
+    background: white;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-dark);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+  }
+
+  .btn-outline-lg:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: var(--blue-light);
+  }
+
+  .hero-trust {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  .trust-avatars {
+    display: flex;
+  }
+
+  .trust-avatars span {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: var(--blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-left: -8px;
+  }
+
+  .trust-avatars span:first-child { margin-left: 0; }
+
+  .trust-stars { color: #f59e0b; font-size: 12px; }
+
+  /* Hero Right — Preview Card */
+  .hero-right {
+    animation: fadeUp 0.9s ease 0.2s both;
+  }
+
+  .preview-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .preview-bar {
+    background: var(--off-white);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .url-bar {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .preview-body { padding: 0; }
+
+  .mock-website {
+    background: linear-gradient(160deg, #1a56ff 0%, #0a1628 100%);
+    padding: 30px;
+    color: white;
+  }
+
+  .mock-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 13px;
+  }
+
+  .mock-logo { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; }
+  .mock-links { display: flex; gap: 16px; opacity: 0.7; font-size: 12px; }
+
+  .mock-hero-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .mock-sub { font-size: 12px; opacity: 0.7; margin-bottom: 18px; }
+
+  .mock-btn {
+    display: inline-block;
+    background: white;
+    color: var(--blue);
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .mock-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 20px;
+    background: white;
+  }
+
+  .mock-card {
+    background: var(--off-white);
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 11px;
+  }
+
+  .mock-card-icon { font-size: 18px; margin-bottom: 6px; }
+  .mock-card-title { font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+  .mock-card-text { color: var(--text-light); font-size: 10px; line-height: 1.4; }
+
+  .preview-footer {
+    padding: 16px 20px;
+    background: var(--off-white);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #16a34a;
+  }
+
+  .live-dot {
+    width: 7px; height: 7px;
+    background: #16a34a;
+    border-radius: 50%;
+    animation: pulse2 1.5s infinite;
+  }
+
+  @keyframes pulse2 {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .activate-btn-sm {
+    padding: 7px 16px;
+    background: var(--blue);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* ── LOGOS BAR ── */
+  .logos-bar {
+    background: var(--off-white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+  }
+
+  .logos-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .logo-item {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--border-dark);
+    white-space: nowrap;
+  }
+
+  /* ── STATS ── */
+  .stats-section {
+    padding: 80px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+
+  .stat-block {
+    padding: 40px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat-block:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-num span { color: var(--blue); }
+
+  .stat-lbl {
+    font-size: 14px;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .section {
+    padding: 100px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue-light);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 900;
+    color: var(--navy);
+    letter-spacing: -1.5px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 17px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 60px;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    position: relative;
+  }
+
+  .steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
+    z-index: 0;
+  }
+
+  .step-item {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .step-num {
+    width: 72px; height: 72px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--blue);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s;
+  }
+
+  .step-item:hover .step-num {
+    background: var(--blue);
+    color: white;
+    border-color: var(--blue);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.65;
+  }
+
+  /* ── FEATURES ── */
+  .features-bg {
+    background: var(--navy);
+    padding: 100px 60px;
+  }
+
+  .features-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .features-bg .section-label {
+    background: rgba(26,86,255,0.2);
+    color: #7aa3ff;
+  }
+
+  .features-bg .section-title {
+    color: white;
+  }
+
+  .features-bg .section-sub { color: #7a93b0; }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s;
+  }
+
+  .feature-card:hover {
+    background: rgba(26,86,255,0.1);
+    border-color: rgba(26,86,255,0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .feature-icon-wrap {
+    width: 48px; height: 48px;
+    background: rgba(26,86,255,0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .feature-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    color: #7a93b0;
+    line-height: 1.65;
+  }
+
+  /* ── PRICING ── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  .price-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .price-card:hover {
+    border-color: var(--blue);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  .price-card.featured {
+    background: var(--navy);
+    border-color: var(--navy);
+    transform: scale(1.03);
+  }
+
+  .price-card.featured:hover { transform: scale(1.03) translateY(-4px); }
+
+  .featured-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .price-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+
+  .price-card.featured .price-label { color: #7aa3ff; }
+
+  .price-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .price-card.featured .price-amount { color: white; }
+
+  .price-amount sup {
+    font-size: 22px;
+    font-weight: 700;
+    vertical-align: top;
+    margin-top: 12px;
+    display: inline-block;
+  }
+
+  .price-period {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 28px;
+  }
+
+  .price-card.featured .price-period { color: #7a93b0; }
+
+  .price-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 24px;
+  }
+
+  .price-card.featured .price-divider { background: rgba(255,255,255,0.08); }
+
+  .price-features {
+    list-style: none;
+    margin-bottom: 32px;
+  }
+
+  .price-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-mid);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  .price-card.featured .price-features li {
+    color: #c8d8f0;
+    border-bottom-color: rgba(255,255,255,0.06);
+  }
+
+  .price-features li:last-child { border-bottom: none; }
+
+  .check {
+    width: 18px; height: 18px;
+    background: #dcfce7;
+    color: #16a34a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .price-card.featured .check {
+    background: rgba(26,86,255,0.2);
+    color: #7aa3ff;
+  }
+
+  .btn-price-blue {
+    width: 100%;
+    padding: 14px;
+    background: var(--blue);
+    color: white;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    transition: all 0.25s;
+    box-shadow: 0 4px 14px rgba(26,86,255,0.25);
+  }
+
+  .btn-price-blue:hover {
+    background: var(--blue-dark);
+    box-shadow: 0 8px 24px rgba(26,86,255,0.4);
+    transform: translateY(-1px);
+  }
+
+  .btn-price-outline {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    color: var(--text);
+    border-radius: 10px;
+    border: 1.5px solid var(--border-dark);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    transition: all 0.25s;
+  }
+
+  .btn-price-outline:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: var(--blue-light);
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .testimonial-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.3s;
+  }
+
+  .testimonial-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--blue);
+    transform: translateY(-3px);
+  }
+
+  .test-stars { color: #f59e0b; font-size: 14px; margin-bottom: 14px; }
+
+  .test-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .test-author { display: flex; align-items: center; gap: 12px; }
+
+  .test-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .test-name { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .test-role { font-size: 12px; color: var(--text-light); }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--blue) 0%, #0a3acc 100%);
+    padding: 100px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 500px; height: 500px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+
+  .cta-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    right: -5%;
+    width: 400px; height: 400px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+
+  .cta-inner { position: relative; z-index: 1; }
+
+  .cta-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 900;
+    color: white;
+    letter-spacing: -2px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .cta-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 44px;
+    line-height: 1.6;
+  }
+
+  .btn-white {
+    display: inline-block;
+    padding: 16px 38px;
+    background: white;
+    color: var(--blue);
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    transition: all 0.25s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-white:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.3);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    padding: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+  }
+
+  .footer-logo span { color: #7aa3ff; }
+
+  .footer-text {
+    font-size: 13px;
+    color: #7a93b0;
+    line-height: 1.7;
+    max-width: 300px;
+  }
+
+  .footer-copy {
+    font-size: 13px;
+    color: #4a6080;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; gap: 50px; padding: 120px 24px 60px; min-height: auto; }
+    .stats-section { grid-template-columns: repeat(2, 1fr); padding: 40px 24px; }
+    .stat-block { border-right: none; border-bottom: 1px solid var(--border); }
+    .section { padding: 60px 24px; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .features-bg { padding: 60px 24px; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .price-card.featured { transform: scale(1); }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .cta-section { padding: 60px 24px; }
+    footer { padding: 40px 24px; flex-direction: column; }
+    .logos-bar { padding: 24px; gap: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <a href="#" class="logo">Auto<span>Vision</span></a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn-ghost">Sign In</a>
+    <a href="login.html" class="btn-blue">Get Started Free →</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section>
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <div class="badge-dot">✦</div>
+        AI-Powered Website Builder
+      </div>
+      <h1>Build a <em>professional</em> website in minutes</h1>
+      <p class="hero-sub">AutoVision uses AI to instantly create beautiful, mobile-ready websites for your business. Preview for free — go live for just ₹299.</p>
+      <div class="hero-buttons">
+        <a href="login.html" class="btn-blue-lg">Create My Website Free →</a>
+        <a href="#how" class="btn-outline-lg">See How It Works</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-avatars">
+          <span>👨</span><span>👩</span><span>👨</span><span>👩</span>
+        </div>
+        <div>
+          <div class="trust-stars">★★★★★</div>
+          <div>Trusted by <strong>1,200+</strong> businesses across India</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="preview-card">
+        <div class="preview-bar">
+          <div class="dots">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-y"></div>
+            <div class="dot dot-g"></div>
+          </div>
+          <div class="url-bar">🔒 autovision.app/preview/kasmani-store</div>
+        </div>
+        <div class="preview-body">
+          <div class="mock-website">
+            <div class="mock-nav">
+              <div class="mock-logo">Kasmani Store</div>
+              <div class="mock-links">
+                <span>Home</span><span>Products</span><span>Contact</span>
+              </div>
+            </div>
+            <div class="mock-hero-text">Quality Products,<br>Delivered to You</div>
+            <div class="mock-sub">Serving Porbandar & Gujarat since 2010</div>
+            <div class="mock-btn">Shop Now →</div>
+          </div>
+          <div class="mock-cards">
+            <div class="mock-card">
+              <div class="mock-card-icon">⚡</div>
+              <div class="mock-card-title">Fast Delivery</div>
+              <div class="mock-card-text">Same day delivery available</div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-icon">✅</div>
+              <div class="mock-card-title">Quality Assured</div>
+              <div class="mock-card-text">100% genuine products</div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-icon">💬</div>
+              <div class="mock-card-title">24/7 Support</div>
+              <div class="mock-card-text">Always here to help</div>
+            </div>
+          </div>
+        </div>
+        <div class="preview-footer">
+          <div class="live-badge"><div class="live-dot"></div> Preview Ready</div>
+          <button class="activate-btn-sm">Activate — ₹299</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Logos Bar -->
+<div class="logos-bar">
+  <span class="logos-label">Payments by</span>
+  <span class="logo-item">Razorpay</span>
+  <span class="logo-item">GPay</span>
+  <span class="logo-item">PhonePe</span>
+  <span class="logo-item">Paytm</span>
+  <span class="logo-item">UPI</span>
+</div>
+
+<!-- Stats -->
+<div class="stats-section">
+  <div class="stat-block fade-up">
+    <div class="stat-num"><span id="s1">0</span>+</div>
+    <div class="stat-lbl">Websites Built</div>
+  </div>
+  <div class="stat-block fade-up">
+    <div class="stat-num"><span id="s2">0</span>+</div>
+    <div class="stat-lbl">Happy Clients</div>
+  </div>
+  <div class="stat-block fade-up">
+    <div class="stat-num"><span id="s3">0</span>s</div>
+    <div class="stat-lbl">Build Time</div>
+  </div>
+  <div class="stat-block fade-up">
+    <div class="stat-num">₹<span>299</span></div>
+    <div class="stat-lbl">To Go Live</div>
+  </div>
+</div>
+
+<!-- How It Works -->
+<section class="section" id="how">
+  <div class="fade-up">
+    <div class="section-label">✦ Process</div>
+    <h2 class="section-title">From idea to live website<br>in four simple steps</h2>
+    <p class="section-sub">No coding, no designers, no waiting. Just fill in your details and we handle everything else.</p>
+  </div>
+  <div class="steps-grid fade-up">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-title">Fill Your Details</div>
+      <p class="step-desc">Tell us your business name, type, services and design preference. Takes under 2 minutes.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-title">AI Builds It</div>
+      <p class="step-desc">Our AI instantly creates a complete, professional website tailored to your business.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-title">Preview Free</div>
+      <p class="step-desc">Review your website before paying anything. Edit text, colors and sections as needed.</p>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-title">Go Live ₹299</div>
+      <p class="step-desc">Pay just ₹299 via UPI or card and your website is instantly live on the internet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<div class="features-bg" id="features">
+  <div class="features-inner">
+    <div class="fade-up">
+      <div class="section-label">✦ Features</div>
+      <h2 class="section-title" style="color:white">Everything your business<br>website needs</h2>
+      <p class="section-sub" style="color:#7a93b0;margin-bottom:50px">Built-in features that would normally cost lakhs of rupees.</p>
+    </div>
+    <div class="features-grid fade-up">
+      <div class="feature-card">
+        <div class="feature-icon-wrap">⚡</div>
+        <div class="feature-title">Instant Generation</div>
+        <p class="feature-desc">Website built in seconds using advanced AI. No waiting, no technical knowledge required.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">📱</div>
+        <div class="feature-title">Mobile Responsive</div>
+        <p class="feature-desc">Every website looks perfect on phones, tablets and desktops automatically.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">✏️</div>
+        <div class="feature-title">Easy Editing</div>
+        <p class="feature-desc">Edit text, colors and sections anytime with our simple visual editor for just ₹99.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">🔒</div>
+        <div class="feature-title">Secure Payments</div>
+        <p class="feature-desc">All payments processed securely via Razorpay with UPI, GPay and card support.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">📊</div>
+        <div class="feature-title">Personal Dashboard</div>
+        <p class="feature-desc">Manage all your websites from one clean dashboard with full control.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-wrap">🚀</div>
+        <div class="feature-title">Instant Deployment</div>
+        <p class="feature-desc">Website goes live within seconds of payment. No technical setup whatsoever.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing -->
+<section class="section" id="pricing">
+  <div class="fade-up" style="text-align:center;max-width:600px;margin:0 auto 60px">
+    <div class="section-label" style="justify-content:center">✦ Pricing</div>
+    <h2 class="section-title">Simple, transparent pricing</h2>
+    <p class="section-sub" style="margin:0 auto">Pay only for what you need. No hidden charges, no monthly fees.</p>
+  </div>
+  <div class="pricing-grid fade-up">
+    <div class="price-card">
+      <div class="price-label">Activation</div>
+      <div class="price-amount"><sup>₹</sup>299</div>
+      <div class="price-period">One-time payment</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Professional website</li>
+        <li><span class="check">✓</span> Mobile responsive</li>
+        <li><span class="check">✓</span> Free preview first</li>
+        <li><span class="check">✓</span> Goes live instantly</li>
+        <li><span class="check">✓</span> 48hr preview period</li>
+      </ul>
+      <a href="login.html" class="btn-price-outline">Get Started Free</a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="featured-badge">Most Popular</div>
+      <div class="price-label">Editing</div>
+      <div class="price-amount"><sup>₹</sup>99</div>
+      <div class="price-period">Per update</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Change text & images</li>
+        <li><span class="check">✓</span> Update colors & fonts</li>
+        <li><span class="check">✓</span> Add/remove sections</li>
+        <li><span class="check">✓</span> Goes live instantly</li>
+        <li><span class="check">✓</span> Unlimited edits available</li>
+      </ul>
+      <a href="login.html" class="btn-price-blue">Edit My Website</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-label">Advanced</div>
+      <div class="price-amount"><sup>₹</sup>3K<span style="font-size:24px;color:var(--text-light)">+</span></div>
+      <div class="price-period">Custom quote</div>
+      <div class="price-divider"></div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Online payment system</li>
+        <li><span class="check">✓</span> Shopping cart</li>
+        <li><span class="check">✓</span> Customer login system</li>
+        <li><span class="check">✓</span> Admin panel</li>
+        <li><span class="check">✓</span> Custom domain & SEO</li>
+      </ul>
+      <a href="login.html" class="btn-price-outline">Get a Quote</a>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section style="background:var(--off-white);padding:100px 0">
+  <div class="section" style="padding-top:0;padding-bottom:0">
+    <div class="fade-up" style="text-align:center;margin-bottom:50px">
+      <div class="section-label" style="justify-content:center">✦ Testimonials</div>
+      <h2 class="section-title">What our clients say</h2>
+    </div>
+    <div class="testimonials-grid fade-up">
+      <div class="testimonial-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"I got my restaurant website live in under 10 minutes. My customers can now find us online and our orders have doubled!"</p>
+        <div class="test-author">
+          <div class="test-avatar">🍽️</div>
+          <div>
+            <div class="test-name">Rajan Patel</div>
+            <div class="test-role">Restaurant Owner, Ahmedabad</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"Finally a website builder that understands Indian businesses. The UPI payment option made it so easy. Highly recommend!"</p>
+        <div class="test-author">
+          <div class="test-avatar">🛍️</div>
+          <div>
+            <div class="test-name">Priya Shah</div>
+            <div class="test-role">Boutique Owner, Surat</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"As a doctor I needed a professional website quickly. AutoVision built one that looks like it cost ₹50,000 but I paid only ₹299!"</p>
+        <div class="test-author">
+          <div class="test-avatar">👨‍⚕️</div>
+          <div>
+            <div class="test-name">Dr. Mehta</div>
+            <div class="test-role">Physician, Rajkot</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-label">✦ Get Started Today</div>
+    <h2 class="cta-title">Your business deserves<br>a professional website</h2>
+    <p class="cta-sub">Join 1,200+ businesses already online with AutoVision.<br>Create your free preview in minutes.</p>
+    <a href="login.html" class="btn-white">Create My Website Free →</a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <a href="#" class="footer-logo">Auto<span>Vision</span></a>
+  <div class="footer-text">
+    Professional AI website builder for Indian businesses.<br>
+    Contact: kasmaniadnan812@gmail.com
+  </div>
+  <div class="footer-copy">© 2026 AutoVision. All rights reserved.</div>
+</footer>
+
+<script>
+  // Scroll animations
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Counters
+  const cObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animCount('s1', 1200);
+        animCount('s2', 850);
+        animCount('s3', 30);
+        cObs.disconnect();
+      }
+    });
+  });
+  cObs.observe(document.querySelector('.stats-section'));
+
+  function animCount(id, target) {
+    let n = 0, step = target / 50;
+    const t = setInterval(() => {
+      n = Math.min(n + step, target);
+      document.getElementById(id).textContent = Math.floor(n);
+      if (n >= target) clearInterval(t);
+    }, 30);
+  }
+</script>
+</body>                                               
+</html>
