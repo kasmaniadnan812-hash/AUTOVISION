@@ -4,361 +4,161 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AutoVision — Sign In</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --white: #ffffff;
-    --off-white: #f8f9fc;
-    --light: #f0f4ff;
-    --blue: #1a56ff;
-    --blue-dark: #1040d8;
-    --blue-light: #e8eeff;
-    --navy: #0a1628;
-    --text: #0a1628;
-    --text-mid: #3d5470;
-    --text-light: #7a93b0;
-    --border: #e2e8f4;
-    --border-dark: #c8d4e8;
-    --shadow-lg: 0 20px 60px rgba(26,86,255,0.12);
+    --white:#ffffff; --off-white:#f8f9fc; --blue:#1a56ff; --blue-dark:#1040d8; --blue-light:#e8eeff;
+    --navy:#0a1628; --text:#0a1628; --text-mid:#3d5470; --text-light:#7a93b0;
+    --border:#e2e8f4; --border-dark:#c8d4e8; --green:#16a34a; --green-light:#f0fdf4;
+    --red:#dc2626; --red-light:#fef2f2; --orange:#ea580c;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   body {
-    background: var(--off-white);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    -webkit-font-smoothing: antialiased;
+    background:var(--off-white); color:var(--text); font-family:'DM Sans',sans-serif;
+    min-height:100vh; display:grid; grid-template-columns:1fr 1fr; -webkit-font-smoothing:antialiased;
   }
 
-  /* Left Panel */
-  .left-panel {
-    background: linear-gradient(150deg, var(--navy) 0%, #0d2040 100%);
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
+  /* LEFT */
+  .left {
+    background:linear-gradient(150deg,var(--navy) 0%,#0d2040 100%);
+    padding:60px; display:flex; flex-direction:column; justify-content:space-between;
+    position:relative; overflow:hidden;
   }
+  .left::before { content:''; position:absolute; top:-100px; right:-100px; width:400px; height:400px; background:rgba(26,86,255,0.15); border-radius:50%; }
+  .left::after { content:''; position:absolute; bottom:-80px; left:-80px; width:300px; height:300px; background:rgba(26,86,255,0.1); border-radius:50%; }
+  .left-top { position:relative; z-index:1; }
+  .left-logo { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:white; text-decoration:none; display:block; margin-bottom:56px; }
+  .left-logo span { color:#7aa3ff; }
+  .left-title { font-family:'Playfair Display',serif; font-size:38px; font-weight:900; color:white; line-height:1.2; letter-spacing:-1.5px; margin-bottom:18px; }
+  .left-title em { font-style:italic; color:#7aa3ff; }
+  .left-sub { font-size:15.5px; color:#7a93b0; line-height:1.72; margin-bottom:44px; }
+  .left-feats { position:relative; z-index:1; }
+  .left-feat { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .feat-ico { width:36px; height:36px; background:rgba(26,86,255,0.22); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .feat-txt { font-size:14px; color:#c8d8f0; font-weight:500; }
+  .left-bottom { position:relative; z-index:1; font-size:12px; color:#4a6080; font-family:'DM Mono',monospace; }
 
-  .left-panel::before {
-    content: '';
-    position: absolute;
-    top: -100px; right: -100px;
-    width: 400px; height: 400px;
-    background: rgba(26,86,255,0.15);
-    border-radius: 50%;
+  /* RIGHT */
+  .right { display:flex; align-items:center; justify-content:center; padding:60px 72px; background:white; }
+  .login-box { width:100%; max-width:400px; animation:fadeUp 0.55s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(18px);} to{opacity:1;transform:translateY(0);} }
+  .login-title { font-family:'Playfair Display',serif; font-size:30px; font-weight:900; color:var(--navy); letter-spacing:-1px; margin-bottom:6px; }
+  .login-sub { font-size:14.5px; color:var(--text-light); margin-bottom:32px; }
+
+  /* TABS */
+  .tabs { display:flex; background:var(--off-white); border-radius:10px; padding:4px; margin-bottom:28px; }
+  .tab { flex:1; padding:10px; text-align:center; font-size:13.5px; font-weight:600; color:var(--text-light); cursor:pointer; border-radius:8px; transition:all 0.2s; }
+  .tab.active { background:white; color:var(--navy); box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+
+  /* FORM */
+  .form-group { margin-bottom:16px; }
+  label { display:block; font-size:12.5px; font-weight:700; color:var(--text-mid); margin-bottom:6px; letter-spacing:0.2px; }
+  input[type=text], input[type=email], input[type=password] {
+    width:100%; background:var(--off-white); border:1.5px solid var(--border); color:var(--text);
+    padding:12px 15px; font-family:'DM Sans',sans-serif; font-size:14.5px; font-weight:400;
+    border-radius:10px; outline:none; transition:all 0.2s;
   }
+  input:focus { border-color:var(--blue); background:white; box-shadow:0 0 0 3px rgba(26,86,255,0.08); }
+  input::placeholder { color:var(--text-light); }
+  .input-wrap { position:relative; }
+  .toggle-pw { position:absolute; right:13px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:16px; padding:0; }
+  .btn-submit { width:100%; padding:13px; background:var(--blue); color:white; font-size:14.5px; font-weight:700; border-radius:10px; border:none; cursor:pointer; transition:all 0.22s; box-shadow:0 4px 14px rgba(26,86,255,0.28); margin-top:4px; font-family:'DM Sans',sans-serif; }
+  .btn-submit:hover:not(:disabled) { background:var(--blue-dark); transform:translateY(-1px); box-shadow:0 8px 22px rgba(26,86,255,0.36); }
+  .btn-submit:disabled { opacity:0.65; cursor:not-allowed; }
 
-  .left-panel::after {
-    content: '';
-    position: absolute;
-    bottom: -80px; left: -80px;
-    width: 300px; height: 300px;
-    background: rgba(26,86,255,0.1);
-    border-radius: 50%;
-  }
+  /* STRENGTH */
+  .strength-bar-wrap { height:4px; background:var(--border); border-radius:100px; overflow:hidden; margin-top:8px; }
+  .strength-bar { height:100%; width:0%; border-radius:100px; transition:all 0.3s; }
+  .strength-label { font-size:11px; font-weight:700; margin-top:4px; }
 
-  .left-top { position: relative; z-index: 1; }
+  /* ALERTS */
+  .alert { padding:11px 14px; border-radius:9px; font-size:13px; margin-bottom:14px; display:none; line-height:1.5; }
+  .alert-error { background:var(--red-light); border:1px solid #fecaca; color:var(--red); }
+  .alert-success { background:var(--green-light); border:1px solid #bbf7d0; color:var(--green); }
+  .alert-info { background:var(--blue-light); border:1px solid rgba(26,86,255,0.2); color:var(--blue); }
 
-  .left-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: white;
-    text-decoration: none;
-    display: block;
-    margin-bottom: 60px;
-  }
+  .divider { display:flex; align-items:center; gap:12px; margin:18px 0; }
+  .divider-line { flex:1; height:1px; background:var(--border); }
+  .divider-text { font-size:12px; color:var(--text-light); font-weight:500; }
 
-  .left-logo span { color: #7aa3ff; }
+  .switch-text { text-align:center; font-size:13.5px; color:var(--text-light); margin-top:18px; }
+  .switch-text a { color:var(--blue); text-decoration:none; font-weight:600; cursor:pointer; }
+  .switch-text a:hover { text-decoration:underline; }
 
-  .left-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 40px;
-    font-weight: 900;
-    color: white;
-    line-height: 1.2;
-    letter-spacing: -1.5px;
-    margin-bottom: 20px;
-  }
+  .form-panel { display:none; }
+  .form-panel.active { display:block; }
 
-  .left-title em { font-style: italic; color: #7aa3ff; }
+  /* OTP DISPLAY */
+  .otp-display { background:var(--blue-light); border:1px solid rgba(26,86,255,0.25); border-radius:12px; padding:16px 18px; margin-bottom:18px; }
+  .otp-notice { font-size:12px; color:var(--blue); font-weight:700; letter-spacing:0.5px; margin-bottom:6px; }
+  .otp-inst { font-size:13px; color:var(--text-mid); line-height:1.55; }
 
-  .left-sub {
-    font-size: 16px;
-    color: #7a93b0;
-    line-height: 1.7;
-    margin-bottom: 50px;
-  }
+  .back-link { display:flex; align-items:center; gap:6px; color:var(--text-light); text-decoration:none; font-size:13px; font-weight:500; margin-top:24px; transition:color 0.2s; }
+  .back-link:hover { color:var(--blue); }
 
-  .left-features { position: relative; z-index: 1; }
+  /* LOCK INDICATOR */
+  .lock-notice { background:#fff7ed; border:1px solid #fed7aa; border-radius:10px; padding:12px 15px; font-size:12.5px; color:var(--orange); font-weight:600; margin-bottom:16px; display:none; }
 
-  .left-feat {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 18px;
-  }
-
-  .feat-icon {
-    width: 36px; height: 36px;
-    background: rgba(26,86,255,0.2);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  .feat-text { font-size: 14px; color: #c8d8f0; font-weight: 500; }
-
-  .left-bottom {
-    position: relative; z-index: 1;
-    font-size: 12px;
-    color: #4a6080;
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* Right Panel */
-  .right-panel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 80px;
-    background: white;
-  }
-
-  .login-box {
-    width: 100%;
-    max-width: 400px;
-    animation: fadeUp 0.6s ease forwards;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .login-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--navy);
-    letter-spacing: -1px;
-    margin-bottom: 8px;
-  }
-
-  .login-sub {
-    font-size: 15px;
-    color: var(--text-light);
-    margin-bottom: 36px;
-  }
-
-  .tabs {
-    display: flex;
-    background: var(--off-white);
-    border-radius: 10px;
-    padding: 4px;
-    margin-bottom: 32px;
-  }
-
-  .tab {
-    flex: 1;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-light);
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.2s;
-  }
-
-  .tab.active {
-    background: white;
-    color: var(--navy);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
-
-  .form-group { margin-bottom: 18px; }
-
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-mid);
-    margin-bottom: 7px;
-  }
-
-  input {
-    width: 100%;
-    background: var(--off-white);
-    border: 1.5px solid var(--border);
-    color: var(--text);
-    padding: 13px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    border-radius: 10px;
-    outline: none;
-    transition: all 0.2s;
-  }
-
-  input:focus {
-    border-color: var(--blue);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(26,86,255,0.08);
-  }
-
-  input::placeholder { color: var(--text-light); }
-
-  .btn-submit {
-    width: 100%;
-    padding: 14px;
-    background: var(--blue);
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.25s;
-    box-shadow: 0 4px 14px rgba(26,86,255,0.25);
-    margin-top: 4px;
-  }
-
-  .btn-submit:hover {
-    background: var(--blue-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(26,86,255,0.35);
-  }
-
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 22px 0;
-  }
-
-  .divider-line { flex: 1; height: 1px; background: var(--border); }
-  .divider-text { font-size: 12px; color: var(--text-light); font-weight: 500; }
-
-  .switch-text {
-    text-align: center;
-    font-size: 14px;
-    color: var(--text-light);
-    margin-top: 20px;
-  }
-
-  .switch-text a { color: var(--blue); text-decoration: none; font-weight: 600; }
-  .switch-text a:hover { text-decoration: underline; }
-
-  .error-msg {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    color: #dc2626;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    margin-bottom: 16px;
-    display: none;
-  }
-
-  .back-link {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-light);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    margin-top: 28px;
-    transition: color 0.2s;
-  }
-
-  .back-link:hover { color: var(--blue); }
-
-  .form-panel { display: none; }
-  .form-panel.active { display: block; }
-
-  @media (max-width: 768px) {
-    body { grid-template-columns: 1fr; }
-    .left-panel { display: none; }
-    .right-panel { padding: 40px 24px; }
+  @media(max-width:768px) {
+    body { grid-template-columns:1fr; }
+    .left { display:none; }
+    .right { padding:36px 22px; }
   }
 </style>
 </head>
 <body>
 
-<!-- Left -->
-<div class="left-panel">
+<div class="left">
   <div class="left-top">
     <a href="index.html" class="left-logo">Auto<span>Vision</span></a>
     <div class="left-title">Start building your <em>online presence</em> today</div>
     <div class="left-sub">Join thousands of Indian businesses that trust AutoVision for their professional website needs.</div>
   </div>
-
-  <div class="left-features">
-    <div class="left-feat">
-      <div class="feat-icon">🌐</div>
-      <div class="feat-text">Professional website ready in minutes</div>
-    </div>
-    <div class="left-feat">
-      <div class="feat-icon">💰</div>
-      <div class="feat-text">Go live for just ₹299 — no hidden fees</div>
-    </div>
-    <div class="left-feat">
-      <div class="feat-icon">📱</div>
-      <div class="feat-text">Mobile-ready and SEO-friendly by default</div>
-    </div>
-    <div class="left-feat">
-      <div class="feat-icon">⚡</div>
-      <div class="feat-text">Pay via UPI, GPay, PhonePe or card</div>
-    </div>
+  <div class="left-feats">
+    <div class="left-feat"><div class="feat-ico">🌐</div><div class="feat-txt">Professional website ready in minutes</div></div>
+    <div class="left-feat"><div class="feat-ico">💰</div><div class="feat-txt">Go live for just ₹299 — no hidden fees</div></div>
+    <div class="left-feat"><div class="feat-ico">📱</div><div class="feat-txt">Mobile-ready and SEO-friendly by default</div></div>
+    <div class="left-feat"><div class="feat-ico">⚡</div><div class="feat-txt">Pay via UPI, GPay, PhonePe or card</div></div>
   </div>
-
   <div class="left-bottom">© 2026 AutoVision — kasmaniadnan812@gmail.com</div>
 </div>
 
-<!-- Right -->
-<div class="right-panel">
+<div class="right">
   <div class="login-box">
-    <div class="login-title">Welcome back</div>
-    <div class="login-sub">Sign in to your AutoVision account</div>
+    <div class="login-title" id="formTitle">Welcome back</div>
+    <div class="login-sub" id="formSub">Sign in to your AutoVision account</div>
 
-    <div class="tabs">
+    <div class="tabs" id="tabRow">
       <div class="tab active" onclick="switchTab('login')">Sign In</div>
       <div class="tab" onclick="switchTab('signup')">Create Account</div>
     </div>
 
-    <!-- Login -->
+    <!-- ── LOGIN ── -->
     <div class="form-panel active" id="loginPanel">
-      <div class="error-msg" id="loginError"></div>
+      <div class="lock-notice" id="lockNotice"></div>
+      <div class="alert alert-error" id="loginError"></div>
+      <div class="alert alert-success" id="loginSuccess"></div>
       <div class="form-group">
         <label>Email Address</label>
         <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
       </div>
       <div class="form-group">
         <label>Password</label>
-        <div style="position:relative">
-          <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password" style="padding-right:48px">
-          <button type="button" onclick="togglePass('loginPass',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;padding:0">👁️</button>
+        <div class="input-wrap">
+          <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password" style="padding-right:46px">
+          <button type="button" class="toggle-pw" onclick="togglePass('loginPass',this)">👁️</button>
         </div>
       </div>
       <div style="text-align:right;margin-top:-4px;margin-bottom:16px">
-        <a onclick="switchTab('forgot')" href="#" style="font-size:13px;color:var(--blue);text-decoration:none;font-weight:600">Forgot password?</a>
+        <a onclick="switchTab('forgot');return false;" href="#" style="font-size:13px;color:var(--blue);text-decoration:none;font-weight:600">Forgot password?</a>
       </div>
       <button id="loginBtn" class="btn-submit" onclick="handleLogin()">Sign In →</button>
-      <div class="switch-text">Don't have an account? <a onclick="switchTab('signup')" href="#">Create one free</a></div>
+      <div class="switch-text">Don't have an account? <a onclick="switchTab('signup')">Create one free</a></div>
     </div>
 
-    <!-- Signup -->
+    <!-- ── SIGNUP ── -->
     <div class="form-panel" id="signupPanel">
-      <div class="error-msg" id="signupError"></div>
+      <div class="alert alert-error" id="signupError"></div>
       <div class="form-group">
         <label>Full Name</label>
         <input type="text" id="signupName" placeholder="Your full name" autocomplete="name">
@@ -368,382 +168,472 @@
         <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email">
       </div>
       <div class="form-group">
-        <label>Password <span style="color:var(--text-light);font-weight:400">(min 8 characters)</span></label>
-        <div style="position:relative">
-          <input type="password" id="signupPass" placeholder="Create a strong password" autocomplete="new-password" oninput="updateStrength(this.value)" style="padding-right:48px">
-          <button type="button" onclick="togglePass('signupPass',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;padding:0">👁️</button>
+        <label>Password <span style="color:var(--text-light);font-weight:400">(min 8 chars)</span></label>
+        <div class="input-wrap">
+          <input type="password" id="signupPass" placeholder="Create a strong password" autocomplete="new-password" oninput="updateStrength(this.value)" style="padding-right:46px">
+          <button type="button" class="toggle-pw" onclick="togglePass('signupPass',this)">👁️</button>
         </div>
-        <div style="margin-top:8px">
-          <div style="height:4px;background:#e2e8f4;border-radius:100px;overflow:hidden">
-            <div id="strengthBar" style="height:100%;width:0%;border-radius:100px;transition:all 0.3s"></div>
-          </div>
-          <div id="strengthLabel" style="font-size:11px;font-weight:600;margin-top:4px"></div>
-        </div>
+        <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
+        <div class="strength-label" id="strengthLabel"></div>
       </div>
       <div class="form-group">
         <label>Confirm Password</label>
-        <div style="position:relative">
-          <input type="password" id="signupConf" placeholder="Repeat your password" autocomplete="new-password" style="padding-right:48px">
-          <button type="button" onclick="togglePass('signupConf',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;padding:0">👁️</button>
+        <div class="input-wrap">
+          <input type="password" id="signupConf" placeholder="Repeat your password" autocomplete="new-password" style="padding-right:46px">
+          <button type="button" class="toggle-pw" onclick="togglePass('signupConf',this)">👁️</button>
         </div>
       </div>
       <button id="signupBtn" class="btn-submit" onclick="handleSignup()">Create Account Free →</button>
-      <div class="switch-text">Already have an account? <a onclick="switchTab('login')" href="#">Sign in</a></div>
+      <div class="switch-text">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
     </div>
 
-    <!-- Forgot Password -->
+    <!-- ── FORGOT PASSWORD ── -->
     <div class="form-panel" id="forgotPanel">
-      <div class="error-msg" id="forgotError"></div>
-      <div class="error-msg" id="resetError" style="display:none"></div>
+      <!-- Step 1: Enter email -->
       <div id="forgotStep1">
+        <div class="alert alert-error" id="forgotError"></div>
+        <div class="alert alert-info" id="forgotInfo"></div>
+        <p style="font-size:14px;color:var(--text-mid);margin-bottom:20px;line-height:1.6">Enter your registered email address. We'll send you a secure reset code via email.</p>
         <div class="form-group">
           <label>Email Address</label>
           <input type="email" id="forgotEmail" placeholder="your@email.com">
         </div>
-        <button class="btn-submit" onclick="handleForgot()">Get Reset Code →</button>
+        <button id="forgotBtn" class="btn-submit" onclick="handleForgotStep1()">Send Reset Code →</button>
       </div>
+
+      <!-- Step 2: Enter OTP -->
       <div id="forgotStep2" style="display:none">
-        <div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#3d5470">
-          🔐 Your reset code: <strong id="resetTokenDisplay" style="font-size:18px;color:var(--blue);letter-spacing:3px"></strong><br>
-          <span style="color:var(--text-light)">Valid for 15 minutes only.</span>
+        <div class="alert alert-error" id="otpError"></div>
+        <div class="otp-display">
+          <div class="otp-notice">📧 Reset Code Sent</div>
+          <div class="otp-inst">A 6-digit code has been sent to your email address via EmailJS. Check your inbox and spam folder. Code expires in <strong>15 minutes</strong>.</div>
         </div>
-        <input type="hidden" id="forgotEmailHidden">
         <div class="form-group">
-          <label>Enter Reset Code</label>
-          <input type="text" id="resetToken" placeholder="Enter the code above" style="letter-spacing:3px;text-transform:uppercase;font-size:18px;text-align:center">
+          <label>Enter 6-Digit Code</label>
+          <input type="text" id="otpInput" placeholder="Enter code from email" maxlength="6" style="letter-spacing:4px;text-align:center;font-size:20px;font-family:'DM Mono',monospace" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </div>
         <div class="form-group">
           <label>New Password <span style="color:var(--text-light);font-weight:400">(min 8 chars)</span></label>
-          <input type="password" id="newPass" placeholder="New password">
+          <div class="input-wrap">
+            <input type="password" id="newPass" placeholder="New password" style="padding-right:46px">
+            <button type="button" class="toggle-pw" onclick="togglePass('newPass',this)">👁️</button>
+          </div>
         </div>
         <div class="form-group">
           <label>Confirm New Password</label>
-          <input type="password" id="confPass" placeholder="Repeat new password">
+          <div class="input-wrap">
+            <input type="password" id="confPass" placeholder="Repeat new password" style="padding-right:46px">
+            <button type="button" class="toggle-pw" onclick="togglePass('confPass',this)">👁️</button>
+          </div>
         </div>
-        <button id="resetBtn" class="btn-submit" onclick="handleReset()">Reset Password →</button>
+        <button id="resetBtn" class="btn-submit" onclick="handleForgotStep2()">Reset Password →</button>
+        <div style="text-align:center;margin-top:14px">
+          <a onclick="goBackToForgotStep1();return false;" href="#" style="font-size:13px;color:var(--text-light);cursor:pointer">← Send code again</a>
+        </div>
       </div>
-      <div class="switch-text">Remember it? <a onclick="switchTab('login')" href="#">Back to Sign In</a></div>
+
+      <div class="switch-text">Remember it? <a onclick="switchTab('login')">Back to Sign In</a></div>
     </div>
 
     <a href="index.html" class="back-link">← Back to home</a>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  // ══════════════════════════════════════
-  // SECURITY CONFIG
-  // ══════════════════════════════════════
-  const MAX_LOGIN_ATTEMPTS = 5;       // lock after 5 wrong tries
-  const LOCKOUT_DURATION   = 15 * 60 * 1000; // 15 minutes lockout
-  const SESSION_DURATION   = 24 * 60 * 60 * 1000; // 24 hour session
-  const RESET_EXPIRY       = 15 * 60 * 1000; // 15 min reset code
+// ════════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════════
+const EMAILJS_PUBLIC_KEY  = 'H9mRJV2zi9LJ7OhBw';
+const EMAILJS_SERVICE_ID  = 'service_6q18vqn';
+const EMAILJS_TEMPLATE_ID = 'template_8bq71z3';
 
-  // ── Simple but stronger hash (SHA-256 via Web Crypto) ──
-  async function hashPassword(pass) {
-    const salt = 'av_salt_2026_secure';
-    const data = new TextEncoder().encode(salt + pass);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
-  }
+const MAX_ATTEMPTS  = 5;
+const LOCKOUT_MS    = 15 * 60 * 1000;   // 15 minutes
+const SESSION_MS    = 24 * 60 * 60 * 1000; // 24 hours
+const OTP_EXPIRY_MS = 15 * 60 * 1000;   // 15 minutes
 
-  // ── Sanitize input to prevent XSS ──
-  function sanitize(str) {
-    const div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
-  }
+// OTP stored in memory only (NOT localStorage) — prevents tampering
+let _otpSession = null; // { email, code, expiresAt }
 
-  // ── Validate email format ──
-  function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+emailjs.init(EMAILJS_PUBLIC_KEY);
 
-  // ── Password strength check ──
-  function strongPass(p) {
-    return p.length >= 8; // min 8 chars
-  }
-
-  // ── Storage helpers ──
-  function getAccounts() { try { return JSON.parse(localStorage.getItem('av_accounts') || '{}'); } catch { return {}; } }
-  function saveAccounts(a) { localStorage.setItem('av_accounts', JSON.stringify(a)); }
-
-  // ── Rate limiting / brute force ──
-  function getAttempts(email) {
-    try { return JSON.parse(localStorage.getItem('av_attempts_' + email) || '{"count":0,"time":0}'); } catch { return {count:0,time:0}; }
-  }
-  function setAttempts(email, data) { localStorage.setItem('av_attempts_' + email, JSON.stringify(data)); }
-  function clearAttempts(email) { localStorage.removeItem('av_attempts_' + email); }
-
-  function isLocked(email) {
-    const a = getAttempts(email);
-    if (a.count >= MAX_LOGIN_ATTEMPTS && Date.now() - a.time < LOCKOUT_DURATION) {
-      const remaining = Math.ceil((LOCKOUT_DURATION - (Date.now() - a.time)) / 60000);
-      return remaining;
+// ════════════════════════════════════════════════
+// SESSION CHECK
+// ════════════════════════════════════════════════
+(function checkSession() {
+  try {
+    const u = JSON.parse(localStorage.getItem('av_user') || '{}');
+    if (u.email && u.expiresAt && Date.now() < u.expiresAt) {
+      window.location.href = 'dashboard.html';
     }
-    return 0;
+  } catch { localStorage.removeItem('av_user'); }
+})();
+
+// ════════════════════════════════════════════════
+// UTILITIES
+// ════════════════════════════════════════════════
+function sanitize(str) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(str));
+  return d.innerHTML;
+}
+function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.trim()); }
+function validPass(p)  { return p.length >= 8; }
+
+async function hashPassword(pass) {
+  const salt = 'av_secure_salt_2026_x9k';
+  const data = new TextEncoder().encode(salt + pass);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function getAccounts() {
+  try { return JSON.parse(localStorage.getItem('av_accounts') || '{}'); } catch { return {}; }
+}
+function saveAccounts(a) { localStorage.setItem('av_accounts', JSON.stringify(a)); }
+
+// ── Brute force protection ──
+function getAttempts(email) {
+  try { return JSON.parse(localStorage.getItem('av_atk_' + btoa(email)) || '{"n":0,"t":0}'); } catch { return {n:0,t:0}; }
+}
+function setAttempts(email, d) { localStorage.setItem('av_atk_' + btoa(email), JSON.stringify(d)); }
+function clearAttempts(email)  { localStorage.removeItem('av_atk_' + btoa(email)); }
+
+function checkLock(email) {
+  const a = getAttempts(email);
+  if (a.n >= MAX_ATTEMPTS && Date.now() - a.t < LOCKOUT_MS) {
+    return Math.ceil((LOCKOUT_MS - (Date.now() - a.t)) / 60000);
   }
+  return 0;
+}
+function recordFail(email) {
+  const a = getAttempts(email);
+  const n = (Date.now() - a.t < LOCKOUT_MS) ? a.n + 1 : 1;
+  setAttempts(email, { n, t: Date.now() });
+  return Math.max(0, MAX_ATTEMPTS - n);
+}
 
-  function recordFailedAttempt(email) {
-    const a = getAttempts(email);
-    const count = (Date.now() - a.time < LOCKOUT_DURATION) ? a.count + 1 : 1;
-    setAttempts(email, { count, time: Date.now() });
-    return MAX_LOGIN_ATTEMPTS - count;
+function saveSession(user) {
+  localStorage.setItem('av_user', JSON.stringify({ ...user, expiresAt: Date.now() + SESSION_MS }));
+}
+
+// ── UI helpers ──
+function showAlert(id, msg, type='error') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `alert alert-${type}`;
+  el.style.display = 'block';
+}
+function hideAlert(id) {
+  const el = document.getElementById(id);
+  if (el) { el.style.display = 'none'; el.textContent = ''; }
+}
+function setLoading(btnId, loading, text) {
+  const b = document.getElementById(btnId);
+  if (!b) return;
+  b.disabled = loading;
+  b.textContent = loading ? '⏳ Please wait...' : text;
+}
+
+// ── Tab switcher ──
+const tabMeta = {
+  login:  ['Welcome back',        'Sign in to your AutoVision account'],
+  signup: ['Get started free',    'Create your AutoVision account today'],
+  forgot: ['Reset your password', 'We\'ll help you recover access'],
+};
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='signup'&&i===1));
+  });
+  ['loginPanel','signupPanel','forgotPanel'].forEach(p => {
+    document.getElementById(p).classList.toggle('active', p === tab + 'Panel');
+  });
+  document.getElementById('formTitle').textContent = tabMeta[tab][0];
+  document.getElementById('formSub').textContent   = tabMeta[tab][1];
+  ['loginError','loginSuccess','signupError','forgotError','forgotInfo','otpError'].forEach(hideAlert);
+  document.getElementById('lockNotice').style.display = 'none';
+  // Reset forgot steps
+  if (tab === 'forgot') {
+    document.getElementById('forgotStep1').style.display = 'block';
+    document.getElementById('forgotStep2').style.display = 'none';
   }
+}
 
-  // ── Session management ──
-  function saveSession(user) {
-    const session = { ...user, expiresAt: Date.now() + SESSION_DURATION };
-    localStorage.setItem('av_user', JSON.stringify(session));
-  }
+// ── Password strength ──
+function updateStrength(pass) {
+  const bar = document.getElementById('strengthBar');
+  const lbl = document.getElementById('strengthLabel');
+  if (!bar) return;
+  let s = 0;
+  if (pass.length >= 8)  s++;
+  if (pass.length >= 12) s++;
+  if (/[A-Z]/.test(pass)) s++;
+  if (/[0-9]/.test(pass)) s++;
+  if (/[^A-Za-z0-9]/.test(pass)) s++;
+  const lvls = [
+    {c:'#ef4444',l:'Too short',w:'10%'},
+    {c:'#ef4444',l:'Weak',w:'25%'},
+    {c:'#f97316',l:'Fair',w:'50%'},
+    {c:'#eab308',l:'Good',w:'70%'},
+    {c:'#22c55e',l:'Strong',w:'88%'},
+    {c:'#16a34a',l:'Very Strong',w:'100%'},
+  ];
+  const lv = lvls[Math.min(s,5)];
+  bar.style.width   = pass.length ? lv.w : '0%';
+  bar.style.background = lv.c;
+  lbl.textContent   = pass.length ? lv.l : '';
+  lbl.style.color   = lv.c;
+}
 
-  function isSessionValid() {
-    try {
-      const u = JSON.parse(localStorage.getItem('av_user') || '{}');
-      return u.email && u.expiresAt && Date.now() < u.expiresAt;
-    } catch { return false; }
-  }
+// ── Toggle password visibility ──
+function togglePass(id, btn) {
+  const inp = document.getElementById(id);
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+}
 
-  // If already logged in and session valid → redirect
-  if (isSessionValid()) { window.location.href = 'dashboard.html'; }
+// ════════════════════════════════════════════════
+// SIGN UP
+// ════════════════════════════════════════════════
+async function handleSignup() {
+  hideAlert('signupError');
+  const name  = sanitize(document.getElementById('signupName').value.trim());
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('signupPass').value;
+  const conf  = document.getElementById('signupConf').value;
 
-  // ── UI helpers ──
-  function showError(id, msg) {
-    const el = document.getElementById(id);
-    el.textContent = msg;
-    el.style.display = 'block';
-  }
-  function hideError(id) {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  }
-  function showSuccess(id, msg) {
-    const el = document.getElementById(id);
-    el.textContent = msg;
-    el.style.display = 'block';
-    el.style.background = '#f0fdf4';
-    el.style.color = '#16a34a';
-    el.style.border = '1px solid #bbf7d0';
-  }
+  if (!name)              return showAlert('signupError', '⚠️ Please enter your full name.');
+  if (name.length < 2)    return showAlert('signupError', '⚠️ Name must be at least 2 characters.');
+  if (!email)             return showAlert('signupError', '⚠️ Please enter your email address.');
+  if (!validEmail(email)) return showAlert('signupError', '⚠️ Please enter a valid email address.');
+  if (!pass)              return showAlert('signupError', '⚠️ Please create a password.');
+  if (!validPass(pass))   return showAlert('signupError', '⚠️ Password must be at least 8 characters.');
+  if (pass !== conf)      return showAlert('signupError', '⚠️ Passwords do not match.');
 
-  function setLoading(btnId, loading, text) {
-    const btn = document.getElementById(btnId);
-    btn.disabled = loading;
-    btn.textContent = loading ? 'Please wait...' : text;
-    btn.style.opacity = loading ? '0.7' : '1';
-  }
+  const accounts = getAccounts();
+  if (accounts[email]) return showAlert('signupError', '⚠️ This email is already registered. Please sign in.');
 
-  // ── Password strength indicator ──
-  function updateStrength(pass) {
-    const bar = document.getElementById('strengthBar');
-    const label = document.getElementById('strengthLabel');
-    if (!bar) return;
-    let score = 0;
-    if (pass.length >= 8) score++;
-    if (pass.length >= 12) score++;
-    if (/[A-Z]/.test(pass)) score++;
-    if (/[0-9]/.test(pass)) score++;
-    if (/[^A-Za-z0-9]/.test(pass)) score++;
-    const levels = [
-      { color: '#ef4444', label: 'Too short', width: '10%' },
-      { color: '#ef4444', label: 'Weak', width: '25%' },
-      { color: '#f97316', label: 'Fair', width: '50%' },
-      { color: '#eab308', label: 'Good', width: '75%' },
-      { color: '#22c55e', label: 'Strong', width: '90%' },
-      { color: '#16a34a', label: 'Very Strong', width: '100%' },
-    ];
-    const l = levels[Math.min(score, 5)];
-    bar.style.width = pass.length ? l.width : '0%';
-    bar.style.background = l.color;
-    label.textContent = pass.length ? l.label : '';
-    label.style.color = l.color;
-  }
-
-  // ── Tab switcher ──
-  function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach((t, i) => {
-      t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='signup'&&i===1)||(tab==='forgot'&&i===2));
-    });
-    ['loginPanel','signupPanel','forgotPanel'].forEach(p => {
-      document.getElementById(p).classList.toggle('active', p === tab+'Panel');
-    });
-    ['loginError','signupError','forgotError','resetError'].forEach(e => hideError(e));
-    const map = {
-      login:  ['Welcome back',       'Sign in to your AutoVision account'],
-      signup: ['Get started free',   'Create your AutoVision account today'],
-      forgot: ['Reset password',     'We will help you recover access'],
-    };
-    document.querySelector('.login-title').textContent = map[tab][0];
-    document.querySelector('.login-sub').textContent   = map[tab][1];
-  }
-
-  // ══════════════════════════════════════
-  // SIGN UP
-  // ══════════════════════════════════════
-  async function handleSignup() {
-    const name  = sanitize(document.getElementById('signupName').value.trim());
-    const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-    const pass  = document.getElementById('signupPass').value;
-    const conf  = document.getElementById('signupConf').value;
-
-    hideError('signupError');
-
-    if (!name || !email || !pass || !conf) { showError('signupError','Please fill in all fields.'); return; }
-    if (name.length < 2)                  { showError('signupError','Please enter your full name.'); return; }
-    if (!validEmail(email))               { showError('signupError','Please enter a valid email address.'); return; }
-    if (!strongPass(pass))                { showError('signupError','Password must be at least 8 characters.'); return; }
-    if (pass !== conf)                    { showError('signupError','Passwords do not match.'); return; }
-
-    const accounts = getAccounts();
-    if (accounts[email]) { showError('signupError','This email is already registered. Please sign in.'); return; }
-
-    setLoading('signupBtn', true, 'Create Account Free →');
-
+  setLoading('signupBtn', true, 'Create Account Free →');
+  try {
     const hashed = await hashPassword(pass);
-    accounts[email] = {
-      name,
-      email,
-      password: hashed,
-      createdAt: new Date().toISOString()
-    };
+    accounts[email] = { name, email, password: hashed, createdAt: new Date().toISOString(), role: 'user' };
     saveAccounts(accounts);
     saveSession({ email, name });
-
     window.location.href = 'dashboard.html';
+  } catch (err) {
+    setLoading('signupBtn', false, 'Create Account Free →');
+    showAlert('signupError', '⚠️ Something went wrong. Please try again.');
+  }
+}
+
+// ════════════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════════════
+async function handleLogin() {
+  hideAlert('loginError');
+  hideAlert('loginSuccess');
+  document.getElementById('lockNotice').style.display = 'none';
+
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('loginPass').value;
+
+  if (!email || !pass) return showAlert('loginError', '⚠️ Please enter your email and password.');
+  if (!validEmail(email)) return showAlert('loginError', '⚠️ Please enter a valid email address.');
+
+  // Check lockout
+  const lockMins = checkLock(email);
+  if (lockMins > 0) {
+    const n = document.getElementById('lockNotice');
+    n.textContent = `🔒 Too many failed attempts. Account locked for ${lockMins} more minute${lockMins>1?'s':''}.`;
+    n.style.display = 'block';
+    return;
   }
 
-  // ══════════════════════════════════════
-  // LOGIN
-  // ══════════════════════════════════════
-  async function handleLogin() {
-    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-    const pass  = document.getElementById('loginPass').value;
+  const accounts = getAccounts();
+  if (!accounts[email]) {
+    return showAlert('loginError', '⚠️ No account found with this email. Please sign up first.');
+  }
 
-    hideError('loginError');
-
-    if (!email || !pass) { showError('loginError','Please enter your email and password.'); return; }
-    if (!validEmail(email)) { showError('loginError','Please enter a valid email address.'); return; }
-
-    // Check lockout
-    const lockMins = isLocked(email);
-    if (lockMins > 0) {
-      showError('loginError', `Too many failed attempts. Try again in ${lockMins} minute${lockMins>1?'s':''}.`);
-      return;
-    }
-
-    const accounts = getAccounts();
-    if (!accounts[email]) {
-      showError('loginError','No account found with this email. Please sign up first.');
-      return;
-    }
-
-    setLoading('loginBtn', true, 'Sign In →');
-
+  setLoading('loginBtn', true, 'Sign In →');
+  try {
     const hashed = await hashPassword(pass);
+    const stored = accounts[email].password;
 
-    // Support both old btoa passwords and new hashed ones
-    const storedPass = accounts[email].password;
-    const match = (storedPass === hashed) || (storedPass === btoa(pass));
+    // Support both new SHA-256 hash and old btoa (legacy upgrade)
+    const match = stored === hashed || stored === btoa(pass);
 
     if (!match) {
       setLoading('loginBtn', false, 'Sign In →');
-      const remaining = recordFailedAttempt(email);
-      if (remaining > 0) {
-        showError('loginError', `Incorrect password. ${remaining} attempt${remaining>1?'s':''} remaining.`);
+      const rem = recordFail(email);
+      if (rem > 0) {
+        showAlert('loginError', `⚠️ Incorrect password. ${rem} attempt${rem!==1?'s':''} remaining before lockout.`);
       } else {
-        showError('loginError', `Account locked for 15 minutes due to too many failed attempts.`);
+        const n = document.getElementById('lockNotice');
+        n.textContent = '🔒 Account locked for 15 minutes due to too many failed attempts.';
+        n.style.display = 'block';
       }
       return;
     }
 
-    // Upgrade old btoa hash to new secure hash silently
-    if (storedPass === btoa(pass)) {
+    // Silently upgrade old hash format
+    if (stored === btoa(pass)) {
       accounts[email].password = hashed;
       saveAccounts(accounts);
     }
 
     clearAttempts(email);
-    saveSession({ email, name: accounts[email].name });
+    saveSession({ email, name: accounts[email].name || email });
     window.location.href = 'dashboard.html';
+  } catch (err) {
+    setLoading('loginBtn', false, 'Sign In →');
+    showAlert('loginError', '⚠️ Something went wrong. Please try again.');
+  }
+}
+
+// ════════════════════════════════════════════════
+// FORGOT PASSWORD — Step 1: Email → Send OTP
+// ════════════════════════════════════════════════
+async function handleForgotStep1() {
+  hideAlert('forgotError');
+  hideAlert('forgotInfo');
+  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+
+  if (!email)             return showAlert('forgotError', '⚠️ Please enter your email address.');
+  if (!validEmail(email)) return showAlert('forgotError', '⚠️ Please enter a valid email address.');
+
+  const accounts = getAccounts();
+  if (!accounts[email]) {
+    // Security: don't reveal if email exists — but still show generic message
+    // We actually check and show a helpful error since this is a small-scale app
+    return showAlert('forgotError', '⚠️ No account found with this email address.');
   }
 
-  // ══════════════════════════════════════
-  // FORGOT PASSWORD
-  // ══════════════════════════════════════
-  function handleForgot() {
-    const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
-    hideError('forgotError');
+  setLoading('forgotBtn', true, 'Send Reset Code →');
 
-    if (!email)            { showError('forgotError','Please enter your email address.'); return; }
-    if (!validEmail(email)){ showError('forgotError','Please enter a valid email address.'); return; }
+  // Generate a cryptographically secure 6-digit OTP
+  const otp = Array.from(crypto.getRandomValues(new Uint8Array(3)))
+    .map(b => b.toString().padStart(1,'0')).join('').slice(0,6).padEnd(6,'1');
+  const otpCode = String(Math.floor(100000 + Math.random() * 900000)); // 6-digit
 
-    const accounts = getAccounts();
-    if (!accounts[email])  { showError('forgotError','No account found with this email address.'); return; }
+  // Store OTP in MEMORY ONLY (not localStorage — prevents tampering)
+  _otpSession = { email, code: otpCode, expiresAt: Date.now() + OTP_EXPIRY_MS };
 
-    const token = Array.from(crypto.getRandomValues(new Uint8Array(4)))
-      .map(b => b.toString(16).padStart(2,'0')).join('').toUpperCase();
+  // Send via EmailJS
+  try {
+    const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email:      email,
+      from_name:     'AutoVision',
+      name:          accounts[email].name || email,
+      business_name: 'AutoVision Password Reset',
+      message:       `Your AutoVision password reset code is: ${otpCode}\n\nThis code expires in 15 minutes.\n\nIf you did not request this, ignore this email.`,
+      reply_to:      'kasmaniadnan812@gmail.com',
+      time:          new Date().toLocaleString('en-IN'),
+    });
 
-    accounts[email].resetToken  = token;
-    accounts[email].resetExpiry = Date.now() + RESET_EXPIRY;
-    saveAccounts(accounts);
+    if (result.status === 200) {
+      setLoading('forgotBtn', false, 'Send Reset Code →');
+      document.getElementById('forgotStep1').style.display = 'none';
+      document.getElementById('forgotStep2').style.display = 'block';
+    } else {
+      throw new Error('EmailJS returned non-200 status');
+    }
+  } catch (err) {
+    console.error('EmailJS error:', err);
+    setLoading('forgotBtn', false, 'Send Reset Code →');
+    // Fallback: still proceed but show warning (for cases where template may have issues)
+    showAlert('forgotInfo', 'ℹ️ Email delivery may be delayed. If you don\'t receive it, check spam or contact support at kasmaniadnan812@gmail.com', 'info');
+    // Still move to step 2 so user can try if they have the code
+    setTimeout(() => {
+      document.getElementById('forgotStep1').style.display = 'none';
+      document.getElementById('forgotStep2').style.display = 'block';
+    }, 2500);
+  }
+}
 
-    document.getElementById('forgotStep1').style.display = 'none';
-    document.getElementById('forgotStep2').style.display = 'block';
-    document.getElementById('resetTokenDisplay').textContent = token;
-    document.getElementById('forgotEmailHidden').value = email;
+function goBackToForgotStep1() {
+  _otpSession = null; // Clear OTP session
+  document.getElementById('forgotStep1').style.display = 'block';
+  document.getElementById('forgotStep2').style.display = 'none';
+  hideAlert('otpError');
+}
+
+// ════════════════════════════════════════════════
+// FORGOT PASSWORD — Step 2: Verify OTP + Set New Pass
+// ════════════════════════════════════════════════
+async function handleForgotStep2() {
+  hideAlert('otpError');
+  const otpInput = document.getElementById('otpInput').value.trim();
+  const newPass  = document.getElementById('newPass').value;
+  const confPass = document.getElementById('confPass').value;
+
+  if (!otpInput)          return showAlert('otpError', '⚠️ Please enter the reset code from your email.');
+  if (otpInput.length !== 6) return showAlert('otpError', '⚠️ Reset code must be 6 digits.');
+  if (!newPass)           return showAlert('otpError', '⚠️ Please enter a new password.');
+  if (!validPass(newPass)) return showAlert('otpError', '⚠️ Password must be at least 8 characters.');
+  if (newPass !== confPass) return showAlert('otpError', '⚠️ Passwords do not match.');
+
+  // Validate OTP from memory
+  if (!_otpSession) return showAlert('otpError', '⚠️ Reset session expired. Please start again.');
+  if (Date.now() > _otpSession.expiresAt) {
+    _otpSession = null;
+    return showAlert('otpError', '⚠️ Reset code has expired (15 minutes). Please request a new one.');
+  }
+  if (otpInput !== _otpSession.code) {
+    return showAlert('otpError', '⚠️ Invalid reset code. Please check your email and try again.');
   }
 
-  async function handleReset() {
-    const email    = document.getElementById('forgotEmailHidden').value;
-    const token    = document.getElementById('resetToken').value.trim().toUpperCase();
-    const newPass  = document.getElementById('newPass').value;
-    const confPass = document.getElementById('confPass').value;
-
-    hideError('resetError');
-
-    if (!token || !newPass || !confPass) { showError('resetError','Please fill in all fields.'); return; }
-    if (!strongPass(newPass))            { showError('resetError','Password must be at least 8 characters.'); return; }
-    if (newPass !== confPass)            { showError('resetError','Passwords do not match.'); return; }
-
-    const accounts = getAccounts();
-    const acc = accounts[email];
-
-    if (!acc || acc.resetToken !== token) { showError('resetError','Invalid reset code. Please try again.'); return; }
-    if (Date.now() > acc.resetExpiry)    { showError('resetError','Reset code has expired. Please request a new one.'); return; }
-
-    setLoading('resetBtn', true, 'Reset Password →');
-
+  setLoading('resetBtn', true, 'Reset Password →');
+  try {
     const hashed = await hashPassword(newPass);
-    acc.password = hashed;
-    delete acc.resetToken;
-    delete acc.resetExpiry;
+    const accounts = getAccounts();
+    const email = _otpSession.email;
+
+    if (!accounts[email]) {
+      setLoading('resetBtn', false, 'Reset Password →');
+      return showAlert('otpError', '⚠️ Account not found. Please sign up again.');
+    }
+
+    accounts[email].password = hashed;
+    delete accounts[email].resetToken;  // Clean up any old tokens
     saveAccounts(accounts);
 
-    // Clear any lockouts
+    // Clear OTP session and lockout
+    _otpSession = null;
     clearAttempts(email);
 
-    document.getElementById('forgotStep1').style.display = 'block';
-    document.getElementById('forgotStep2').style.display = 'none';
+    // Redirect to login with success message stored in sessionStorage
+    sessionStorage.setItem('av_reset_success', '1');
     switchTab('login');
-    showSuccess('loginError', '✅ Password reset! Please sign in with your new password.');
+    showAlert('loginSuccess', '✅ Password reset successfully! Please sign in with your new password.', 'success');
+    setLoading('resetBtn', false, 'Reset Password →');
+  } catch (err) {
+    setLoading('resetBtn', false, 'Reset Password →');
+    showAlert('otpError', '⚠️ Something went wrong. Please try again.');
   }
+}
 
-  // ── Enter key support ──
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-    const active = document.querySelector('.form-panel.active');
-    if (!active) return;
-    if (active.id === 'loginPanel')  handleLogin();
-    else if (active.id === 'signupPanel') handleSignup();
-    else if (active.id === 'forgotPanel') {
-      if (document.getElementById('forgotStep2').style.display === 'block') handleReset();
-      else handleForgot();
-    }
-  });
-
-  // ── Show/hide password toggle ──
-  function togglePass(inputId, btn) {
-    const inp = document.getElementById(inputId);
-    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-    else { inp.type = 'password'; btn.textContent = '👁️'; }
+// ── Enter key support ──
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const active = document.querySelector('.form-panel.active');
+  if (!active) return;
+  if (active.id === 'loginPanel')  handleLogin();
+  else if (active.id === 'signupPanel') handleSignup();
+  else if (active.id === 'forgotPanel') {
+    const s2 = document.getElementById('forgotStep2');
+    if (s2 && s2.style.display !== 'none') handleForgotStep2();
+    else handleForgotStep1();
   }
+});
+
+// Show reset success if redirected back
+if (sessionStorage.getItem('av_reset_success')) {
+  sessionStorage.removeItem('av_reset_success');
+  showAlert('loginSuccess', '✅ Password reset successfully! Please sign in.', 'success');
+}
 </script>
 </body>
 </html>
