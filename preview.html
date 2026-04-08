@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website Preview</title>
+<title>Website Preview — AutoVision</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -11,203 +11,217 @@
 /* PREVIEW BANNER */
 .preview-banner {
   position:fixed; top:0; left:0; right:0; z-index:99999;
-  background:#0a1628; padding:0 32px; height:52px;
+  background:#0a1628; padding:0 30px; height:54px;
   display:flex; align-items:center; justify-content:space-between;
   font-family:'DM Sans',sans-serif;
   box-shadow:0 2px 20px rgba(0,0,0,0.4);
 }
-.banner-left { display:flex; align-items:center; gap:12px; }
-.banner-logo { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:white; text-decoration:none; }
+.banner-left { display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.banner-logo { font-family:'Playfair Display',serif; font-size:16px; font-weight:900; color:white; text-decoration:none; }
 .banner-logo span { color:#60a5fa; }
-.banner-pill { background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.35); color:#fb923c; font-size:11px; font-weight:700; padding:3px 10px; border-radius:100px; }
-.banner-text { font-size:13px; color:#94a3b8; }
-.banner-right { display:flex; align-items:center; gap:10px; }
-.banner-expire { font-size:12px; color:#fb923c; font-weight:600; }
-.btn-back { padding:7px 14px; background:transparent; border:1px solid #2d3f55; color:#94a3b8; border-radius:7px; font-size:12px; font-weight:500; cursor:pointer; text-decoration:none; font-family:'DM Sans',sans-serif; transition:all 0.2s; display:inline-block; }
+.banner-pill { background:rgba(251,146,60,0.16); border:1px solid rgba(251,146,60,0.35); color:#fb923c; font-size:11px; font-weight:800; padding:3px 10px; border-radius:100px; white-space:nowrap; }
+.banner-pill.live-pill { background:rgba(34,197,94,0.16); border-color:rgba(34,197,94,0.35); color:#4ade80; }
+.banner-text { font-size:13px; color:#94a3b8; white-space:nowrap; }
+.banner-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.banner-expire { font-size:12px; color:#fb923c; font-weight:600; white-space:nowrap; }
+.btn-back { padding:7px 14px; background:transparent; border:1px solid #2d3f55; color:#94a3b8; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none; font-family:'DM Sans',sans-serif; transition:all 0.2s; display:inline-block; }
 .btn-back:hover { border-color:#60a5fa; color:#60a5fa; }
-.btn-activate { padding:8px 20px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:7px; font-size:13px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; box-shadow:0 4px 14px rgba(26,86,255,0.35); white-space:nowrap; }
+.btn-activate { padding:8px 20px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:7px; font-size:13px; font-weight:800; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; box-shadow:0 4px 14px rgba(26,86,255,0.38); white-space:nowrap; }
 .btn-activate:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(26,86,255,0.5); }
 
-/* BASE */
+/* SITE */
 body { background:#fff; -webkit-font-smoothing:antialiased; }
-.site { padding-top:52px; font-family:'DM Sans',sans-serif; }
+.site { padding-top:54px; font-family:'DM Sans',sans-serif; }
 
-/* NAVBAR */
-.s-nav { position:sticky; top:52px; z-index:100; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); border-bottom:1px solid #e8edf5; padding:0 80px; height:70px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 20px rgba(0,0,0,0.04); }
-.s-nav-logo { font-family:'Playfair Display',serif; font-size:24px; font-weight:800; color:#0a1628; letter-spacing:-0.5px; }
-.s-nav-links { display:flex; gap:32px; list-style:none; }
+/* SITE NAVBAR */
+.s-nav { position:sticky; top:54px; z-index:100; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); border-bottom:1px solid #e8edf5; padding:0 72px; height:68px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 16px rgba(0,0,0,0.04); }
+.s-nav-logo { font-family:'Playfair Display',serif; font-size:23px; font-weight:900; color:#0a1628; letter-spacing:-0.5px; }
+.s-nav-links { display:flex; gap:30px; list-style:none; }
 .s-nav-links a { font-size:14px; font-weight:500; color:#64748b; text-decoration:none; transition:color 0.2s; }
 .s-nav-links a:hover { color:var(--primary); }
-.s-nav-cta { padding:10px 24px; background:var(--primary) !important; color:white !important; border-radius:8px; font-weight:700 !important; box-shadow:0 4px 14px var(--primary-shadow); transition:all 0.2s; }
-.s-nav-cta:hover { transform:translateY(-1px); }
+.s-nav-cta { padding:10px 22px; background:var(--primary) !important; color:white !important; border-radius:8px; font-weight:700 !important; box-shadow:0 4px 14px var(--primary-shadow); transition:all 0.2s; display:inline-block !important; }
+.s-nav-cta:hover { transform:translateY(-1px) !important; }
 
 /* HERO */
-.s-hero { background:var(--hero-bg); padding:90px 80px 0; overflow:hidden; position:relative; min-height:560px; display:flex; align-items:flex-end; gap:60px; }
+.s-hero { background:var(--hero-bg); padding:88px 72px 0; overflow:hidden; position:relative; min-height:540px; display:flex; align-items:flex-end; gap:56px; }
 .s-hero::before { content:''; position:absolute; top:-200px; right:-200px; width:600px; height:600px; background:var(--hero-orb); border-radius:50%; filter:blur(80px); opacity:0.4; }
 .s-hero::after { content:''; position:absolute; bottom:-100px; left:30%; width:400px; height:400px; background:var(--hero-orb2); border-radius:50%; filter:blur(100px); opacity:0.25; }
-.hero-content { position:relative; z-index:2; flex:1; padding-bottom:80px; }
-.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:var(--eyebrow-bg); border:1px solid var(--eyebrow-border); color:var(--eyebrow-color); font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:7px 16px; border-radius:100px; margin-bottom:24px; }
+.hero-content { position:relative; z-index:2; flex:1; padding-bottom:76px; }
+.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:var(--eyebrow-bg); border:1px solid var(--eyebrow-border); color:var(--eyebrow-color); font-size:11.5px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:7px 16px; border-radius:100px; margin-bottom:22px; }
 .eyebrow-dot { width:6px; height:6px; border-radius:50%; background:var(--eyebrow-color); animation:pulse3 2s infinite; }
 @keyframes pulse3 { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.8);} }
-.hero-h1 { font-family:'Playfair Display',serif; font-size:clamp(40px,5vw,68px); font-weight:900; line-height:1.1; letter-spacing:-2px; color:var(--hero-text); margin-bottom:20px; }
+.hero-h1 { font-family:'Playfair Display',serif; font-size:clamp(38px,5vw,66px); font-weight:900; line-height:1.1; letter-spacing:-2px; color:var(--hero-text); margin-bottom:18px; }
 .hero-h1 em { font-style:italic; color:var(--primary-light); }
-.hero-p { font-size:18px; color:var(--hero-subtext); line-height:1.75; max-width:480px; margin-bottom:40px; }
-.hero-actions { display:flex; gap:14px; align-items:center; margin-bottom:48px; }
-.btn-hero-main { padding:15px 32px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 24px var(--primary-shadow); transition:all 0.25s; }
+.hero-p { font-size:17px; color:var(--hero-subtext); line-height:1.78; max-width:480px; margin-bottom:38px; }
+.hero-actions { display:flex; gap:14px; align-items:center; margin-bottom:46px; flex-wrap:wrap; }
+.btn-hero-main { padding:14px 30px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 22px var(--primary-shadow); transition:all 0.25s; }
 .btn-hero-main:hover { transform:translateY(-2px); }
-.btn-hero-ghost { padding:15px 32px; background:transparent; color:white; border:1.5px solid rgba(255,255,255,0.25); border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.25s; }
+.btn-hero-ghost { padding:14px 30px; background:transparent; color:white; border:1.5px solid rgba(255,255,255,0.25); border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.25s; }
 .btn-hero-ghost:hover { background:rgba(255,255,255,0.1); }
 .hero-trust { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--hero-subtext); }
 .trust-stars { color:#fbbf24; }
-.hero-visual { position:relative; z-index:2; width:360px; flex-shrink:0; align-self:flex-end; }
-.hero-card { background:white; border-radius:20px 20px 0 0; padding:32px; box-shadow:0 -8px 60px rgba(0,0,0,0.15); }
-.hero-card-icon { font-size:52px; margin-bottom:14px; display:block; }
-.hero-card-name { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; color:#0a1628; margin-bottom:6px; }
-.hero-card-type { font-size:13px; color:#64748b; font-weight:500; margin-bottom:18px; }
-.hero-card-badges { display:flex; gap:8px; flex-wrap:wrap; }
-.hc-badge { background:#eff6ff; color:#1a56ff; font-size:11px; font-weight:700; padding:5px 12px; border-radius:100px; }
+.hero-visual { position:relative; z-index:2; width:340px; flex-shrink:0; align-self:flex-end; }
+.hero-card { background:white; border-radius:20px 20px 0 0; padding:28px; box-shadow:0 -8px 50px rgba(0,0,0,0.14); }
+.hero-card-icon { font-size:50px; margin-bottom:12px; display:block; }
+.hero-card-name { font-family:'Playfair Display',serif; font-size:21px; font-weight:900; color:#0a1628; margin-bottom:5px; }
+.hero-card-type { font-size:13px; color:#64748b; font-weight:500; margin-bottom:16px; }
+.hero-card-badges { display:flex; gap:7px; flex-wrap:wrap; }
+.hc-badge { background:#eff6ff; color:#1a56ff; font-size:11px; font-weight:800; padding:4px 11px; border-radius:100px; }
 
 /* TRUST BAR */
-.trust-bar { background:var(--trust-bg); border-bottom:1px solid var(--trust-border); padding:22px 80px; display:flex; align-items:center; justify-content:center; gap:50px; flex-wrap:wrap; }
+.trust-bar { background:var(--trust-bg); border-bottom:1px solid var(--trust-border); padding:20px 72px; display:flex; align-items:center; justify-content:center; gap:44px; flex-wrap:wrap; }
 .trust-item { display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; color:var(--trust-text); }
 .trust-icon { width:32px; height:32px; background:var(--trust-icon-bg); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
 
 /* STATS */
-.s-stats { background:var(--primary); padding:50px 80px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; }
-.stat-box { padding:10px; border-right:1px solid rgba(255,255,255,0.15); }
+.s-stats { background:var(--primary); padding:48px 72px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; }
+.stat-box { padding:10px; border-right:1px solid rgba(255,255,255,0.14); }
 .stat-box:last-child { border-right:none; }
-.stat-big { font-family:'Playfair Display',serif; font-size:48px; font-weight:900; color:white; line-height:1; margin-bottom:6px; }
-.stat-small { font-size:14px; color:rgba(255,255,255,0.7); font-weight:500; }
+.stat-big { font-family:'Playfair Display',serif; font-size:46px; font-weight:900; color:white; line-height:1; margin-bottom:6px; }
+.stat-small { font-size:14px; color:rgba(255,255,255,0.68); font-weight:500; }
 
 /* ABOUT */
-.s-about { padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; background:white; }
-.section-eyebrow { display:inline-flex; align-items:center; gap:6px; background:var(--tag-bg); color:var(--primary); font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-radius:100px; margin-bottom:18px; }
-.section-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:900; color:#0a1628; letter-spacing:-1.5px; line-height:1.15; margin-bottom:18px; }
+.s-about { padding:96px 72px; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center; background:white; }
+.section-eyebrow { display:inline-flex; align-items:center; gap:6px; background:var(--tag-bg); color:var(--primary); font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-radius:100px; margin-bottom:16px; }
+.section-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:900; color:#0a1628; letter-spacing:-1.5px; line-height:1.15; margin-bottom:16px; }
 .section-title em { font-style:italic; color:var(--primary); }
-.section-body { font-size:16px; color:#475569; line-height:1.85; margin-bottom:32px; }
-.check-list { list-style:none; display:flex; flex-direction:column; gap:12px; }
-.check-list li { display:flex; align-items:center; gap:12px; font-size:15px; color:#334155; font-weight:500; }
-.cl-icon { width:24px; height:24px; background:var(--tag-bg); color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
+.section-body { font-size:16px; color:#475569; line-height:1.85; margin-bottom:28px; }
+.check-list { list-style:none; display:flex; flex-direction:column; gap:11px; }
+.check-list li { display:flex; align-items:center; gap:11px; font-size:15px; color:#334155; font-weight:500; }
+.cl-icon { width:22px; height:22px; background:var(--tag-bg); color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; flex-shrink:0; }
 .about-visual { position:relative; }
-.about-main-card { background:var(--hero-bg); border-radius:24px; padding:50px 40px; text-align:center; position:relative; overflow:hidden; }
+.about-main-card { background:var(--hero-bg); border-radius:22px; padding:44px 36px; text-align:center; position:relative; overflow:hidden; }
 .about-main-card::before { content:''; position:absolute; top:-60px; right:-60px; width:200px; height:200px; background:var(--hero-orb); border-radius:50%; filter:blur(50px); opacity:0.3; }
-.amc-icon { font-size:72px; margin-bottom:16px; display:block; }
-.amc-name { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--hero-text); margin-bottom:8px; }
-.amc-type { font-size:14px; color:var(--hero-subtext); }
-.about-float { position:absolute; bottom:-16px; left:-16px; background:white; border-radius:14px; padding:14px 18px; box-shadow:0 8px 30px rgba(0,0,0,0.12); display:flex; align-items:center; gap:10px; }
-.af-icon { font-size:24px; }
-.af-num { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; color:#0a1628; line-height:1; }
+.amc-icon { font-size:68px; margin-bottom:14px; display:block; }
+.amc-name { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--hero-text); margin-bottom:7px; }
+.amc-type { font-size:13px; color:var(--hero-subtext); }
+.about-float { position:absolute; bottom:-14px; left:-14px; background:white; border-radius:13px; padding:13px 16px; box-shadow:0 8px 28px rgba(0,0,0,0.11); display:flex; align-items:center; gap:10px; }
+.af-icon { font-size:22px; }
+.af-num { font-family:'Playfair Display',serif; font-size:19px; font-weight:900; color:#0a1628; line-height:1; }
 .af-label { font-size:11px; color:#94a3b8; font-weight:600; }
 
 /* SERVICES */
-.s-services { background:#f8faff; padding:100px 80px; }
-.services-header { text-align:center; margin-bottom:60px; }
-.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; }
-.svc-card { background:white; border:1.5px solid #e2e8f4; border-radius:20px; padding:36px 28px; transition:all 0.3s; position:relative; overflow:hidden; }
+.s-services { background:#f8faff; padding:96px 72px; }
+.services-header { text-align:center; margin-bottom:56px; }
+.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:22px; }
+.svc-card { background:white; border:1.5px solid #e2e8f4; border-radius:20px; padding:32px 26px; transition:all 0.3s; position:relative; overflow:hidden; }
 .svc-card::after { content:''; position:absolute; bottom:0; left:0; width:0; height:3px; background:linear-gradient(90deg,var(--primary),#6366f1); transition:width 0.4s; }
 .svc-card:hover::after { width:100%; }
-.svc-card:hover { box-shadow:0 16px 48px rgba(0,0,0,0.09); transform:translateY(-6px); border-color:var(--primary); }
-.svc-icon-wrap { width:60px; height:60px; background:var(--tag-bg); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:20px; transition:all 0.3s; }
+.svc-card:hover { box-shadow:0 14px 44px rgba(0,0,0,0.08); transform:translateY(-6px); border-color:var(--primary); }
+.svc-icon-wrap { width:56px; height:56px; background:var(--tag-bg); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:18px; transition:all 0.3s; }
 .svc-card:hover .svc-icon-wrap { background:var(--primary); }
-.svc-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:800; color:#0a1628; margin-bottom:10px; }
-.svc-desc { font-size:14px; color:#64748b; line-height:1.7; }
+.svc-title { font-family:'Playfair Display',serif; font-size:19px; font-weight:800; color:#0a1628; margin-bottom:9px; }
+.svc-desc { font-size:14px; color:#64748b; line-height:1.68; }
 
 /* WHY US */
-.s-why { background:white; padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
-.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.why-card { background:#f8faff; border:1px solid #e2e8f4; border-radius:16px; padding:24px 20px; transition:all 0.25s; }
-.why-card:hover { background:var(--tag-bg); border-color:var(--primary); transform:translateY(-3px); box-shadow:0 8px 24px rgba(26,86,255,0.1); }
-.why-card-icon { font-size:28px; margin-bottom:10px; }
-.why-card-title { font-size:15px; font-weight:700; color:#0a1628; margin-bottom:6px; }
+.s-why { background:white; padding:96px 72px; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center; }
+.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+.why-card { background:#f8faff; border:1px solid #e2e8f4; border-radius:14px; padding:22px 18px; transition:all 0.25s; }
+.why-card:hover { background:var(--tag-bg); border-color:var(--primary); transform:translateY(-3px); box-shadow:0 8px 22px rgba(26,86,255,0.1); }
+.why-card-icon { font-size:26px; margin-bottom:9px; }
+.why-card-title { font-size:14.5px; font-weight:800; color:#0a1628; margin-bottom:5px; }
 .why-card-text { font-size:13px; color:#64748b; line-height:1.5; }
 
 /* TESTIMONIAL */
-.s-testimonial { background:var(--primary); padding:80px; text-align:center; position:relative; overflow:hidden; }
-.s-testimonial::before { content:'"'; position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-size:300px; font-weight:900; color:rgba(255,255,255,0.04); line-height:1; }
-.test-stars { color:#fbbf24; font-size:20px; margin-bottom:20px; letter-spacing:3px; }
-.test-quote { font-family:'Playfair Display',serif; font-size:clamp(20px,3vw,30px); font-weight:700; font-style:italic; color:white; line-height:1.5; max-width:700px; margin:0 auto 28px; }
-.test-author { font-size:14px; color:rgba(255,255,255,0.7); font-weight:600; }
+.s-testimonial { background:var(--primary); padding:76px 72px; text-align:center; position:relative; overflow:hidden; }
+.s-testimonial::before { content:'"'; position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-size:280px; font-weight:900; color:rgba(255,255,255,0.04); line-height:1; }
+.test-stars { color:#fbbf24; font-size:19px; margin-bottom:18px; letter-spacing:3px; }
+.test-quote { font-family:'Playfair Display',serif; font-size:clamp(19px,3vw,28px); font-weight:700; font-style:italic; color:white; line-height:1.5; max-width:680px; margin:0 auto 24px; }
+.test-author { font-size:14px; color:rgba(255,255,255,0.68); font-weight:600; }
 
 /* CONTACT */
-.s-contact { background:#f8faff; padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
-.contact-info { display:flex; flex-direction:column; gap:16px; margin-top:28px; }
-.ci-item { display:flex; align-items:center; gap:16px; background:white; border:1px solid #e2e8f4; border-radius:14px; padding:18px 20px; transition:all 0.25s; }
-.ci-item:hover { border-color:var(--primary); box-shadow:0 6px 20px rgba(26,86,255,0.08); transform:translateX(4px); }
-.ci-icon { width:46px; height:46px; background:var(--tag-bg); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-.ci-label { font-size:11px; color:#94a3b8; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.s-contact { background:#f8faff; padding:96px 72px; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; }
+.contact-info { display:flex; flex-direction:column; gap:14px; margin-top:26px; }
+.ci-item { display:flex; align-items:center; gap:15px; background:white; border:1px solid #e2e8f4; border-radius:13px; padding:17px 18px; transition:all 0.25s; }
+.ci-item:hover { border-color:var(--primary); box-shadow:0 6px 18px rgba(26,86,255,0.07); transform:translateX(4px); }
+.ci-icon { width:44px; height:44px; background:var(--tag-bg); border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+.ci-label { font-size:11px; color:#94a3b8; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
 .ci-val { font-size:15px; color:#0a1628; font-weight:700; margin-top:2px; }
-.contact-form-card { background:white; border:1px solid #e2e8f4; border-radius:24px; padding:40px; box-shadow:0 8px 40px rgba(0,0,0,0.06); }
-.cf-title { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:#0a1628; margin-bottom:6px; }
-.cf-sub { font-size:14px; color:#94a3b8; margin-bottom:28px; }
-.cf-input { width:100%; padding:13px 16px; background:#f8faff; border:1.5px solid #e2e8f4; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; color:#0a1628; outline:none; transition:all 0.2s; margin-bottom:14px; }
+.contact-form-card { background:white; border:1px solid #e2e8f4; border-radius:22px; padding:36px; box-shadow:0 8px 36px rgba(0,0,0,0.05); }
+.cf-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:#0a1628; margin-bottom:5px; }
+.cf-sub { font-size:14px; color:#94a3b8; margin-bottom:26px; }
+.cf-input { width:100%; padding:12px 15px; background:#f8faff; border:1.5px solid #e2e8f4; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; color:#0a1628; outline:none; transition:all 0.2s; margin-bottom:13px; }
 .cf-input:focus { border-color:var(--primary); background:white; }
 .cf-input::placeholder { color:#94a3b8; }
-.cf-submit { width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px var(--primary-shadow); transition:all 0.25s; }
+.cf-submit { width:100%; padding:14px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 18px var(--primary-shadow); transition:all 0.25s; }
 .cf-submit:hover { transform:translateY(-2px); }
+.cf-submit:disabled { opacity:0.65; cursor:not-allowed; transform:none; }
+.cf-status { margin-top:11px; font-size:13px; padding:10px 14px; border-radius:8px; display:none; }
+.cf-status.success { background:#f0fdf4; border:1px solid #bbf7d0; color:#16a34a; }
+.cf-status.error   { background:#fef2f2; border:1px solid #fecaca; color:#dc2626; }
 
 /* FOOTER */
-.s-footer { background:#0a1628; padding:50px 80px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
-.s-footer-logo { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; color:white; }
-.s-footer-links { display:flex; gap:24px; }
-.s-footer-links a { font-size:14px; color:#475569; text-decoration:none; transition:color 0.2s; }
+.s-footer { background:#0a1628; padding:46px 72px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px; }
+.s-footer-logo { font-family:'Playfair Display',serif; font-size:21px; font-weight:900; color:white; }
+.s-footer-links { display:flex; gap:22px; }
+.s-footer-links a { font-size:13.5px; color:#475569; text-decoration:none; transition:color 0.2s; }
 .s-footer-links a:hover { color:#60a5fa; }
-.s-footer-copy { font-size:13px; color:#334155; }
+.s-footer-copy { font-size:12.5px; color:#334155; }
 
 /* PAYMENT MODAL */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,22,40,0.65); backdrop-filter:blur(6px); z-index:999999; align-items:center; justify-content:center; }
-.modal { background:white; border-radius:24px; padding:44px; max-width:460px; width:90%; box-shadow:0 40px 100px rgba(0,0,0,0.25); text-align:center; animation:popUp 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-@keyframes popUp { from{opacity:0;transform:scale(0.92) translateY(16px);} to{opacity:1;transform:scale(1) translateY(0);} }
-.modal-emoji { font-size:56px; margin-bottom:18px; }
-.modal-title { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:#0a1628; margin-bottom:8px; }
-.modal-sub { font-size:14px; color:#64748b; margin-bottom:24px; line-height:1.6; }
-.pay-box { background:linear-gradient(135deg,#f0f4ff,#e8eeff); border:1px solid #c7d2fe; border-radius:16px; padding:22px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; text-align:left; }
-.pay-label { font-size:11px; color:#64748b; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
-.pay-amount { font-family:'Playfair Display',serif; font-size:44px; font-weight:900; color:#0a1628; line-height:1; }
-.pay-features { text-align:left; font-size:13px; color:#475569; line-height:2; margin-bottom:28px; }
-.modal-btns { display:flex; gap:12px; }
-.btn-pay { flex:2; padding:15px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px rgba(26,86,255,0.35); transition:all 0.2s; }
+.modal-overlay.open { display:flex; }
+.modal { background:white; border-radius:22px; padding:42px; max-width:450px; width:90%; box-shadow:0 40px 100px rgba(0,0,0,0.24); text-align:center; animation:popUp 0.28s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes popUp { from{opacity:0;transform:scale(0.92) translateY(14px);} to{opacity:1;transform:scale(1) translateY(0);} }
+.modal-emoji { font-size:54px; margin-bottom:16px; }
+.modal-title { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:#0a1628; margin-bottom:8px; }
+.modal-sub { font-size:14px; color:#64748b; margin-bottom:22px; line-height:1.6; }
+.pay-box { background:linear-gradient(135deg,#f0f4ff,#e8eeff); border:1px solid #c7d2fe; border-radius:14px; padding:20px; display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; text-align:left; }
+.pay-label { font-size:11px; color:#64748b; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+.pay-amount { font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:#0a1628; line-height:1; }
+.pay-features { text-align:left; font-size:13px; color:#475569; line-height:2.1; margin-bottom:26px; }
+.modal-btns { display:flex; gap:11px; }
+.btn-pay { flex:2; padding:14px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:11px; font-size:14.5px; font-weight:800; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px rgba(26,86,255,0.36); transition:all 0.2s; }
 .btn-pay:hover { transform:translateY(-2px); }
-.btn-cancel { flex:1; padding:15px; background:#f1f5f9; color:#64748b; border:none; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.btn-pay:disabled { opacity:0.65; cursor:not-allowed; transform:none; }
+.btn-cancel { flex:1; padding:14px; background:#f1f5f9; color:#64748b; border:none; border-radius:11px; font-size:13.5px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background 0.2s; }
+.btn-cancel:hover { background:#e2e8f0; }
+
+/* 404 / error state */
+.error-state { text-align:center; padding:120px 40px; font-family:'DM Sans',sans-serif; }
+.error-state h2 { font-family:'Playfair Display',serif; font-size:30px; color:#0a1628; margin-bottom:11px; }
+.error-state p { color:#64748b; margin-bottom:26px; }
 
 /* RESPONSIVE */
 @media(max-width:900px) {
-  .s-nav { padding:0 24px; }
+  .s-nav { padding:0 22px; }
   .s-nav-links { display:none; }
-  .s-hero { padding:60px 24px 0; flex-direction:column; }
+  .s-hero { padding:56px 22px 0; flex-direction:column; }
   .hero-visual { width:100%; }
-  .hero-card { border-radius:20px; }
-  .trust-bar,.s-stats { padding:30px 24px; }
-  .s-stats { grid-template-columns:1fr; }
-  .stat-box { border-right:none; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:20px; }
-  .s-about,.s-why,.s-contact { grid-template-columns:1fr; padding:60px 24px; gap:40px; }
-  .s-services,.s-testimonial { padding:60px 24px; }
-  .trust-bar { gap:20px; }
-  .s-footer { padding:36px 24px; flex-direction:column; text-align:center; }
+  .hero-card { border-radius:18px; }
+  .trust-bar { padding:24px 22px; gap:18px; }
+  .s-stats { padding:32px 22px; grid-template-columns:1fr; }
+  .stat-box { border-right:none; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:18px; }
+  .s-about,.s-why,.s-contact { grid-template-columns:1fr; padding:56px 22px; gap:36px; }
+  .s-services,.s-testimonial { padding:56px 22px; }
+  .s-footer { padding:32px 22px; flex-direction:column; text-align:center; }
   .s-footer-links { flex-wrap:wrap; justify-content:center; }
   .why-grid { grid-template-columns:1fr; }
-  .preview-banner { flex-direction:column; height:auto; padding:10px 16px; gap:8px; }
-  .site { padding-top:90px; }
-  .s-nav { top:90px; }
+  .preview-banner { flex-direction:column; height:auto; padding:10px 14px; gap:7px; }
+  .site { padding-top:88px; }
+  .s-nav { top:88px; }
 }
 </style>
 </head>
 <body>
 
-<div class="preview-banner">
+<!-- Preview Banner (varies based on site status) -->
+<div class="preview-banner" id="previewBanner">
   <div class="banner-left">
     <a href="index.html" class="banner-logo">Auto<span>Vision</span></a>
-    <span class="banner-pill">⏳ Preview</span>
-    <span class="banner-text">Free preview — activate to go live</span>
+    <span class="banner-pill" id="bannerPill">⏳ Preview</span>
+    <span class="banner-text" id="bannerText">Free preview — activate to go live</span>
   </div>
-  <div class="banner-right">
-    <span class="banner-expire">⚠️ Expires in 48 hours</span>
+  <div class="banner-right" id="bannerRight">
+    <span class="banner-expire" id="bannerExpire">⚠️ Expires in 48 hours</span>
     <a href="dashboard.html" class="btn-back">← Dashboard</a>
-    <button class="btn-activate" onclick="openPayment()">Activate Now — ₹299</button>
+    <button class="btn-activate" id="activateBtn" onclick="openPayModal()">Activate Now — ₹299</button>
   </div>
 </div>
 
 <div class="site" id="site"></div>
 
+<!-- Payment Modal -->
 <div class="modal-overlay" id="payModal">
   <div class="modal">
     <div class="modal-emoji">🚀</div>
@@ -215,17 +229,18 @@ body { background:#fff; -webkit-font-smoothing:antialiased; }
     <div class="modal-sub">Your professional website will be live on the internet instantly.</div>
     <div class="pay-box">
       <div><div class="pay-label">Activation Fee</div><div class="pay-amount">₹299</div></div>
-      <div style="font-size:40px">🌐</div>
+      <div style="font-size:38px">🌐</div>
     </div>
     <div class="pay-features">
       ✅ Website goes live <strong>instantly</strong><br>
       ✅ Pay via UPI, GPay, PhonePe or Card<br>
       ✅ 100% secure via Razorpay<br>
-      ✅ Mobile-ready professional website
+      ✅ Mobile-ready professional website<br>
+      ✅ Editing costs ₹99 per change after going live
     </div>
     <div class="modal-btns">
-      <button class="btn-pay" onclick="processPayment()">Pay ₹299 & Go Live →</button>
-      <button class="btn-cancel" onclick="document.getElementById('payModal').style.display='none'">Later</button>
+      <button class="btn-pay" id="payBtn" onclick="processPayment()">Pay ₹299 & Go Live →</button>
+      <button class="btn-cancel" onclick="closePayModal()">Later</button>
     </div>
   </div>
 </div>
@@ -234,130 +249,206 @@ body { background:#fff; -webkit-font-smoothing:antialiased; }
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-emailjs.init('H9mRJV2zi9LJ7OhBw');
-
+// ════════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════════
 const SUPA_URL = 'https://twneeawhdzgnavudanud.supabase.co';
 const SUPA_KEY = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+const RAZORPAY_KEY = 'rzp_live_SaJ684rRC2TUwj';
+const BASE_URL = 'https://autovision-psi.vercel.app';
+const EMAILJS_PUBLIC_KEY  = 'H9mRJV2zi9LJ7OhBw';
+const EMAILJS_SERVICE_ID  = 'service_6q18vqn';
+const EMAILJS_TEMPLATE_ID = 'template_8bq71z3';
+
+emailjs.init(EMAILJS_PUBLIC_KEY);
 const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-const params = new URLSearchParams(window.location.search);
-const siteId = params.get('site');
-
+// Themes
 const themes = {
-  Modern:  { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.3)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
-  Classic: { primary:'#166534', primaryShadow:'rgba(22,101,52,0.3)', heroBg:'linear-gradient(135deg,#14532d 0%,#052e16 100%)', heroOrb:'#16a34a', heroOrb2:'#4ade80', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#86efac', trustBg:'#f0fdf4', trustBorder:'#bbf7d0', trustText:'#14532d', trustIconBg:'#dcfce7', tagBg:'#f0fdf4', primaryLight:'#86efac' },
-  Bold:    { primary:'#dc2626', primaryShadow:'rgba(220,38,38,0.3)', heroBg:'linear-gradient(135deg,#1c0a0a 0%,#450a0a 100%)', heroOrb:'#dc2626', heroOrb2:'#f97316', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#fca5a5', trustBg:'#fff5f5', trustBorder:'#fecaca', trustText:'#7f1d1d', trustIconBg:'#fee2e2', tagBg:'#fff5f5', primaryLight:'#fca5a5' },
-  Minimal: { primary:'#0f172a', primaryShadow:'rgba(15,23,42,0.2)', heroBg:'linear-gradient(135deg,#0f172a 0%,#1e293b 100%)', heroOrb:'#334155', heroOrb2:'#475569', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.6)', eyebrowBg:'rgba(255,255,255,0.08)', eyebrowBorder:'rgba(255,255,255,0.15)', eyebrowColor:'#cbd5e1', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#f1f5f9', tagBg:'#f8fafc', primaryLight:'#94a3b8' }
+  Modern:  { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.28)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
+  Classic: { primary:'#166534', primaryShadow:'rgba(22,101,52,0.28)', heroBg:'linear-gradient(135deg,#14532d 0%,#052e16 100%)', heroOrb:'#16a34a', heroOrb2:'#4ade80', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#86efac', trustBg:'#f0fdf4', trustBorder:'#bbf7d0', trustText:'#14532d', trustIconBg:'#dcfce7', tagBg:'#f0fdf4', primaryLight:'#86efac' },
+  Bold:    { primary:'#dc2626', primaryShadow:'rgba(220,38,38,0.28)', heroBg:'linear-gradient(135deg,#1c0a0a 0%,#450a0a 100%)', heroOrb:'#dc2626', heroOrb2:'#f97316', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#fca5a5', trustBg:'#fff5f5', trustBorder:'#fecaca', trustText:'#7f1d1d', trustIconBg:'#fee2e2', tagBg:'#fff5f5', primaryLight:'#fca5a5' },
+  Minimal: { primary:'#0f172a', primaryShadow:'rgba(15,23,42,0.18)', heroBg:'linear-gradient(135deg,#0f172a 0%,#1e293b 100%)', heroOrb:'#334155', heroOrb2:'#475569', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.6)', eyebrowBg:'rgba(255,255,255,0.08)', eyebrowBorder:'rgba(255,255,255,0.15)', eyebrowColor:'#cbd5e1', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#f1f5f9', tagBg:'#f8fafc', primaryLight:'#94a3b8' }
 };
 
 const typeIcons = { 'Restaurant / Cafe':'🍽️','Shop / Retail':'🛍️','Service Business':'⚙️','Healthcare / Clinic':'🏥','Education / Coaching':'📚','Portfolio / Freelance':'💼','Other':'🏢' };
-const svcIcons = ['⚡','🎯','✅','🌟','💡','🔥'];
+const svcIcons  = ['⚡','🎯','✅','🌟','💡','🔥'];
 const defaultSvc = {
-  'Restaurant / Cafe':['Fine Dining','Home Delivery','Catering Services','Takeaway Orders'],
-  'Shop / Retail':['Quality Products','Fast Delivery','Easy Returns','Wholesale Deals'],
-  'Service Business':['Professional Service','Expert Consultation','Quick Turnaround','Affordable Rates'],
-  'Healthcare / Clinic':['General Consultation','Health Checkup','Specialist Care','Emergency Support'],
+  'Restaurant / Cafe':   ['Fine Dining','Home Delivery','Catering Services','Takeaway Orders'],
+  'Shop / Retail':       ['Quality Products','Fast Delivery','Easy Returns','Wholesale Deals'],
+  'Service Business':    ['Professional Service','Expert Consultation','Quick Turnaround','Affordable Rates'],
+  'Healthcare / Clinic': ['General Consultation','Health Checkup','Specialist Care','Emergency Support'],
   'Education / Coaching':['One-on-One Tuition','Group Classes','Study Materials','Online Sessions'],
   'Portfolio / Freelance':['Creative Design','Web Development','Brand Strategy','Project Consulting'],
-  'Other':['Quality Service','Expert Team','Customer Support','Fast Delivery']
+  'Other':               ['Quality Service','Expert Team','Customer Support','Fast Delivery']
 };
 
+const params = new URLSearchParams(window.location.search);
+const siteId  = params.get('site');
+let currentSite = null;
+
+// ════════════════════════════════════════════════
+// LOAD SITE
+// ════════════════════════════════════════════════
 async function loadSite() {
-  let s = null;
-  if (siteId && siteId.includes('-')) {
-    // Supabase UUID
-    const { data } = await db.from('av_websites').select('*').eq('id', siteId).single();
-    s = data;
-  } else if (siteId) {
-    // Old localStorage fallback
-    const sites = JSON.parse(localStorage.getItem('av_websites') || '[]');
-    s = sites[parseInt(siteId)];
+  if (!siteId) { renderError('No site ID provided.'); return; }
+
+  let siteData = null;
+  try {
+    const { data, error } = await db.from('av_websites').select('*').eq('id', siteId).single();
+    if (!error) siteData = data;
+  } catch (e) {
+    console.error('Supabase error:', e);
   }
-  renderSite(s);
+
+  if (!siteData) { renderError('Website not found.'); return; }
+  currentSite = siteData;
+  updateBanner(siteData);
+  renderSite(siteData);
 }
 
-function renderSite(s) {
-  if (!s) {
-    document.getElementById('site').innerHTML = `<div style="text-align:center;padding:120px 40px;font-family:'DM Sans',sans-serif"><div style="font-size:64px;margin-bottom:20px">😕</div><h2 style="font-family:'Playfair Display',serif;font-size:32px;color:#0a1628;margin-bottom:12px">Website Not Found</h2><p style="color:#64748b;margin-bottom:28px">Go back and create a website first.</p><a href="dashboard.html" style="padding:14px 28px;background:#1a56ff;color:white;border-radius:10px;text-decoration:none;font-weight:700">← Back to Dashboard</a></div>`;
-    return;
+// ── Update the banner based on status ──
+function updateBanner(s) {
+  const pill    = document.getElementById('bannerPill');
+  const text    = document.getElementById('bannerText');
+  const expire  = document.getElementById('bannerExpire');
+  const actBtn  = document.getElementById('activateBtn');
+  const right   = document.getElementById('bannerRight');
+
+  if (s.status === 'active') {
+    pill.textContent   = '✅ Live';
+    pill.className     = 'banner-pill live-pill';
+    text.textContent   = 'This website is live on the internet';
+    expire.style.display  = 'none';
+    actBtn.style.display  = 'none';
+    document.title = s.name + ' — Live Website';
+  } else if (s.status === 'preview') {
+    pill.textContent   = '⏳ Preview';
+    text.textContent   = 'Free preview — activate to go live';
+    expire.textContent = '⚠️ Expires in 48 hours';
+    document.title = s.name + ' — Preview';
+  } else {
+    pill.textContent   = '❌ Expired';
+    pill.style.background = 'rgba(220,38,38,0.16)';
+    pill.style.borderColor = 'rgba(220,38,38,0.35)';
+    pill.style.color   = '#f87171';
+    text.textContent   = 'This preview has expired';
+    expire.textContent = '❌ This preview expired. Please create a new website.';
+    actBtn.style.display = 'none';
   }
+}
 
-  window.currentSite = s;
-  window.businessEmail = s.email || '';
-  window.businessName  = s.name  || '';
-
-  const t = themes[s.design] || themes.Modern;
+// ════════════════════════════════════════════════
+// RENDER SITE
+// ════════════════════════════════════════════════
+function renderSite(s) {
+  const t   = themes[s.design] || themes.Modern;
   const root = document.documentElement;
-  Object.entries(t).forEach(([k,v]) => root.style.setProperty('--'+k.replace(/([A-Z])/g,'-$1').toLowerCase(), v));
-  // Also set direct CSS vars
-  root.style.setProperty('--primary', t.primary);
-  root.style.setProperty('--primary-shadow', t.primaryShadow);
+  root.style.setProperty('--primary',       t.primary);
+  root.style.setProperty('--primary-shadow',t.primaryShadow);
   root.style.setProperty('--primary-light', t.primaryLight);
-  root.style.setProperty('--hero-bg', t.heroBg);
-  root.style.setProperty('--hero-orb', t.heroOrb);
-  root.style.setProperty('--hero-orb2', t.heroOrb2);
-  root.style.setProperty('--hero-text', t.heroText);
-  root.style.setProperty('--hero-subtext', t.heroSubtext);
-  root.style.setProperty('--eyebrow-bg', t.eyebrowBg);
-  root.style.setProperty('--eyebrow-border', t.eyebrowBorder);
+  root.style.setProperty('--hero-bg',       t.heroBg);
+  root.style.setProperty('--hero-orb',      t.heroOrb);
+  root.style.setProperty('--hero-orb2',     t.heroOrb2);
+  root.style.setProperty('--hero-text',     t.heroText);
+  root.style.setProperty('--hero-subtext',  t.heroSubtext);
+  root.style.setProperty('--eyebrow-bg',    t.eyebrowBg);
+  root.style.setProperty('--eyebrow-border',t.eyebrowBorder);
   root.style.setProperty('--eyebrow-color', t.eyebrowColor);
-  root.style.setProperty('--trust-bg', t.trustBg);
-  root.style.setProperty('--trust-border', t.trustBorder);
-  root.style.setProperty('--trust-text', t.trustText);
+  root.style.setProperty('--trust-bg',      t.trustBg);
+  root.style.setProperty('--trust-border',  t.trustBorder);
+  root.style.setProperty('--trust-text',    t.trustText);
   root.style.setProperty('--trust-icon-bg', t.trustIconBg);
-  root.style.setProperty('--tag-bg', t.tagBg);
+  root.style.setProperty('--tag-bg',        t.tagBg);
 
-  const icon = typeIcons[s.type] || '🏢';
-  const rawSvc = s.services ? s.services.split(/[,\n]/).map(x=>x.trim()).filter(Boolean).slice(0,4) : (defaultSvc[s.type] || defaultSvc['Other']);
-  const svcHTML = rawSvc.map((sv,i)=>`<div class="svc-card"><div class="svc-icon-wrap">${svcIcons[i]||'✨'}</div><div class="svc-title">${sv}</div><div class="svc-desc">We deliver exceptional ${sv.toLowerCase()} with a focus on quality and customer satisfaction.</div></div>`).join('');
-  const whyHTML = [{icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence.'},{icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising quality.'},{icon:'💰',t:'Best Value',d:'Premium services at prices that work for you.'},{icon:'🤝',t:'Personal Touch',d:'We treat every customer like family.'}].map(w=>`<div class="why-card"><div class="why-card-icon">${w.icon}</div><div class="why-card-title">${w.t}</div><div class="why-card-text">${w.d}</div></div>`).join('');
-  const desc = s.services ? s.services.substring(0,130)+'...' : 'We are committed to providing exceptional quality and service. Your satisfaction is our highest priority.';
+  const icon    = typeIcons[s.type] || '🏢';
+  const rawSvc  = s.services
+    ? s.services.split(/[,\n]/).map(x => x.trim()).filter(Boolean).slice(0, 6)
+    : (defaultSvc[s.type] || defaultSvc['Other']);
+  const svcHTML = rawSvc.map((sv, i) => `
+    <div class="svc-card">
+      <div class="svc-icon-wrap">${svcIcons[i] || '✨'}</div>
+      <div class="svc-title">${esc(sv)}</div>
+      <div class="svc-desc">We deliver exceptional ${esc(sv.toLowerCase())} with a focus on quality and customer satisfaction.</div>
+    </div>`).join('');
+
+  const whyItems = [
+    {icon:'⭐',t:'Trusted Quality',   d:'Years of experience delivering excellence.'},
+    {icon:'⚡',t:'Fast & Reliable',   d:'Quick service without compromising quality.'},
+    {icon:'💰',t:'Best Value',        d:'Premium services at prices that work for you.'},
+    {icon:'🤝',t:'Personal Touch',    d:'We treat every customer like family.'}
+  ];
+  const whyHTML = whyItems.map(w => `
+    <div class="why-card">
+      <div class="why-card-icon">${w.icon}</div>
+      <div class="why-card-title">${w.t}</div>
+      <div class="why-card-text">${w.d}</div>
+    </div>`).join('');
+
+  const desc = s.services
+    ? s.services.substring(0, 140) + (s.services.length > 140 ? '...' : '')
+    : 'We are committed to providing exceptional quality and service. Your satisfaction is our highest priority.';
+
+  const contactInfo = [
+    s.phone   ? `<div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Phone</div><div class="ci-val">${esc(s.phone)}</div></div></div>` : '',
+    s.email   ? `<div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-val">${esc(s.email)}</div></div></div>` : '',
+    s.address ? `<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Address</div><div class="ci-val">${esc(s.address)}</div></div></div>` : '',
+    (!s.phone && !s.email && !s.address) ? `<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Location</div><div class="ci-val">India</div></div></div>` : ''
+  ].join('');
 
   document.getElementById('site').innerHTML = `
     <nav class="s-nav">
-      <div class="s-nav-logo">${s.name}</div>
+      <div class="s-nav-logo">${esc(s.name)}</div>
       <ul class="s-nav-links">
-        <li><a href="#" onclick="scrollSec('sec-about');return false;">About</a></li>
-        <li><a href="#" onclick="scrollSec('sec-services');return false;">Services</a></li>
-        <li><a href="#" onclick="scrollSec('sec-contact');return false;" class="s-nav-cta">Contact Us</a></li>
+        <li><a href="#sec-about" onclick="scrollTo('sec-about');return false;">About</a></li>
+        <li><a href="#sec-services" onclick="scrollTo('sec-services');return false;">Services</a></li>
+        <li><a href="#sec-contact" onclick="scrollTo('sec-contact');return false;" class="s-nav-cta">Contact Us</a></li>
       </ul>
     </nav>
+
     <div class="s-hero">
       <div class="hero-content">
-        <div class="hero-eyebrow"><span class="eyebrow-dot"></span>${s.type}</div>
-        <h1 class="hero-h1">Welcome to<br><em>${s.name}</em></h1>
-        <p class="hero-p">${desc}</p>
+        <div class="hero-eyebrow"><span class="eyebrow-dot"></span>${esc(s.type || 'Business')}</div>
+        <h1 class="hero-h1">Welcome to<br><em>${esc(s.name)}</em></h1>
+        <p class="hero-p">${esc(desc)}</p>
         <div class="hero-actions">
-          <button class="btn-hero-main" onclick="scrollSec('sec-contact')">Get In Touch →</button>
-          <button class="btn-hero-ghost" onclick="scrollSec('sec-services')">Our Services</button>
+          <button class="btn-hero-main" onclick="scrollTo('sec-contact')">Get In Touch →</button>
+          <button class="btn-hero-ghost" onclick="scrollTo('sec-services')">Our Services</button>
         </div>
         <div class="hero-trust"><span class="trust-stars">★★★★★</span><span>Trusted by <strong>500+</strong> happy customers</span></div>
       </div>
       <div class="hero-visual">
         <div class="hero-card">
           <span class="hero-card-icon">${icon}</span>
-          <div class="hero-card-name">${s.name}</div>
-          <div class="hero-card-type">${s.type} · ${s.design} Design</div>
-          <div class="hero-card-badges"><span class="hc-badge">✅ Verified</span><span class="hc-badge">⚡ Professional</span><span class="hc-badge">📱 Mobile Ready</span></div>
+          <div class="hero-card-name">${esc(s.name)}</div>
+          <div class="hero-card-type">${esc(s.type || '')} · ${esc(s.design || 'Modern')} Design</div>
+          <div class="hero-card-badges">
+            <span class="hc-badge">✅ Verified</span>
+            <span class="hc-badge">⚡ Professional</span>
+            <span class="hc-badge">📱 Mobile Ready</span>
+          </div>
         </div>
       </div>
     </div>
+
     <div class="trust-bar">
       <div class="trust-item"><div class="trust-icon">🏆</div>Award Winning Quality</div>
       <div class="trust-item"><div class="trust-icon">🔒</div>100% Trusted & Secure</div>
       <div class="trust-item"><div class="trust-icon">⚡</div>Fast & Reliable Service</div>
       <div class="trust-item"><div class="trust-icon">💬</div>24/7 Customer Support</div>
     </div>
+
     <div class="s-stats">
       <div class="stat-box"><div class="stat-big">500+</div><div class="stat-small">Happy Customers</div></div>
       <div class="stat-box"><div class="stat-big">10+</div><div class="stat-small">Years of Excellence</div></div>
       <div class="stat-box"><div class="stat-big">100%</div><div class="stat-small">Satisfaction Rate</div></div>
     </div>
+
     <div class="s-about" id="sec-about">
       <div>
         <div class="section-eyebrow">✦ About Us</div>
-        <div class="section-title">The story behind <em>${s.name}</em></div>
-        <p class="section-body">We are a dedicated ${s.type.toLowerCase()} passionate about serving our community with the very best. Every product and service is crafted to meet the highest standards.</p>
+        <div class="section-title">The story behind <em>${esc(s.name)}</em></div>
+        <p class="section-body">We are a dedicated ${esc((s.type || '').toLowerCase())} passionate about serving our community with the very best. Every product and service is crafted to meet the highest standards.</p>
         <ul class="check-list">
           <li><span class="cl-icon">✓</span>Trusted by hundreds of loyal customers</li>
           <li><span class="cl-icon">✓</span>Premium quality in everything we do</li>
@@ -366,127 +457,229 @@ function renderSite(s) {
         </ul>
       </div>
       <div class="about-visual">
-        <div class="about-main-card"><span class="amc-icon">${icon}</span><div class="amc-name">${s.name}</div><div class="amc-type">${s.type}${s.address?' · '+s.address:''}</div></div>
-        <div class="about-float"><div class="af-icon">⭐</div><div><div class="af-num">500+</div><div class="af-label">Happy Customers</div></div></div>
+        <div class="about-main-card">
+          <span class="amc-icon">${icon}</span>
+          <div class="amc-name">${esc(s.name)}</div>
+          <div class="amc-type">${esc(s.type || '')}${s.address ? ' · ' + esc(s.address) : ''}</div>
+        </div>
+        <div class="about-float">
+          <div class="af-icon">⭐</div>
+          <div><div class="af-num">500+</div><div class="af-label">Happy Customers</div></div>
+        </div>
       </div>
     </div>
+
     <div class="s-services" id="sec-services">
       <div class="services-header">
         <div class="section-eyebrow" style="justify-content:center">✦ What We Offer</div>
         <div class="section-title" style="text-align:center">Our <em>Services</em></div>
-        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-top:10px;text-align:center">Everything you need, delivered with care and expertise.</p>
+        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-top:8px;text-align:center">Everything you need, delivered with care and expertise.</p>
       </div>
       <div class="services-grid">${svcHTML}</div>
     </div>
+
     <div class="s-why">
       <div>
         <div class="section-eyebrow">✦ Why Choose Us</div>
         <div class="section-title">We go <em>above and beyond</em> for you</div>
         <p class="section-body">Our commitment to excellence makes us the trusted choice for thousands of customers.</p>
-        <button class="btn-hero-main" style="margin-top:8px;font-family:'DM Sans',sans-serif" onclick="scrollSec('sec-contact')">Get In Touch →</button>
+        <button class="btn-hero-main" style="font-family:'DM Sans',sans-serif" onclick="scrollTo('sec-contact')">Get In Touch →</button>
       </div>
       <div class="why-grid">${whyHTML}</div>
     </div>
+
     <div class="s-testimonial">
       <div class="test-stars">★ ★ ★ ★ ★</div>
-      <div class="test-quote">"${s.name} has been absolutely incredible. The quality of service and attention to detail is unmatched!"</div>
+      <div class="test-quote">"${esc(s.name)} has been absolutely incredible. The quality of service and attention to detail is unmatched!"</div>
       <div class="test-author">— A Happy Customer, India</div>
     </div>
+
     <div class="s-contact" id="sec-contact">
       <div>
         <div class="section-eyebrow">✦ Contact Us</div>
         <div class="section-title">Let's <em>talk</em> today</div>
         <p class="section-body" style="margin-bottom:0">We'd love to hear from you.</p>
-        <div class="contact-info">
-          ${s.phone?`<div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Phone</div><div class="ci-val">${s.phone}</div></div></div>`:''}
-          ${s.email?`<div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-val">${s.email}</div></div></div>`:''}
-          ${s.address?`<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Address</div><div class="ci-val">${s.address}</div></div></div>`:''}
-          ${!s.phone&&!s.email&&!s.address?`<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Location</div><div class="ci-val">India</div></div></div>`:''}
-        </div>
+        <div class="contact-info">${contactInfo}</div>
       </div>
       <div class="contact-form-card">
         <div class="cf-title">Send Us a Message</div>
         <div class="cf-sub">We'll get back to you within 24 hours.</div>
-        <input class="cf-input" id="cf-name" placeholder="Your Full Name">
-        <input class="cf-input" id="cf-contact" placeholder="Your Phone Number or Email">
-        <textarea class="cf-input" id="cf-message" rows="4" placeholder="How can we help you?" style="resize:vertical"></textarea>
-        <button class="cf-submit" onclick="sendMessage()">Send Message →</button>
-        <div id="cf-status" style="margin-top:12px;font-size:13px;display:none;padding:10px 14px;border-radius:8px;"></div>
+        <input class="cf-input" id="cf-name"    placeholder="Your Full Name" maxlength="80">
+        <input class="cf-input" id="cf-contact" placeholder="Your Phone Number or Email" maxlength="100">
+        <textarea class="cf-input" id="cf-message" rows="4" placeholder="How can we help you?" style="resize:vertical" maxlength="1000"></textarea>
+        <button class="cf-submit" id="cf-submit-btn" onclick="sendMessage()">Send Message →</button>
+        <div class="cf-status" id="cf-status"></div>
       </div>
     </div>
+
     <div class="s-footer">
-      <div class="s-footer-logo">${s.name}</div>
+      <div class="s-footer-logo">${esc(s.name)}</div>
       <div class="s-footer-links">
-        <a href="#" onclick="scrollSec('sec-about');return false;">About</a>
-        <a href="#" onclick="scrollSec('sec-services');return false;">Services</a>
-        <a href="#" onclick="scrollSec('sec-contact');return false;">Contact</a>
+        <a href="#" onclick="scrollTo('sec-about');return false;">About</a>
+        <a href="#" onclick="scrollTo('sec-services');return false;">Services</a>
+        <a href="#" onclick="scrollTo('sec-contact');return false;">Contact</a>
       </div>
-      <div class="s-footer-copy">© ${new Date().getFullYear()} ${s.name}. All rights reserved.</div>
+      <div class="s-footer-copy">© ${new Date().getFullYear()} ${esc(s.name)}. All rights reserved.</div>
     </div>`;
 
-  document.title = s.name + ' — Preview';
+  document.title = s.name + (s.status === 'active' ? '' : ' — Preview');
 }
 
-function scrollSec(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+function renderError(msg) {
+  document.getElementById('site').innerHTML = `
+    <div class="error-state">
+      <div style="font-size:60px;margin-bottom:18px">😕</div>
+      <h2>Website Not Found</h2>
+      <p>${esc(msg)} Please go back and try again.</p>
+      <a href="dashboard.html" style="padding:13px 26px;background:#1a56ff;color:white;border-radius:10px;text-decoration:none;font-weight:700;display:inline-block">← Back to Dashboard</a>
+    </div>`;
 }
 
-function sendMessage() {
+// ════════════════════════════════════════════════
+// CONTACT FORM — with real EmailJS
+// ════════════════════════════════════════════════
+async function sendMessage() {
   const name    = document.getElementById('cf-name').value.trim();
   const contact = document.getElementById('cf-contact').value.trim();
   const message = document.getElementById('cf-message').value.trim();
   const status  = document.getElementById('cf-status');
-  if (!name||!contact||!message) {
-    status.style.display='block'; status.style.background='#fef2f2'; status.style.color='#dc2626'; status.style.border='1px solid #fecaca';
-    status.textContent='⚠️ Please fill in all fields.'; return;
+  const btn     = document.getElementById('cf-submit-btn');
+
+  // Validation
+  if (!name)    return showStatus('⚠️ Please enter your name.', 'error');
+  if (!contact) return showStatus('⚠️ Please enter your phone number or email.', 'error');
+  if (!message) return showStatus('⚠️ Please enter your message.', 'error');
+  if (message.length < 10) return showStatus('⚠️ Message is too short. Please provide more details.', 'error');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Sending...';
+  status.style.display = 'none';
+
+  const businessEmail = currentSite?.email || 'kasmaniadnan812@gmail.com';
+  const businessName  = currentSite?.name  || 'Business';
+
+  try {
+    const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email:      businessEmail,
+      business_name: businessName,
+      from_name:     name,
+      name:          name,
+      from_contact:  contact,
+      message:       message,
+      reply_to:      contact.includes('@') ? contact : businessEmail,
+      time:          new Date().toLocaleString('en-IN')
+    });
+
+    if (result.status === 200) {
+      showStatus('✅ Message sent successfully! ' + businessName + ' will contact you soon.', 'success');
+      document.getElementById('cf-name').value = '';
+      document.getElementById('cf-contact').value = '';
+      document.getElementById('cf-message').value = '';
+    } else {
+      throw new Error('Non-200 status: ' + result.status);
+    }
+  } catch (err) {
+    console.error('EmailJS send error:', err);
+    showStatus('⚠️ Failed to send message. Please contact directly via phone/email shown above.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send Message →';
   }
-  const btn = document.querySelector('.cf-submit');
-  btn.textContent='Sending...'; btn.disabled=true;
-  emailjs.send('service_6q18vqn','template_8bq71z3',{
-    to_email: window.businessEmail||'kasmaniadnan812@gmail.com',
-    business_name: window.businessName,
-    from_name: name, name: name,
-    from_contact: contact,
-    message: message,
-    reply_to: contact,
-    time: new Date().toLocaleString('en-IN')
-  }).then(()=>{
-    status.style.display='block'; status.style.background='#f0fdf4'; status.style.color='#16a34a'; status.style.border='1px solid #bbf7d0';
-    status.textContent='✅ Message sent! The business will contact you soon.';
-    document.getElementById('cf-name').value=''; document.getElementById('cf-contact').value=''; document.getElementById('cf-message').value='';
-    btn.textContent='Send Message →'; btn.disabled=false;
-  }).catch(()=>{
-    status.style.display='block'; status.style.background='#f0fdf4'; status.style.color='#16a34a'; status.style.border='1px solid #bbf7d0';
-    status.textContent='✅ Message received! We will contact you within 24 hours.';
-    btn.textContent='Send Message →'; btn.disabled=false;
-  });
 }
 
-function openPayment() { document.getElementById('payModal').style.display='flex'; }
+function showStatus(msg, type) {
+  const el = document.getElementById('cf-status');
+  el.textContent = msg;
+  el.className   = 'cf-status ' + type;
+  el.style.display = 'block';
+}
+
+// ════════════════════════════════════════════════
+// PAYMENT
+// ════════════════════════════════════════════════
+function openPayModal() {
+  if (!currentSite) return;
+  if (currentSite.status === 'active') {
+    alert('✅ This website is already live!');
+    return;
+  }
+  document.getElementById('payModal').classList.add('open');
+}
+function closePayModal() {
+  document.getElementById('payModal').classList.remove('open');
+}
 
 async function processPayment() {
-  const user = JSON.parse(localStorage.getItem('av_user') || '{}');
-  const s = window.currentSite;
-  new Razorpay({
-    key: 'rzp_live_SaJ684rRC2TUwj',
-    amount: 29900, currency: 'INR',
-    name: 'AutoVision', description: 'Website Activation — ₹299',
-    handler: async function(res) {
-      document.getElementById('payModal').style.display='none';
-      if (s && s.id) {
-        await db.from('av_websites').update({status:'active'}).eq('id', s.id);
-        await db.from('av_payments').insert([{ user_email: s.user_email, website_id: s.id, amount:299, payment_id: res.razorpay_payment_id, type:'activation', status:'paid' }]);
+  if (!currentSite?.id) return;
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Opening payment...';
+
+  // Get current user from localStorage (for prefill only, NOT for auth decisions)
+  let userEmail = '';
+  try { userEmail = JSON.parse(localStorage.getItem('av_user') || '{}').email || ''; } catch {}
+
+  const rzp = new Razorpay({
+    key: RAZORPAY_KEY,
+    amount: 29900,
+    currency: 'INR',
+    name: 'AutoVision',
+    description: 'Website Activation — ₹299',
+    handler: async function(response) {
+      closePayModal();
+      const payId = response.razorpay_payment_id;
+      try {
+        // Activate site
+        await db.from('av_websites').update({ status: 'active' }).eq('id', currentSite.id);
+        // Log payment
+        await db.from('av_payments').insert([{
+          user_email:  currentSite.user_email,
+          website_id:  currentSite.id,
+          amount:      299,
+          payment_id:  payId,
+          type:        'activation',
+          status:      'paid',
+          created_at:  new Date().toISOString()
+        }]);
+        currentSite.status = 'active';
+        updateBanner(currentSite);
+        alert('🎉 Payment Successful!\nYour website is now LIVE!\n\nPayment ID: ' + payId + '\n\nShare this page link with your customers!');
+      } catch (err) {
+        alert('⚠️ Payment received but activation failed.\nPlease contact support with your Payment ID: ' + payId + '\nEmail: kasmaniadnan812@gmail.com');
       }
-      alert('🎉 Payment Successful!\nYour website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
-      window.location.href = 'dashboard.html';
     },
-    prefill: { email: user.email || '' },
+    modal: {
+      ondismiss: function() {
+        btn.disabled = false;
+        btn.textContent = 'Pay ₹299 & Go Live →';
+      }
+    },
+    prefill: { email: userEmail },
     theme: { color: '#1a56ff' }
-  }).open();
+  });
+  rzp.open();
 }
 
-// Load on page start
+// ════════════════════════════════════════════════
+// UTILITIES
+// ════════════════════════════════════════════════
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(str || ''));
+  return d.innerHTML;
+}
+
+// Close modal on overlay click
+document.getElementById('payModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('payModal')) closePayModal();
+});
+
+// Init
 loadSite();
 </script>
 </body>
