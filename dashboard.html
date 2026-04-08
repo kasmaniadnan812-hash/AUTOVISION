@@ -866,6 +866,60 @@
   </div>
 </div>
 
+<!-- Live Link Modal -->
+<div class="modal-overlay" id="liveLinkModal" style="display:none">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <div class="modal-title">Website is LIVE!</div>
+    <div class="modal-sub">Share this link with your customers. Anyone with this link can visit your professional website.</div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:16px">
+      <div style="font-size:11px;color:#16a34a;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">🔗 Your Live Website Link</div>
+      <input id="liveLinkUrl" readonly style="width:100%;background:white;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;font-family:monospace;font-size:11px;color:#0a1628;outline:none">
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:12px">
+      <button id="copyLinkBtn" onclick="copyLiveLink()" style="flex:2;padding:13px;background:#1a56ff;color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">📋 Copy Link</button>
+      <button onclick="window.open(document.getElementById('liveLinkUrl').value,'_blank')" style="flex:1;padding:13px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Open ↗</button>
+    </div>
+    <button onclick="document.getElementById('liveLinkModal').style.display='none';showPanel('websites',null)" style="width:100%;padding:12px;background:#f8fafc;color:#64748b;border:1px solid #e2e8f4;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Go to My Websites</button>
+  </div>
+</div>
+
+<!-- Edit Website Modal -->
+<div class="modal-overlay" id="editModal" style="display:none">
+  <div class="modal" style="max-width:500px;text-align:left">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#0a1628;margin-bottom:12px" id="editModalTitle">Edit Website</div>
+    <div id="editFeeNotice" style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;font-size:13px;color:#ea580c;margin-bottom:16px;display:none">⚡ A small fee of ₹99 is charged for editing a live website.</div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+      <div>
+        <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Business Name</label>
+        <input id="editHeading" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" placeholder="Your business name">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Services / Description</label>
+        <textarea id="editDesc" rows="3" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;resize:vertical" placeholder="What you offer..."></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Phone</label>
+          <input id="editPhone" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" placeholder="+91 99999 99999">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Email</label>
+          <input id="editEmailField" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" placeholder="business@email.com">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Address</label>
+        <input id="editAddress" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" placeholder="Your address">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button id="editSaveBtn" style="flex:2;padding:14px;background:#1a56ff;color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Save Changes →</button>
+      <button onclick="document.getElementById('editModal').style.display='none'" style="flex:1;padding:14px;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -935,14 +989,71 @@
         <div class="card-body">
           <div class="card-name">${s.name}</div>
           <div class="card-meta">${s.type} · ${s.design} Design · ${new Date(s.created_at).toLocaleDateString('en-IN')}</div>
+          ${s.status==='active'?`<div style="margin-bottom:10px;padding:8px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;color:#16a34a;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            🔗 <span style="font-family:monospace;word-break:break-all">autovision-psi.vercel.app/preview.html?site=${s.id}</span>
+            <button onclick="navigator.clipboard.writeText('https://autovision-psi.vercel.app/preview.html?site=${s.id}').then(()=>alert('Link copied!'))" style="background:#16a34a;color:white;border:none;padding:3px 10px;border-radius:5px;font-size:11px;cursor:pointer;flex-shrink:0">Copy</button>
+          </div>`:''}
           <div class="card-actions">
-            <button class="card-btn cb-view" onclick="window.open('preview.html?site=${s.id}','_blank')">View</button>
-            ${s.status==='preview'?`<button class="card-btn cb-activate" onclick="openPaymentFor('${s.id}','${s.name}')">Activate ₹299</button>`:''}
-            <button class="card-btn cb-edit" onclick="alert('Edit — ₹99 per update')">Edit</button>
-            <button class="card-btn cb-delete" onclick="deleteWebsite('${s.id}','${containerId}')">Delete</button>
+            <button class="card-btn cb-view" onclick="window.open('preview.html?site=${s.id}','_blank')">👁 View</button>
+            ${s.status==='preview'?`
+              <button class="card-btn cb-edit" onclick="openFreeEdit('${s.id}','${s.name}')">✏️ Edit Free</button>
+              <button class="card-btn cb-activate" onclick="openPaymentFor('${s.id}','${s.name}')">⚡ Activate ₹299</button>
+            `:`
+              <button class="card-btn cb-edit" onclick="openPaidEdit('${s.id}','${s.name}')">✏️ Edit ₹99</button>
+            `}
+            <button class="card-btn cb-delete" onclick="deleteWebsite('${s.id}','${containerId}')">🗑 Delete</button>
           </div>
         </div>
       </div>`).join('')}</div>`;
+  }
+
+  // Free edit before activation
+  function openFreeEdit(id, name) {
+    currentWebsite = { id, name };
+    document.getElementById('editModal').style.display = 'flex';
+    document.getElementById('editModalTitle').textContent = `Edit "${name}" — Free`;
+    document.getElementById('editFeeNotice').style.display = 'none';
+    document.getElementById('editSaveBtn').textContent = 'Save Changes Free →';
+    document.getElementById('editSaveBtn').onclick = () => saveEdit(id, false);
+  }
+
+  // Paid edit after live
+  function openPaidEdit(id, name) {
+    currentWebsite = { id, name };
+    document.getElementById('editModal').style.display = 'flex';
+    document.getElementById('editModalTitle').textContent = `Edit "${name}"`;
+    document.getElementById('editFeeNotice').style.display = 'block';
+    document.getElementById('editSaveBtn').textContent = 'Pay ₹99 & Save →';
+    document.getElementById('editSaveBtn').onclick = () => processEditPayment(id);
+  }
+
+  async function saveEdit(id, paid) {
+    const heading = document.getElementById('editHeading').value.trim();
+    const desc    = document.getElementById('editDesc').value.trim();
+    const phone   = document.getElementById('editPhone').value.trim();
+    const email   = document.getElementById('editEmailField').value.trim();
+    const address = document.getElementById('editAddress').value.trim();
+    if (!heading) { alert('Please enter at least a business name.'); return; }
+    await db.from('av_websites').update({ name: heading, services: desc, phone, email, address }).eq('id', id);
+    document.getElementById('editModal').style.display = 'none';
+    await renderWebsites('recentWebsites', 3);
+    await renderWebsites('allWebsites');
+    alert('✅ Changes saved successfully!');
+  }
+
+  function processEditPayment(id) {
+    document.getElementById('editModal').style.display = 'none';
+    new Razorpay({
+      key: 'rzp_live_SaJ684rRC2TUwj',
+      amount: 9900, currency: 'INR',
+      name: 'AutoVision', description: 'Website Edit — ₹99',
+      handler: async function(res) {
+        await db.from('av_payments').insert([{ user_email: currentUser.email, website_id: id, amount: 99, payment_id: res.razorpay_payment_id, type:'edit', status:'paid' }]);
+        await saveEdit(id, true);
+      },
+      prefill: { email: currentUser.email || '' },
+      theme: { color: '#1a56ff' }
+    }).open();
   }
 
   async function generateWebsite() {
@@ -998,12 +1109,25 @@
         await db.from('av_payments').insert([{ user_email: currentUser.email, website_id: currentWebsite.id, amount: 299, payment_id: res.razorpay_payment_id, type:'activation', status:'paid' }]);
         await loadStats();
         await renderWebsites('recentWebsites', 3);
-        alert('🎉 Payment Successful!\nYour website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
-        showPanel('websites', null);
+
+        // Show live link to user
+        const liveLink = `https://autovision-psi.vercel.app/preview.html?site=${currentWebsite.id}`;
+        document.getElementById('liveLinkUrl').value = liveLink;
+        document.getElementById('liveLinkModal').style.display = 'flex';
       },
       prefill: { email: currentUser.email || '' },
       theme: { color: '#1a56ff' }
     }).open();
+  }
+
+  function copyLiveLink() {
+    const inp = document.getElementById('liveLinkUrl');
+    navigator.clipboard.writeText(inp.value).then(() => {
+      const btn = document.getElementById('copyLinkBtn');
+      btn.textContent = '✅ Copied!';
+      btn.style.background = '#16a34a';
+      setTimeout(() => { btn.textContent = '📋 Copy Link'; btn.style.background = '#1a56ff'; }, 2500);
+    });
   }
 
   async function deleteWebsite(id, containerId) {
@@ -1036,21 +1160,30 @@
       budget, phone, email, notes
     }]);
 
-    // 2. Send email to admin via EmailJS
-    // The "To Email" is already set to kasmaniadnan812@gmail.com in EmailJS template
-    const msgBody = `🚨 NEW UPGRADE REQUEST from AutoVision!\n\n👤 Account: ${currentUser.email}\n📋 Features Needed: ${features.join(', ') || 'None selected'}\n💼 Business Size: ${bizSize}\n💰 Budget: ${budget}\n📞 Phone: ${phone}\n📧 Email: ${email}\n📝 Notes: ${notes || 'None'}`;
+    // 2. Send email via EmailJS using fetch directly (most reliable way)
+    const emailData = {
+      service_id:  'service_6q18vqn',
+      template_id: 'template_8bq71z3',
+      user_id:     'H9mRJV2zi9LJ7OhBw',
+      template_params: {
+        from_name:     currentUser.name || currentUser.email,
+        name:          currentUser.name || currentUser.email,
+        from_contact:  `${phone} | ${email}`,
+        business_name: 'AutoVision — Upgrade Request',
+        message:       `NEW UPGRADE REQUEST\n\nAccount: ${currentUser.email}\nFeatures: ${features.join(', ') || 'None'}\nBusiness Size: ${bizSize}\nBudget: ${budget}\nPhone: ${phone}\nEmail: ${email}\nNotes: ${notes || 'None'}`,
+        reply_to:      email,
+        time:          new Date().toLocaleString('en-IN')
+      }
+    };
 
     try {
-      await emailjs.send('service_6q18vqn', 'template_8bq71z3', {
-        from_name:    currentUser.name || 'AutoVision Customer',
-        name:         currentUser.name || 'AutoVision Customer',
-        from_contact: phone + ' | ' + email,
-        business_name:'AutoVision — New Upgrade Request',
-        message:      msgBody,
-        reply_to:     email,
-        time:         new Date().toLocaleString('en-IN')
+      const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailData)
       });
-      console.log('Admin email sent ✅');
+      const result = await res.text();
+      console.log('EmailJS response:', res.status, result);
     } catch(e) {
       console.log('Email error:', e);
     }
