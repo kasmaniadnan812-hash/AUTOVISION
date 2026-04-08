@@ -4,626 +4,222 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AutoVision — Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --white: #ffffff;
-    --off-white: #f8f9fc;
-    --light: #f0f4ff;
-    --blue: #1a56ff;
-    --blue-dark: #1040d8;
-    --blue-light: #e8eeff;
-    --navy: #0a1628;
-    --text: #0a1628;
-    --text-mid: #3d5470;
-    --text-light: #7a93b0;
-    --border: #e2e8f4;
-    --border-dark: #c8d4e8;
-    --green: #16a34a;
-    --green-light: #dcfce7;
-    --orange: #ea580c;
-    --orange-light: #fff7ed;
-    --red: #dc2626;
-    --red-light: #fef2f2;
-    --gold: #c9a84c;
-    --shadow-sm: 0 2px 8px rgba(26,86,255,0.06);
-    --shadow-md: 0 8px 30px rgba(26,86,255,0.1);
+    --white:#ffffff; --off-white:#f8f9fc; --light:#f0f4ff;
+    --blue:#1a56ff; --blue-dark:#1040d8; --blue-light:#e8eeff; --blue-glow:rgba(26,86,255,0.14);
+    --navy:#0a1628; --text:#0a1628; --text-mid:#3d5470; --text-light:#7a93b0;
+    --border:#e2e8f4; --border-dark:#c8d4e8;
+    --green:#16a34a; --green-light:#dcfce7;
+    --orange:#ea580c; --orange-light:#fff7ed;
+    --red:#dc2626; --red-light:#fef2f2;
+    --gold:#c9a84c;
+    --shadow-sm:0 2px 8px rgba(26,86,255,0.06);
+    --shadow-md:0 8px 30px rgba(26,86,255,0.10);
+    --shadow-lg:0 20px 60px rgba(26,86,255,0.14);
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--off-white);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--off-white); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; -webkit-font-smoothing:antialiased; }
 
-  /* Sidebar */
+  /* ── SIDEBAR ── */
   .sidebar {
-    position: fixed;
-    left: 0; top: 0; bottom: 0;
-    width: 256px;
-    background: white;
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
+    position:fixed; left:0; top:0; bottom:0; width:258px;
+    background:white; border-right:1px solid var(--border);
+    display:flex; flex-direction:column; z-index:200;
+    transition:transform 0.3s;
   }
+  .sidebar-logo { padding:26px 22px; border-bottom:1px solid var(--border); font-family:'Playfair Display',serif; font-size:20px; font-weight:900; color:var(--navy); text-decoration:none; display:block; letter-spacing:-0.5px; }
+  .sidebar-logo span { color:var(--blue); }
+  .nav-section { padding:18px 0; flex:1; overflow-y:auto; }
+  .nav-section-lbl { font-size:10.5px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; color:var(--text-light); padding:0 22px 10px; }
+  .nav-item { display:flex; align-items:center; gap:11px; padding:11px 22px; color:var(--text-mid); font-size:14px; font-weight:500; cursor:pointer; transition:all 0.2s; border-left:3px solid transparent; text-decoration:none; }
+  .nav-item:hover { background:var(--off-white); color:var(--text); }
+  .nav-item.active { background:var(--blue-light); color:var(--blue); border-left-color:var(--blue); font-weight:700; }
+  .nav-icon { width:32px; height:32px; border-radius:8px; background:var(--off-white); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .nav-item.active .nav-icon { background:rgba(26,86,255,0.14); }
+  .sidebar-bottom { padding:18px 22px; border-top:1px solid var(--border); }
+  .user-card { display:flex; align-items:center; gap:10px; padding:11px; background:var(--off-white); border-radius:10px; margin-bottom:11px; }
+  .user-av { width:36px; height:36px; border-radius:50%; background:var(--blue-light); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .user-name { font-size:13px; font-weight:800; color:var(--navy); }
+  .user-email { font-size:11px; color:var(--text-light); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:142px; }
+  .logout-btn { width:100%; padding:9px; background:transparent; border:1px solid var(--border); color:var(--text-mid); font-size:13px; font-weight:600; border-radius:8px; cursor:pointer; transition:all 0.2s; font-family:'DM Sans',sans-serif; }
+  .logout-btn:hover { border-color:var(--red); color:var(--red); background:var(--red-light); }
 
-  .sidebar-logo {
-    padding: 28px 24px;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--navy);
-    text-decoration: none;
-    display: block;
+  /* ── MAIN ── */
+  .main { margin-left:258px; padding:38px; min-height:100vh; }
+  .page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:30px; gap:16px; flex-wrap:wrap; }
+  .page-title { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--navy); letter-spacing:-0.5px; }
+  .page-sub { font-size:13.5px; color:var(--text-light); margin-top:4px; }
+  .btn-blue { padding:11px 22px; background:var(--blue); color:white; font-size:14px; font-weight:700; border-radius:9px; border:none; cursor:pointer; text-decoration:none; display:inline-block; box-shadow:0 4px 14px rgba(26,86,255,0.26); transition:all 0.22s; }
+  .btn-blue:hover { background:var(--blue-dark); transform:translateY(-1px); }
+
+  /* ── STATS ── */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:30px; }
+  .stat-card { background:white; border:1px solid var(--border); border-radius:14px; padding:22px; transition:all 0.22s; }
+  .stat-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+  .stat-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; }
+  .stat-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .si-blue { background:var(--blue-light); } .si-green { background:var(--green-light); } .si-orange { background:var(--orange-light); } .si-navy { background:var(--light); }
+  .stat-val { font-family:'Playfair Display',serif; font-size:32px; font-weight:900; color:var(--navy); line-height:1; margin-bottom:4px; }
+  .stat-lbl { font-size:13px; color:var(--text-light); font-weight:500; }
+
+  /* ── SECTION HEADER ── */
+  .sec-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; }
+  .sec-title { font-size:16px; font-weight:800; color:var(--navy); }
+
+  /* ── WEBSITE GRID ── */
+  .website-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+  .website-card { background:white; border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:all 0.25s; }
+  .website-card:hover { box-shadow:var(--shadow-md); transform:translateY(-3px); }
+  .card-thumb { background:linear-gradient(140deg,var(--navy) 0%,#0d2040 100%); height:96px; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:18px; font-weight:900; color:white; position:relative; }
+  .card-status { position:absolute; top:11px; right:11px; font-size:11px; font-weight:800; letter-spacing:0.4px; padding:4px 10px; border-radius:100px; }
+  .s-preview { background:var(--orange-light); color:var(--orange); }
+  .s-active  { background:var(--green-light); color:var(--green); }
+  .s-expired { background:var(--red-light); color:var(--red); }
+  .card-body { padding:16px; }
+  .card-name { font-size:15px; font-weight:800; color:var(--navy); margin-bottom:3px; }
+  .card-meta { font-size:12px; color:var(--text-light); margin-bottom:14px; }
+  .card-actions { display:flex; gap:7px; flex-wrap:wrap; }
+  .card-btn { flex:1; padding:8px 10px; font-size:12px; font-weight:700; border-radius:7px; cursor:pointer; transition:all 0.2s; text-align:center; font-family:'DM Sans',sans-serif; min-width:60px; white-space:nowrap; }
+  .cb-view     { background:var(--off-white); color:var(--text-mid); border:1px solid var(--border); }
+  .cb-view:hover { background:var(--light); color:var(--blue); border-color:var(--blue); }
+  .cb-activate { background:var(--blue); color:white; border:none; box-shadow:0 2px 8px rgba(26,86,255,0.22); }
+  .cb-activate:hover { background:var(--blue-dark); }
+  .cb-edit     { background:transparent; color:var(--blue); border:1px solid var(--blue-light); }
+  .cb-edit:hover { background:var(--blue-light); }
+  .cb-edit-locked { background:var(--off-white); color:var(--text-light); border:1px solid var(--border); cursor:pointer; }
+  .cb-edit-locked:hover { background:var(--orange-light); color:var(--orange); border-color:var(--orange); }
+  .cb-delete   { background:transparent; color:var(--red); border:1px solid #fecaca; }
+  .cb-delete:hover { background:var(--red-light); }
+
+  /* Live link row */
+  .live-link-row { margin-bottom:11px; padding:9px 12px; background:var(--green-light); border:1px solid #bbf7d0; border-radius:9px; font-size:11px; color:var(--green); display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .live-link-row span { font-family:'DM Mono',monospace; word-break:break-all; flex:1; }
+  .copy-btn { background:var(--green); color:white; border:none; padding:3px 10px; border-radius:5px; font-size:11px; cursor:pointer; flex-shrink:0; font-family:'DM Sans',sans-serif; font-weight:700; transition:background 0.2s; }
+  .copy-btn:hover { background:#14532d; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state { background:white; border:1.5px dashed var(--border-dark); border-radius:18px; padding:72px 40px; text-align:center; }
+  .empty-icon { font-size:52px; margin-bottom:14px; }
+  .empty-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:var(--navy); margin-bottom:7px; }
+  .empty-sub { font-size:14px; color:var(--text-light); margin-bottom:26px; }
+
+  /* ── FORM CARD ── */
+  .form-card { background:white; border:1px solid var(--border); border-radius:18px; padding:30px; max-width:720px; margin-bottom:22px; }
+  .form-card-title { font-family:'Playfair Display',serif; font-size:17px; font-weight:900; color:var(--navy); margin-bottom:22px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-group { margin-bottom:16px; }
+  label { display:block; font-size:12.5px; font-weight:700; color:var(--text-mid); margin-bottom:6px; }
+  input, select, textarea { width:100%; background:var(--off-white); border:1.5px solid var(--border); color:var(--text); padding:11px 14px; font-family:'DM Sans',sans-serif; font-size:14px; border-radius:9px; outline:none; transition:all 0.2s; }
+  input:focus, select:focus, textarea:focus { border-color:var(--blue); background:white; box-shadow:0 0 0 3px rgba(26,86,255,0.07); }
+  input::placeholder, textarea::placeholder { color:var(--text-light); }
+
+  /* Design picker */
+  .design-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .design-opt { border:1.5px solid var(--border); border-radius:10px; padding:14px 10px; text-align:center; cursor:pointer; transition:all 0.2s; font-size:13px; font-weight:700; color:var(--text-mid); }
+  .design-opt:hover, .design-opt.selected { border-color:var(--blue); color:var(--blue); background:var(--blue-light); }
+
+  /* Feature checkboxes */
+  .feat-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .feat-label { display:flex; align-items:center; gap:10px; padding:11px 14px; background:var(--off-white); border:1.5px solid var(--border); border-radius:9px; cursor:pointer; font-size:13px; font-weight:500; transition:all 0.2s; }
+  .feat-label:hover { border-color:var(--blue); background:var(--blue-light); }
+  .feat-label input { width:auto; accent-color:var(--blue); }
+
+  /* Alert */
+  .alert { padding:11px 14px; border-radius:9px; font-size:13px; margin-bottom:14px; display:none; line-height:1.5; }
+  .alert-error   { background:var(--red-light); border:1px solid #fecaca; color:var(--red); }
+  .alert-success { background:var(--green-light); border:1px solid #bbf7d0; color:var(--green); }
+
+  /* ── PANELS ── */
+  .panel { display:none; }
+  .panel.active { display:block; }
+
+  /* ── MODAL OVERLAY ── */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,22,40,0.58); backdrop-filter:blur(5px); z-index:1000; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:white; border-radius:22px; padding:38px; max-width:460px; width:90%; box-shadow:0 32px 80px rgba(0,0,0,0.22); text-align:center; animation:popUp 0.28s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes popUp { from{opacity:0;transform:scale(0.93) translateY(12px);} to{opacity:1;transform:scale(1) translateY(0);} }
+  .modal-icon { font-size:54px; margin-bottom:16px; }
+  .modal-title { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--navy); margin-bottom:8px; }
+  .modal-sub { font-size:14px; color:var(--text-mid); margin-bottom:22px; line-height:1.6; }
+  .warn-box { background:var(--orange-light); border:1px solid #fed7aa; border-radius:10px; padding:13px 16px; font-size:13px; color:var(--orange); margin-bottom:26px; text-align:left; font-weight:600; }
+  .modal-actions { display:flex; gap:11px; }
+  .modal-btn-primary { flex:2; padding:13px; background:var(--blue); color:white; border-radius:10px; border:none; font-size:14px; font-weight:800; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 4px 14px rgba(26,86,255,0.26); transition:all 0.2s; }
+  .modal-btn-primary:hover { background:var(--blue-dark); }
+  .modal-btn-secondary { flex:1; padding:13px; background:var(--off-white); color:var(--text-mid); border-radius:10px; border:1px solid var(--border); font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+  .modal-btn-secondary:hover { background:var(--border); }
+
+  /* Edit Modal specific */
+  .edit-modal { max-width:500px; text-align:left; }
+  .edit-modal .modal-title { text-align:left; }
+  .edit-modal .modal-sub { text-align:left; }
+  .edit-locked-banner { background:var(--orange-light); border:1px solid #fed7aa; border-radius:10px; padding:12px 15px; font-size:13px; color:var(--orange); font-weight:600; display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .edit-form-group { margin-bottom:13px; }
+  .edit-form-group label { font-size:12px; font-weight:800; color:var(--text-light); display:block; margin-bottom:5px; letter-spacing:0.2px; }
+  .edit-input { width:100%; padding:11px 14px; background:var(--off-white); border:1.5px solid var(--border); border-radius:9px; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; color:var(--text); transition:all 0.2s; }
+  .edit-input:focus { border-color:var(--blue); background:white; }
+  .edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .edit-actions { display:flex; gap:10px; margin-top:18px; }
+
+  /* Loading overlay */
+  .loading-overlay { display:none; position:fixed; inset:0; background:rgba(248,249,252,0.94); z-index:1000; align-items:center; justify-content:center; flex-direction:column; text-align:center; }
+  .loading-overlay.open { display:flex; }
+  .spinner { width:54px; height:54px; border:3px solid var(--border); border-top-color:var(--blue); border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:22px; }
+  @keyframes spin { to{transform:rotate(360deg);} }
+  .loading-title { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--navy); margin-bottom:8px; }
+  .loading-msg { font-size:14px; color:var(--text-light); margin-bottom:22px; }
+  .progress-bar { width:300px; height:4px; background:var(--border); border-radius:100px; overflow:hidden; margin-bottom:11px; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--blue),#7aa3ff); border-radius:100px; transition:width 0.5s ease; }
+  .progress-pct { font-family:'DM Mono',monospace; font-size:13px; color:var(--text-light); }
+
+  /* Payment modal */
+  .pay-box { background:var(--off-white); border:1px solid var(--border); border-radius:12px; padding:18px; display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; text-align:left; }
+  .pay-label { font-size:11px; color:var(--text-light); font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+  .pay-amount { font-family:'Playfair Display',serif; font-size:40px; font-weight:900; color:var(--navy); }
+
+  /* Live link modal */
+  .live-link-box { background:var(--green-light); border:1px solid #bbf7d0; border-radius:12px; padding:16px; margin-bottom:16px; }
+  .live-link-lbl { font-size:11px; color:var(--green); font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+  .live-link-input { width:100%; background:white; border:1px solid #bbf7d0; border-radius:8px; padding:10px 12px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text); outline:none; }
+
+  /* Upgrade success */
+  .upgrade-success { text-align:center; padding:72px 40px; }
+
+  /* Responsive */
+  @media(max-width:900px) {
+    .sidebar { transform:translateX(-100%); }
+    .sidebar.open { transform:translateX(0); }
+    .main { margin-left:0; padding:20px; }
+    .stats-row { grid-template-columns:repeat(2,1fr); }
+    .form-grid { grid-template-columns:1fr; }
+    .hamburger { display:flex; }
   }
-
-  .sidebar-logo span { color: var(--blue); }
-
-  .nav-section {
-    padding: 20px 0;
-    flex: 1;
-    overflow-y: auto;
+  @media(max-width:500px) {
+    .stats-row { grid-template-columns:1fr; }
+    .design-grid { grid-template-columns:repeat(2,1fr); }
   }
-
-  .nav-section-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text-light);
-    padding: 0 24px 10px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 24px;
-    color: var(--text-mid);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-left: 3px solid transparent;
-    text-decoration: none;
-  }
-
-  .nav-item:hover { background: var(--off-white); color: var(--text); }
-  .nav-item.active {
-    background: var(--blue-light);
-    color: var(--blue);
-    border-left-color: var(--blue);
-    font-weight: 600;
-  }
-
-  .nav-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    background: var(--off-white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-
-  .nav-item.active .nav-icon { background: rgba(26,86,255,0.12); }
-
-  .sidebar-bottom {
-    padding: 20px 24px;
-    border-top: 1px solid var(--border);
-  }
-
-  .user-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: var(--off-white);
-    border-radius: 10px;
-    margin-bottom: 12px;
-  }
-
-  .user-avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--blue-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  .user-name { font-size: 13px; font-weight: 700; color: var(--navy); }
-  .user-email { font-size: 11px; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-
-  .logout-btn {
-    width: 100%;
-    padding: 9px;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-mid);
-    font-size: 13px;
-    font-weight: 500;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .logout-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
-
-  /* Main */
-  .main { margin-left: 256px; padding: 40px; min-height: 100vh; }
-
-  .page-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 32px;
-  }
-
-  .page-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--navy);
-    letter-spacing: -0.5px;
-  }
-
-  .page-sub { font-size: 14px; color: var(--text-light); margin-top: 4px; }
-
-  .btn-blue {
-    padding: 11px 22px;
-    background: var(--blue);
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 9px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    box-shadow: 0 4px 14px rgba(26,86,255,0.25);
-    transition: all 0.2s;
-  }
-
-  .btn-blue:hover { background: var(--blue-dark); transform: translateY(-1px); }
-
-  /* Stats */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
-  .stat-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 24px;
-    transition: all 0.2s;
-  }
-
-  .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-
-  .stat-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-  }
-
-  .stat-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-  }
-
-  .stat-icon.blue { background: var(--blue-light); }
-  .stat-icon.green { background: var(--green-light); }
-  .stat-icon.orange { background: var(--orange-light); }
-  .stat-icon.navy { background: var(--light); }
-
-  .stat-val {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--navy);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .stat-lbl { font-size: 13px; color: var(--text-light); font-weight: 500; }
-
-  /* Section Header */
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-
-  .section-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--navy);
-  }
-
-  /* Website Cards */
-  .website-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-  }
-
-  .website-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    transition: all 0.25s;
-  }
-
-  .website-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
-
-  .card-thumb {
-    background: linear-gradient(135deg, var(--navy) 0%, #0d2040 100%);
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-    position: relative;
-  }
-
-  .card-status {
-    position: absolute;
-    top: 12px; right: 12px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    padding: 4px 10px;
-    border-radius: 100px;
-  }
-
-  .status-preview { background: var(--orange-light); color: var(--orange); }
-  .status-active { background: var(--green-light); color: var(--green); }
-  .status-expired { background: var(--red-light); color: var(--red); }
-
-  .card-body { padding: 18px; }
-
-  .card-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 4px;
-  }
-
-  .card-meta { font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
-
-  .card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  .card-btn {
-    flex: 1;
-    padding: 8px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-    font-family: 'DM Sans', sans-serif;
-    min-width: 60px;
-  }
-
-  .cb-view { background: var(--off-white); color: var(--text-mid); border: 1px solid var(--border); }
-  .cb-view:hover { background: var(--light); color: var(--blue); border-color: var(--blue); }
-
-  .cb-activate { background: var(--blue); color: white; border: none; box-shadow: 0 2px 8px rgba(26,86,255,0.25); }
-  .cb-activate:hover { background: var(--blue-dark); }
-
-  .cb-edit { background: transparent; color: var(--blue); border: 1px solid var(--blue-light); }
-  .cb-edit:hover { background: var(--blue-light); }
-
-  .cb-delete { background: transparent; color: var(--red); border: 1px solid #fecaca; }
-  .cb-delete:hover { background: var(--red-light); }
-
-  /* Empty State */
-  .empty-state {
-    background: white;
-    border: 1.5px dashed var(--border-dark);
-    border-radius: 16px;
-    padding: 80px 40px;
-    text-align: center;
-  }
-
-  .empty-icon { font-size: 52px; margin-bottom: 16px; }
-  .empty-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
-  .empty-sub { font-size: 14px; color: var(--text-light); margin-bottom: 28px; }
-
-  /* Form Styles */
-  .form-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px;
-    max-width: 720px;
-    margin-bottom: 24px;
-  }
-
-  .form-card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-
-  .form-group { margin-bottom: 18px; }
-
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-mid);
-    margin-bottom: 7px;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    background: var(--off-white);
-    border: 1.5px solid var(--border);
-    color: var(--text);
-    padding: 12px 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    border-radius: 9px;
-    outline: none;
-    transition: all 0.2s;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--blue);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(26,86,255,0.07);
-  }
-
-  input::placeholder, textarea::placeholder { color: var(--text-light); }
-
-  .design-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-
-  .design-opt {
-    border: 1.5px solid var(--border);
-    border-radius: 9px;
-    padding: 14px 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-mid);
-  }
-
-  .design-opt:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
-  .design-opt.selected { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
-
-  .feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-
-  .feat-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
-    background: var(--off-white);
-    border: 1.5px solid var(--border);
-    border-radius: 9px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-
-  .feat-label:hover { border-color: var(--blue); background: var(--blue-light); }
-
-  /* Panel */
-  .panel { display: none; }
-  .panel.active { display: block; }
-
-  /* Modals */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(10,22,40,0.6);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal {
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    max-width: 460px;
-    width: 90%;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.2);
-    text-align: center;
-    animation: popUp 0.3s ease;
-  }
-
-  @keyframes popUp {
-    from { opacity: 0; transform: scale(0.95) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  .modal-icon { font-size: 56px; margin-bottom: 20px; }
-  .modal-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
-  .modal-sub { font-size: 14px; color: var(--text-mid); margin-bottom: 24px; line-height: 1.6; }
-
-  .warning-box {
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
-    border-radius: 10px;
-    padding: 14px 18px;
-    font-size: 13px;
-    color: var(--orange);
-    margin-bottom: 28px;
-    text-align: left;
-    font-weight: 500;
-  }
-
-  .modal-actions { display: flex; gap: 12px; }
-
-  .modal-btn-primary {
-    flex: 2;
-    padding: 14px;
-    background: var(--blue);
-    color: white;
-    border-radius: 10px;
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    box-shadow: 0 4px 14px rgba(26,86,255,0.25);
-    transition: all 0.2s;
-  }
-
-  .modal-btn-primary:hover { background: var(--blue-dark); }
-
-  .modal-btn-secondary {
-    flex: 1;
-    padding: 14px;
-    background: var(--off-white);
-    color: var(--text-mid);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
-  }
-
-  .modal-btn-secondary:hover { background: var(--border); }
-
-  /* Loading */
-  .loading-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(248,249,252,0.95);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .loading-spinner {
-    width: 56px; height: 56px;
-    border: 3px solid var(--border);
-    border-top-color: var(--blue);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 24px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 900;
-    color: var(--navy);
-    margin-bottom: 8px;
-  }
-
-  .loading-msg { font-size: 14px; color: var(--text-light); margin-bottom: 24px; }
-
-  .progress-bar {
-    width: 320px;
-    height: 4px;
-    background: var(--border);
-    border-radius: 100px;
-    overflow: hidden;
-    margin-bottom: 12px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--blue), #7aa3ff);
-    border-radius: 100px;
-    transition: width 0.5s ease;
-  }
-
-  .progress-pct { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text-light); }
-
-  /* Payment card */
-  .payment-detail {
-    background: var(--off-white);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    text-align: left;
-  }
-
-  .payment-label { font-size: 12px; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-  .payment-amount { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 900; color: var(--navy); }
-
-  @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main { margin-left: 0; padding: 20px; }
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .form-grid { grid-template-columns: 1fr; }
-  }
+  .hamburger { display:none; position:fixed; top:14px; left:14px; z-index:300; background:white; border:1px solid var(--border); border-radius:8px; padding:10px; cursor:pointer; font-size:20px; box-shadow:var(--shadow-sm); }
 </style>
 </head>
 <body>
 
+<!-- Mobile hamburger -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+
 <!-- Sidebar -->
-<div class="sidebar">
+<div class="sidebar" id="sidebar">
   <a href="index.html" class="sidebar-logo">Auto<span>Vision</span></a>
   <div class="nav-section">
-    <div class="nav-section-label">Main Menu</div>
-    <div class="nav-item active" onclick="showPanel('dashboard', this)">
-      <div class="nav-icon">⚡</div> Dashboard
-    </div>
-    <div class="nav-item" onclick="showPanel('create', this)">
-      <div class="nav-icon">➕</div> Create Website
-    </div>
-    <div class="nav-item" onclick="showPanel('websites', this)">
-      <div class="nav-icon">🌐</div> My Websites
-    </div>
-    <div class="nav-item" onclick="showPanel('upgrade', this)">
-      <div class="nav-icon">🚀</div> Upgrade
-    </div>
+    <div class="nav-section-lbl">Main Menu</div>
+    <div class="nav-item active" data-panel="dashboard" onclick="showPanel('dashboard',this)"><div class="nav-icon">⚡</div> Dashboard</div>
+    <div class="nav-item" data-panel="create" onclick="showPanel('create',this)"><div class="nav-icon">➕</div> Create Website</div>
+    <div class="nav-item" data-panel="websites" onclick="showPanel('websites',this)"><div class="nav-icon">🌐</div> My Websites</div>
+    <div class="nav-item" data-panel="upgrade" onclick="showPanel('upgrade',this)"><div class="nav-icon">🚀</div> Upgrade</div>
   </div>
   <div class="sidebar-bottom">
     <div class="user-card">
-      <div class="user-avatar">👤</div>
+      <div class="user-av">👤</div>
       <div>
         <div class="user-name" id="userName">Loading...</div>
         <div class="user-email" id="userEmail">loading@email.com</div>
@@ -633,64 +229,41 @@
   </div>
 </div>
 
-<!-- Main -->
+<!-- Main Content -->
 <div class="main">
 
-  <!-- Dashboard -->
+  <!-- ── DASHBOARD ── -->
   <div class="panel active" id="dashboardPanel">
     <div class="page-header">
       <div>
         <div class="page-title">Good day, <span id="welcomeName">there</span> 👋</div>
         <div class="page-sub">Here's an overview of your websites</div>
       </div>
-      <button class="btn-blue" onclick="showPanel('create', null)">+ Create Website</button>
+      <button class="btn-blue" onclick="showPanel('create',null)">+ Create Website</button>
     </div>
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-top">
-          <div class="stat-icon blue">🌐</div>
-        </div>
-        <div class="stat-val" id="totalSites">0</div>
-        <div class="stat-lbl">Total Websites</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon green">✅</div></div>
-        <div class="stat-val" id="activeSites">0</div>
-        <div class="stat-lbl">Active Sites</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon orange">👁️</div></div>
-        <div class="stat-val" id="previewSites">0</div>
-        <div class="stat-lbl">In Preview</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-top"><div class="stat-icon navy">💰</div></div>
-        <div class="stat-val">₹0</div>
-        <div class="stat-lbl">Total Spent</div>
-      </div>
+      <div class="stat-card"><div class="stat-top"><div class="stat-icon si-blue">🌐</div></div><div class="stat-val" id="totalSites">0</div><div class="stat-lbl">Total Websites</div></div>
+      <div class="stat-card"><div class="stat-top"><div class="stat-icon si-green">✅</div></div><div class="stat-val" id="activeSites">0</div><div class="stat-lbl">Active Sites</div></div>
+      <div class="stat-card"><div class="stat-top"><div class="stat-icon si-orange">👁️</div></div><div class="stat-val" id="previewSites">0</div><div class="stat-lbl">In Preview</div></div>
+      <div class="stat-card"><div class="stat-top"><div class="stat-icon si-navy">💰</div></div><div class="stat-val" id="totalSpent">₹0</div><div class="stat-lbl">Total Spent</div></div>
     </div>
-    <div class="section-header">
-      <div class="section-title">Recent Websites</div>
-      <a style="font-size:13px;color:var(--blue);cursor:pointer;text-decoration:none;font-weight:600" onclick="showPanel('websites', null)">View all →</a>
+    <div class="sec-header">
+      <div class="sec-title">Recent Websites</div>
+      <a style="font-size:13px;color:var(--blue);cursor:pointer;text-decoration:none;font-weight:700" onclick="showPanel('websites',null)">View all →</a>
     </div>
     <div id="recentWebsites"></div>
   </div>
 
-  <!-- Create -->
+  <!-- ── CREATE ── -->
   <div class="panel" id="createPanel">
     <div class="page-header">
-      <div>
-        <div class="page-title">Create Website</div>
-        <div class="page-sub">Fill in your business details below</div>
-      </div>
+      <div><div class="page-title">Create Website</div><div class="page-sub">Fill in your business details below</div></div>
     </div>
     <div class="form-card">
       <div class="form-card-title">Business Information</div>
+      <div class="alert alert-error" id="createError"></div>
       <div class="form-grid">
-        <div class="form-group">
-          <label>Business Name *</label>
-          <input id="bizName" type="text" placeholder="e.g. Kasmani Store">
-        </div>
+        <div class="form-group"><label>Business Name *</label><input id="bizName" type="text" placeholder="e.g. Kasmani Store" maxlength="60"></div>
         <div class="form-group">
           <label>Business Type *</label>
           <select id="bizType">
@@ -705,217 +278,169 @@
           </select>
         </div>
       </div>
-      <div class="form-group">
-        <label>Services / Products</label>
-        <textarea id="bizServices" placeholder="Describe what you offer..." rows="3"></textarea>
-      </div>
+      <div class="form-group"><label>Services / Products</label><textarea id="bizServices" placeholder="Describe what you offer..." rows="3" maxlength="500"></textarea></div>
       <div class="form-grid">
-        <div class="form-group">
-          <label>Phone Number</label>
-          <input id="bizPhone" type="text" placeholder="+91 99999 99999">
-        </div>
-        <div class="form-group">
-          <label>Business Email</label>
-          <input id="bizEmail" type="email" placeholder="business@email.com">
-        </div>
+        <div class="form-group"><label>Phone Number</label><input id="bizPhone" type="tel" placeholder="+91 99999 99999"></div>
+        <div class="form-group"><label>Business Email</label><input id="bizEmail" type="email" placeholder="business@email.com"></div>
       </div>
-      <div class="form-group">
-        <label>Address</label>
-        <input id="bizAddress" type="text" placeholder="Your business address">
-      </div>
+      <div class="form-group"><label>Address</label><input id="bizAddress" type="text" placeholder="Your business address" maxlength="200"></div>
     </div>
-
     <div class="form-card">
       <div class="form-card-title">Design Preference</div>
       <div class="design-grid" id="designGrid">
-        <div class="design-opt" onclick="selectDesign(this,'Modern')">⚡<br><span>Modern</span></div>
+        <div class="design-opt selected" onclick="selectDesign(this,'Modern')">⚡<br><span>Modern</span></div>
         <div class="design-opt" onclick="selectDesign(this,'Classic')">🏛️<br><span>Classic</span></div>
         <div class="design-opt" onclick="selectDesign(this,'Bold')">🔥<br><span>Bold</span></div>
         <div class="design-opt" onclick="selectDesign(this,'Minimal')">✨<br><span>Minimal</span></div>
       </div>
     </div>
-
-    <button onclick="generateWebsite()" class="btn-blue" style="padding:14px 36px;font-size:15px">
-      Generate My Website →
-    </button>
+    <button onclick="generateWebsite()" class="btn-blue" style="padding:13px 34px;font-size:15px">Generate My Website →</button>
   </div>
 
-  <!-- Websites -->
+  <!-- ── MY WEBSITES ── -->
   <div class="panel" id="websitesPanel">
     <div class="page-header">
-      <div>
-        <div class="page-title">My Websites</div>
-        <div class="page-sub">Manage all your websites</div>
-      </div>
-      <button class="btn-blue" onclick="showPanel('create', null)">+ Create New</button>
+      <div><div class="page-title">My Websites</div><div class="page-sub">Manage all your websites</div></div>
+      <button class="btn-blue" onclick="showPanel('create',null)">+ Create New</button>
     </div>
     <div id="allWebsites"></div>
   </div>
 
-  <!-- Upgrade -->
+  <!-- ── UPGRADE ── -->
   <div class="panel" id="upgradePanel">
     <div class="page-header">
-      <div>
-        <div class="page-title">Advanced Features</div>
-        <div class="page-sub">Tell us what you need and we'll contact you</div>
-      </div>
+      <div><div class="page-title">Advanced Features</div><div class="page-sub">Tell us what you need and we'll contact you within 24 hours</div></div>
     </div>
-
     <div class="form-card">
       <div class="form-card-title">Features Required</div>
       <div class="feat-grid">
-        <label class="feat-label"><input type="checkbox" value="Online Payments" style="accent-color:var(--blue);width:auto"> Online Payments</label>
-        <label class="feat-label"><input type="checkbox" value="Shopping Cart" style="accent-color:var(--blue);width:auto"> Shopping Cart</label>
-        <label class="feat-label"><input type="checkbox" value="Product Listing" style="accent-color:var(--blue);width:auto"> Product Listing</label>
-        <label class="feat-label"><input type="checkbox" value="Customer Login" style="accent-color:var(--blue);width:auto"> Customer Login</label>
-        <label class="feat-label"><input type="checkbox" value="Admin Panel" style="accent-color:var(--blue);width:auto"> Admin Panel</label>
-        <label class="feat-label"><input type="checkbox" value="Custom Domain" style="accent-color:var(--blue);width:auto"> Custom Domain</label>
-        <label class="feat-label"><input type="checkbox" value="SEO Optimization" style="accent-color:var(--blue);width:auto"> SEO Optimization</label>
-        <label class="feat-label"><input type="checkbox" value="WhatsApp Chat" style="accent-color:var(--blue);width:auto"> WhatsApp Chat</label>
-        <label class="feat-label"><input type="checkbox" value="Booking System" style="accent-color:var(--blue);width:auto"> Booking System</label>
-        <label class="feat-label"><input type="checkbox" value="Custom Design" style="accent-color:var(--blue);width:auto"> Custom Design</label>
+        <label class="feat-label"><input type="checkbox" value="Online Payments"> Online Payments</label>
+        <label class="feat-label"><input type="checkbox" value="Shopping Cart"> Shopping Cart</label>
+        <label class="feat-label"><input type="checkbox" value="Product Listing"> Product Listing</label>
+        <label class="feat-label"><input type="checkbox" value="Customer Login"> Customer Login</label>
+        <label class="feat-label"><input type="checkbox" value="Admin Panel"> Admin Panel</label>
+        <label class="feat-label"><input type="checkbox" value="Custom Domain"> Custom Domain</label>
+        <label class="feat-label"><input type="checkbox" value="SEO Optimization"> SEO Optimization</label>
+        <label class="feat-label"><input type="checkbox" value="WhatsApp Chat"> WhatsApp Chat</label>
+        <label class="feat-label"><input type="checkbox" value="Booking System"> Booking System</label>
+        <label class="feat-label"><input type="checkbox" value="Custom Design"> Custom Design</label>
       </div>
     </div>
-
     <div class="form-card">
       <div class="form-card-title">Your Details</div>
+      <div class="alert alert-error" id="upgradeError"></div>
+      <div class="alert alert-success" id="upgradeSuccess"></div>
       <div class="form-grid">
-        <div class="form-group">
-          <label>Business Size</label>
-          <select id="bizSize">
-            <option>Small</option><option>Growing</option><option>Large</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Budget</label>
-          <select id="budget">
-            <option>Less than ₹3,000</option>
-            <option>₹3,000 – ₹7,000</option>
-            <option>₹7,000 – ₹15,000</option>
-            <option>₹15,000+</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Phone Number</label>
-          <input id="upPhone" type="text" placeholder="+91 99999 99999">
-        </div>
-        <div class="form-group">
-          <label>Email Address</label>
-          <input id="upEmail" type="email" placeholder="your@email.com">
-        </div>
+        <div class="form-group"><label>Business Size</label><select id="bizSize"><option>Small</option><option>Growing</option><option>Large</option></select></div>
+        <div class="form-group"><label>Budget</label><select id="budget"><option>Less than ₹3,000</option><option>₹3,000 – ₹7,000</option><option>₹7,000 – ₹15,000</option><option>₹15,000+</option></select></div>
+        <div class="form-group"><label>Phone Number *</label><input id="upPhone" type="tel" placeholder="+91 99999 99999"></div>
+        <div class="form-group"><label>Email Address *</label><input id="upEmail" type="email" placeholder="your@email.com"></div>
       </div>
-      <div class="form-group">
-        <label>Additional Notes</label>
-        <textarea id="upNotes" placeholder="Any specific requirements..." rows="3"></textarea>
-      </div>
-      <button onclick="submitUpgrade()" class="btn-blue" style="padding:13px 30px">Submit Request →</button>
+      <div class="form-group"><label>Additional Notes</label><textarea id="upNotes" placeholder="Any specific requirements..." rows="3"></textarea></div>
+      <button id="upgradeBtn" onclick="submitUpgrade()" class="btn-blue" style="padding:12px 28px">Submit Request →</button>
     </div>
   </div>
-
 </div>
 
-<!-- Loading Overlay -->
+<!-- ── LOADING OVERLAY ── -->
 <div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-spinner"></div>
+  <div class="spinner"></div>
   <div class="loading-title">Building Your Website</div>
-  <div class="loading-msg" id="loadMsg">Initializing AI engine...</div>
-  <div class="progress-bar">
-    <div class="progress-fill" id="progressFill" style="width:0%"></div>
-  </div>
+  <div class="loading-msg" id="loadMsg">Initialising AI engine...</div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   <div class="progress-pct" id="progressPct">0%</div>
 </div>
 
-<!-- Success Modal -->
+<!-- ── SUCCESS MODAL ── -->
 <div class="modal-overlay" id="successModal">
   <div class="modal">
     <div class="modal-icon">🎉</div>
     <div class="modal-title">Website Ready!</div>
-    <div class="modal-sub">Your professional website has been created successfully. Activate it now to make it live.</div>
-    <div class="warning-box">
-      ⚠️ This preview will expire in <strong>48 hours</strong> if not activated. Activate now for just ₹299.
-    </div>
+    <div class="modal-sub">Your professional website has been created. Preview it before activating.</div>
+    <div class="warn-box">⚠️ Preview expires in <strong>48 hours</strong>. You can edit for free before activating. After going live, editing costs ₹99.</div>
     <div class="modal-actions">
-      <button class="modal-btn-primary" onclick="openPayment()">Activate Now — ₹299</button>
-      <button class="modal-btn-secondary" onclick="closeSuccess()">Later</button>
+      <button class="modal-btn-primary" onclick="openPaymentModal()">Activate Now — ₹299</button>
+      <button class="modal-btn-secondary" onclick="closeSuccessModal()">Preview Later</button>
     </div>
   </div>
 </div>
 
-<!-- Payment Modal -->
+<!-- ── PAYMENT MODAL ── -->
 <div class="modal-overlay" id="paymentModal">
   <div class="modal">
     <div class="modal-icon">💳</div>
     <div class="modal-title">Activate Website</div>
     <div class="modal-sub">Secure payment via Razorpay</div>
-    <div class="payment-detail">
-      <div>
-        <div class="payment-label">Activation Fee</div>
-        <div class="payment-amount">₹299</div>
-      </div>
+    <div class="pay-box">
+      <div><div class="pay-label">Activation Fee</div><div class="pay-amount">₹299</div></div>
       <div style="font-size:32px">🌐</div>
     </div>
-    <div style="font-size:13px;color:var(--text-light);margin-bottom:24px;line-height:1.8;text-align:left">
+    <div style="font-size:13px;color:var(--text-light);margin-bottom:24px;line-height:1.9;text-align:left">
       ✓ Website goes live instantly<br>
       ✓ Pay via UPI, GPay, PhonePe or Card<br>
-      ✓ 100% secure via Razorpay
+      ✓ 100% secure via Razorpay<br>
+      ✓ Editing will cost ₹99 per change after going live
     </div>
     <div class="modal-actions">
-      <button class="modal-btn-primary" onclick="processPayment()">Pay ₹299 →</button>
-      <button class="modal-btn-secondary" onclick="document.getElementById('paymentModal').style.display='none'">Cancel</button>
+      <button class="modal-btn-primary" id="payBtn" onclick="processActivationPayment()">Pay ₹299 →</button>
+      <button class="modal-btn-secondary" onclick="closeModal('paymentModal')">Cancel</button>
     </div>
   </div>
 </div>
 
-<!-- Live Link Modal -->
-<div class="modal-overlay" id="liveLinkModal" style="display:none">
+<!-- ── LIVE LINK MODAL ── -->
+<div class="modal-overlay" id="liveLinkModal">
   <div class="modal">
-    <div class="modal-icon">🎉</div>
+    <div class="modal-icon">🎊</div>
     <div class="modal-title">Website is LIVE!</div>
     <div class="modal-sub">Share this link with your customers. Anyone with this link can visit your professional website.</div>
-    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;margin-bottom:16px">
-      <div style="font-size:11px;color:#16a34a;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">🔗 Your Live Website Link</div>
-      <input id="liveLinkUrl" readonly style="width:100%;background:white;border:1px solid #bbf7d0;border-radius:8px;padding:10px 12px;font-family:monospace;font-size:11px;color:#0a1628;outline:none">
+    <div class="live-link-box">
+      <div class="live-link-lbl">🔗 Your Live Website Link</div>
+      <input id="liveLinkUrl" class="live-link-input" readonly>
     </div>
     <div style="display:flex;gap:10px;margin-bottom:12px">
-      <button id="copyLinkBtn" onclick="copyLiveLink()" style="flex:2;padding:13px;background:#1a56ff;color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">📋 Copy Link</button>
-      <button onclick="window.open(document.getElementById('liveLinkUrl').value,'_blank')" style="flex:1;padding:13px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Open ↗</button>
+      <button id="copyLinkBtn" onclick="copyLiveLink()" style="flex:2;padding:13px;background:var(--blue);color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s">📋 Copy Link</button>
+      <button onclick="window.open(document.getElementById('liveLinkUrl').value,'_blank')" style="flex:1;padding:13px;background:var(--green-light);color:var(--green);border:1px solid #bbf7d0;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Open ↗</button>
     </div>
-    <button onclick="document.getElementById('liveLinkModal').style.display='none';showPanel('websites',null)" style="width:100%;padding:12px;background:#f8fafc;color:#64748b;border:1px solid #e2e8f4;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Go to My Websites</button>
+    <button onclick="closeModal('liveLinkModal');showPanel('websites',null)" style="width:100%;padding:12px;background:var(--off-white);color:var(--text-mid);border:1px solid var(--border);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Go to My Websites</button>
   </div>
 </div>
 
-<!-- Edit Website Modal -->
-<div class="modal-overlay" id="editModal" style="display:none">
-  <div class="modal" style="max-width:500px;text-align:left">
-    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#0a1628;margin-bottom:12px" id="editModalTitle">Edit Website</div>
-    <div id="editFeeNotice" style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;font-size:13px;color:#ea580c;margin-bottom:16px;display:none">⚡ A small fee of ₹99 is charged for editing a live website.</div>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
-      <div>
-        <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Business Name</label>
-        <input id="editHeading" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" placeholder="Your business name">
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Services / Description</label>
-        <textarea id="editDesc" rows="3" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;resize:vertical" placeholder="What you offer..."></textarea>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div>
-          <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Phone</label>
-          <input id="editPhone" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" placeholder="+91 99999 99999">
-        </div>
-        <div>
-          <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Email</label>
-          <input id="editEmailField" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" placeholder="business@email.com">
-        </div>
-      </div>
-      <div>
-        <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:5px">Address</label>
-        <input id="editAddress" style="width:100%;padding:11px 14px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none" placeholder="Your address">
-      </div>
+<!-- ── EDIT MODAL ── -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal edit-modal">
+    <div class="modal-title" id="editModalTitle">Edit Website</div>
+    <div class="edit-locked-banner" id="editLockedBanner" style="display:none">
+      🔒 This website is live. Editing requires a payment of ₹99.
     </div>
-    <div style="display:flex;gap:10px">
-      <button id="editSaveBtn" style="flex:2;padding:14px;background:#1a56ff;color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Save Changes →</button>
-      <button onclick="document.getElementById('editModal').style.display='none'" style="flex:1;padding:14px;background:#f1f5f9;color:#64748b;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Cancel</button>
+    <div class="alert alert-error" id="editError"></div>
+    <div class="edit-form-group"><label>Business Name *</label><input class="edit-input" id="editName" placeholder="Your business name" maxlength="60"></div>
+    <div class="edit-form-group"><label>Services / Description</label><textarea class="edit-input" id="editServices" rows="3" placeholder="What you offer..." maxlength="500" style="resize:vertical"></textarea></div>
+    <div class="edit-grid">
+      <div class="edit-form-group"><label>Phone</label><input class="edit-input" id="editPhone" placeholder="+91 99999 99999"></div>
+      <div class="edit-form-group"><label>Email</label><input class="edit-input" id="editEmailField" placeholder="business@email.com"></div>
+    </div>
+    <div class="edit-form-group"><label>Address</label><input class="edit-input" id="editAddress" placeholder="Your address" maxlength="200"></div>
+    <div class="edit-actions">
+      <button id="editSaveBtn" style="flex:2;padding:13px;background:var(--blue);color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s" onclick="handleEditSave()">Save Changes →</button>
+      <button onclick="closeModal('editModal')" style="flex:1;padding:13px;background:var(--off-white);color:var(--text-mid);border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDIT UNLOCK PAYMENT MODAL ── -->
+<div class="modal-overlay" id="editPayModal">
+  <div class="modal">
+    <div class="modal-icon">✏️</div>
+    <div class="modal-title">Unlock Editing</div>
+    <div class="modal-sub">This website is live. Pay ₹99 to unlock editing for this update.</div>
+    <div class="pay-box">
+      <div><div class="pay-label">Edit Fee</div><div class="pay-amount">₹99</div></div>
+      <div style="font-size:32px">✏️</div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-primary" onclick="processEditPayment()">Pay ₹99 & Edit →</button>
+      <button class="modal-btn-secondary" onclick="closeModal('editPayModal')">Cancel</button>
     </div>
   </div>
 </div>
@@ -924,294 +449,628 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  emailjs.init('H9mRJV2zi9LJ7OhBw');
+// ════════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════════
+const EMAILJS_PUBLIC_KEY  = 'H9mRJV2zi9LJ7OhBw';
+const EMAILJS_SERVICE_ID  = 'service_6q18vqn';
+const EMAILJS_TEMPLATE_ID = 'template_8bq71z3';
+const SUPA_URL = 'https://twneeawhdzgnavudanud.supabase.co';
+const SUPA_KEY = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+const RAZORPAY_KEY = 'rzp_live_SaJ684rRC2TUwj';
+const BASE_URL = 'https://autovision-psi.vercel.app';
 
-  const SUPA_URL = 'https://twneeawhdzgnavudanud.supabase.co';
-  const SUPA_KEY = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
-  const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+emailjs.init(EMAILJS_PUBLIC_KEY);
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-  let selectedDesign = 'Modern';
-  let currentWebsite = null;
-  let currentUser    = null;
+// ── In-memory state (NOT in localStorage — prevents tampering) ──
+let currentUser    = null;
+let currentWebsite = null;  // { id, name, status } — pending operations
+let selectedDesign = 'Modern';
+let _editingWebsite = null; // { id, name, status } — website being edited
+let _editPaidUnlocked = false; // true only after successful payment in this session
 
-  window.onload = async function() {
-    const user = JSON.parse(localStorage.getItem('av_user') || '{}');
-    if (!user.email || (user.expiresAt && Date.now() > user.expiresAt)) {
-      localStorage.removeItem('av_user');
+// ════════════════════════════════════════════════
+// INIT + SESSION GUARD
+// ════════════════════════════════════════════════
+window.onload = async function() {
+  // Strict session validation
+  let user;
+  try {
+    user = JSON.parse(localStorage.getItem('av_user') || '{}');
+  } catch {
+    user = {};
+  }
+  if (!user.email || !user.expiresAt || Date.now() > user.expiresAt) {
+    localStorage.removeItem('av_user');
+    window.location.href = 'login.html';
+    return;
+  }
+  currentUser = user;
+
+  // Populate UI
+  const name = capitalize(user.name || user.email.split('@')[0]);
+  document.getElementById('userName').textContent    = name;
+  document.getElementById('userEmail').textContent   = user.email;
+  document.getElementById('welcomeName').textContent = name;
+
+  await loadStats();
+  await renderWebsites('recentWebsites', 3);
+};
+
+// Re-validate session on page visibility (catches tab switching/resuming)
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    try {
+      const u = JSON.parse(localStorage.getItem('av_user') || '{}');
+      if (!u.email || !u.expiresAt || Date.now() > u.expiresAt) {
+        window.location.href = 'login.html';
+      }
+    } catch {
       window.location.href = 'login.html';
-      return;
     }
-    currentUser = user;
-    const name = (user.name||'there').charAt(0).toUpperCase()+(user.name||'there').slice(1);
-    document.getElementById('userName').textContent  = name;
-    document.getElementById('userEmail').textContent = user.email;
-    document.getElementById('welcomeName').textContent = name;
-    await loadStats();
-    await renderWebsites('recentWebsites', 3);
-  };
+  }
+});
 
-  function logout() { localStorage.removeItem('av_user'); window.location.href = 'index.html'; }
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
-  function showPanel(name, el) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(name+'Panel').classList.add('active');
-    if (el) el.classList.add('active');
-    if (name === 'websites') renderWebsites('allWebsites');
+function logout() {
+  localStorage.removeItem('av_user');
+  window.location.href = 'index.html';
+}
+
+// ════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════
+function showPanel(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(name + 'Panel').classList.add('active');
+  if (el) { el.classList.add('active'); }
+  else {
+    const match = document.querySelector(`[data-panel="${name}"]`);
+    if (match) match.classList.add('active');
+  }
+  if (name === 'websites') renderWebsites('allWebsites');
+  if (name === 'dashboard') { loadStats(); renderWebsites('recentWebsites', 3); }
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ════════════════════════════════════════════════
+// DESIGN SELECTION
+// ════════════════════════════════════════════════
+function selectDesign(el, style) {
+  document.querySelectorAll('.design-opt').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedDesign = style;
+}
+
+// ════════════════════════════════════════════════
+// STATS
+// ════════════════════════════════════════════════
+async function loadStats() {
+  const { data: sites } = await db.from('av_websites').select('status').eq('user_email', currentUser.email);
+  const { data: payments } = await db.from('av_payments').select('amount').eq('user_email', currentUser.email).eq('status','paid');
+  document.getElementById('totalSites').textContent   = sites?.length || 0;
+  document.getElementById('activeSites').textContent  = sites?.filter(s => s.status === 'active').length  || 0;
+  document.getElementById('previewSites').textContent = sites?.filter(s => s.status === 'preview').length || 0;
+  const spent = payments?.reduce((a, p) => a + (p.amount || 0), 0) || 0;
+  document.getElementById('totalSpent').textContent   = '₹' + spent;
+}
+
+// ════════════════════════════════════════════════
+// RENDER WEBSITES
+// ════════════════════════════════════════════════
+async function renderWebsites(containerId, limit) {
+  const cont = document.getElementById(containerId);
+  if (!cont) return;
+  cont.innerHTML = '<div style="text-align:center;padding:40px;color:#94a3b8;font-size:14px">⏳ Loading...</div>';
+
+  let query = db.from('av_websites').select('*').eq('user_email', currentUser.email).order('created_at', { ascending: false });
+  if (limit) query = query.limit(limit);
+  const { data: sites, error } = await query;
+
+  if (error) {
+    cont.innerHTML = '<div style="text-align:center;padding:40px;color:var(--red);font-size:14px">⚠️ Failed to load websites. Please refresh.</div>';
+    return;
+  }
+  if (!sites || sites.length === 0) {
+    cont.innerHTML = `<div class="empty-state"><div class="empty-icon">🌐</div><div class="empty-title">No websites yet</div><div class="empty-sub">Create your first website for free — ready in under 2 minutes.</div><button onclick="showPanel('create',null)" class="btn-blue" style="padding:12px 24px;font-size:14px">Create My First Website →</button></div>`;
+    return;
   }
 
-  function selectDesign(el, style) {
-    document.querySelectorAll('.design-opt').forEach(d => d.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedDesign = style;
-  }
+  const cards = sites.map(s => {
+    const isActive  = s.status === 'active';
+    const isPreview = s.status === 'preview';
+    const isExpired = s.status === 'expired';
+    const previewUrl = `${BASE_URL}/preview.html?site=${s.id}`;
 
-  async function loadStats() {
-    const { data: sites } = await db.from('av_websites').select('status').eq('user_email', currentUser.email);
-    document.getElementById('totalSites').textContent   = sites?.length || 0;
-    document.getElementById('activeSites').textContent  = sites?.filter(s=>s.status==='active').length || 0;
-    document.getElementById('previewSites').textContent = sites?.filter(s=>s.status==='preview').length || 0;
-  }
+    const liveLinkHtml = isActive ? `
+      <div class="live-link-row">
+        🔗 <span>${previewUrl}</span>
+        <button class="copy-btn" onclick="copyText('${previewUrl}',this)">Copy</button>
+      </div>` : '';
 
-  async function renderWebsites(containerId, limit) {
-    const cont = document.getElementById(containerId);
-    cont.innerHTML = `<div style="text-align:center;padding:40px;color:#94a3b8;font-size:14px">Loading...</div>`;
-    let query = db.from('av_websites').select('*').eq('user_email', currentUser.email).order('created_at',{ascending:false});
-    if (limit) query = query.limit(limit);
-    const { data: sites } = await query;
-    if (!sites || sites.length === 0) {
-      cont.innerHTML = `<div class="empty-state"><div class="empty-icon">🌐</div><div class="empty-title">No websites yet</div><div class="empty-sub">Create your first website for free</div><button onclick="showPanel('create',null)" class="btn-blue" style="padding:12px 24px;font-size:14px">Create My First Website →</button></div>`;
-      return;
+    // ── EDIT BUTTON LOGIC ──
+    // Before live: free edit button
+    // After live: locked edit button (requires ₹99 payment)
+    let editBtn = '';
+    if (isPreview) {
+      editBtn = `<button class="card-btn cb-edit" onclick="openFreeEdit('${s.id}','${sanitizeAttr(s.name)}')">✏️ Edit Free</button>`;
+    } else if (isActive) {
+      editBtn = `<button class="card-btn cb-edit-locked" onclick="openLockedEdit('${s.id}','${sanitizeAttr(s.name)}')">🔒 Edit ₹99</button>`;
     }
-    cont.innerHTML = `<div class="website-grid">${sites.map(s=>`
+
+    const activateBtn = isPreview ? `<button class="card-btn cb-activate" onclick="openPaymentFor('${s.id}','${sanitizeAttr(s.name)}')">⚡ Activate ₹299</button>` : '';
+
+    return `
       <div class="website-card">
-        <div class="card-thumb">${s.name}<div class="card-status status-${s.status}">${s.status==='preview'?'⏳ Preview':s.status==='active'?'✅ Live':'❌ Expired'}</div></div>
+        <div class="card-thumb">
+          ${escapeHtml(s.name)}
+          <div class="card-status ${isActive?'s-active':isPreview?'s-preview':'s-expired'}">
+            ${isActive?'✅ Live':isPreview?'⏳ Preview':'❌ Expired'}
+          </div>
+        </div>
         <div class="card-body">
-          <div class="card-name">${s.name}</div>
-          <div class="card-meta">${s.type} · ${s.design} Design · ${new Date(s.created_at).toLocaleDateString('en-IN')}</div>
-          ${s.status==='active'?`<div style="margin-bottom:10px;padding:8px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;color:#16a34a;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-            🔗 <span style="font-family:monospace;word-break:break-all">autovision-psi.vercel.app/preview.html?site=${s.id}</span>
-            <button onclick="navigator.clipboard.writeText('https://autovision-psi.vercel.app/preview.html?site=${s.id}').then(()=>alert('Link copied!'))" style="background:#16a34a;color:white;border:none;padding:3px 10px;border-radius:5px;font-size:11px;cursor:pointer;flex-shrink:0">Copy</button>
-          </div>`:''}
+          <div class="card-name">${escapeHtml(s.name)}</div>
+          <div class="card-meta">${escapeHtml(s.type || '')} · ${escapeHtml(s.design || 'Modern')} Design · ${formatDate(s.created_at)}</div>
+          ${liveLinkHtml}
           <div class="card-actions">
             <button class="card-btn cb-view" onclick="window.open('preview.html?site=${s.id}','_blank')">👁 View</button>
-            ${s.status==='preview'?`
-              <button class="card-btn cb-edit" onclick="openFreeEdit('${s.id}','${s.name}')">✏️ Edit Free</button>
-              <button class="card-btn cb-activate" onclick="openPaymentFor('${s.id}','${s.name}')">⚡ Activate ₹299</button>
-            `:`
-              <button class="card-btn cb-edit" onclick="openPaidEdit('${s.id}','${s.name}')">✏️ Edit ₹99</button>
-            `}
+            ${editBtn}
+            ${activateBtn}
             <button class="card-btn cb-delete" onclick="deleteWebsite('${s.id}','${containerId}')">🗑 Delete</button>
           </div>
         </div>
-      </div>`).join('')}</div>`;
-  }
+      </div>`;
+  }).join('');
 
-  // Free edit before activation
-  function openFreeEdit(id, name) {
-    currentWebsite = { id, name };
-    document.getElementById('editModal').style.display = 'flex';
-    document.getElementById('editModalTitle').textContent = `Edit "${name}" — Free`;
-    document.getElementById('editFeeNotice').style.display = 'none';
-    document.getElementById('editSaveBtn').textContent = 'Save Changes Free →';
-    document.getElementById('editSaveBtn').onclick = () => saveEdit(id, false);
-  }
+  cont.innerHTML = `<div class="website-grid">${cards}</div>`;
+}
 
-  // Paid edit after live
-  function openPaidEdit(id, name) {
-    currentWebsite = { id, name };
-    document.getElementById('editModal').style.display = 'flex';
-    document.getElementById('editModalTitle').textContent = `Edit "${name}"`;
-    document.getElementById('editFeeNotice').style.display = 'block';
-    document.getElementById('editSaveBtn').textContent = 'Pay ₹99 & Save →';
-    document.getElementById('editSaveBtn').onclick = () => processEditPayment(id);
-  }
+function sanitizeAttr(str) { return (str || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;'); }
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(str || ''));
+  return d.innerHTML;
+}
+function formatDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
 
-  async function saveEdit(id, paid) {
-    const heading = document.getElementById('editHeading').value.trim();
-    const desc    = document.getElementById('editDesc').value.trim();
-    const phone   = document.getElementById('editPhone').value.trim();
-    const email   = document.getElementById('editEmailField').value.trim();
-    const address = document.getElementById('editAddress').value.trim();
-    if (!heading) { alert('Please enter at least a business name.'); return; }
-    await db.from('av_websites').update({ name: heading, services: desc, phone, email, address }).eq('id', id);
-    document.getElementById('editModal').style.display = 'none';
-    await renderWebsites('recentWebsites', 3);
-    await renderWebsites('allWebsites');
-    alert('✅ Changes saved successfully!');
-  }
+// ════════════════════════════════════════════════
+// GENERATE WEBSITE
+// ════════════════════════════════════════════════
+function validateCreateForm() {
+  const name = document.getElementById('bizName').value.trim();
+  const type = document.getElementById('bizType').value;
+  const email = document.getElementById('bizEmail').value.trim();
+  const phone = document.getElementById('bizPhone').value.trim();
+  const errEl = document.getElementById('createError');
 
-  function processEditPayment(id) {
-    document.getElementById('editModal').style.display = 'none';
-    new Razorpay({
-      key: 'rzp_live_SaJ684rRC2TUwj',
-      amount: 9900, currency: 'INR',
-      name: 'AutoVision', description: 'Website Edit — ₹99',
-      handler: async function(res) {
-        await db.from('av_payments').insert([{ user_email: currentUser.email, website_id: id, amount: 99, payment_id: res.razorpay_payment_id, type:'edit', status:'paid' }]);
-        await saveEdit(id, true);
-      },
-      prefill: { email: currentUser.email || '' },
-      theme: { color: '#1a56ff' }
-    }).open();
-  }
+  if (!name) { showInlineAlert('createError', '⚠️ Business Name is required.'); return false; }
+  if (name.length < 2) { showInlineAlert('createError', '⚠️ Business Name must be at least 2 characters.'); return false; }
+  if (!type) { showInlineAlert('createError', '⚠️ Please select a Business Type.'); return false; }
+  if (email && !validEmail(email)) { showInlineAlert('createError', '⚠️ Please enter a valid Business Email.'); return false; }
+  hideInlineAlert('createError');
+  return true;
+}
 
-  async function generateWebsite() {
-    const name = document.getElementById('bizName').value.trim();
-    const type = document.getElementById('bizType').value;
-    if (!name || !type) { alert('Please fill in Business Name and Type.'); return; }
-    const overlay = document.getElementById('loadingOverlay');
-    overlay.style.display = 'flex';
-    const msgs = ['Initialising AI engine...','Analysing your business...','Designing your layout...','Building your pages...','Finalising your website...'];
-    let step = 0;
-    const interval = setInterval(async () => {
-      step++;
-      const pct = step * 20;
-      document.getElementById('progressFill').style.width = pct+'%';
-      document.getElementById('progressPct').textContent = pct+'%';
-      if (msgs[step-1]) document.getElementById('loadMsg').textContent = msgs[step-1];
-      if (step >= 5) {
-        clearInterval(interval);
-        setTimeout(async () => {
+async function generateWebsite() {
+  if (!validateCreateForm()) return;
+
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('open');
+
+  const msgs = [
+    'Analysing your business details...',
+    'Designing your layout...',
+    'Building pages and sections...',
+    'Adding content and styling...',
+    'Finalising your website...'
+  ];
+  let step = 0;
+
+  const interval = setInterval(async () => {
+    step++;
+    const pct = step * 20;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent  = pct + '%';
+    document.getElementById('loadMsg').textContent = msgs[step - 1] || 'Almost done...';
+
+    if (step >= 5) {
+      clearInterval(interval);
+      setTimeout(async () => {
+        try {
           const { data, error } = await db.from('av_websites').insert([{
             user_email: currentUser.email,
-            name, type, design: selectedDesign,
+            name:     document.getElementById('bizName').value.trim(),
+            type:     document.getElementById('bizType').value,
+            design:   selectedDesign,
             phone:    document.getElementById('bizPhone').value.trim(),
             email:    document.getElementById('bizEmail').value.trim(),
             services: document.getElementById('bizServices').value.trim(),
             address:  document.getElementById('bizAddress').value.trim(),
-            status: 'preview',
-            expires_at: new Date(Date.now()+48*60*60*1000).toISOString()
+            status:   'preview',
+            expires_at: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
           }]).select().single();
-          overlay.style.display = 'none';
-          if (error) { alert('Error saving. Please try again.'); return; }
+
+          overlay.classList.remove('open');
+
+          if (error) {
+            console.error('Supabase insert error:', error);
+            alert('⚠️ Error saving your website. Please try again.');
+            return;
+          }
           currentWebsite = data;
           await loadStats();
           await renderWebsites('recentWebsites', 3);
-          document.getElementById('successModal').style.display = 'flex';
-        }, 400);
-      }
-    }, 800);
-  }
+          openModal('successModal');
+          // Reset form
+          document.getElementById('bizName').value = '';
+          document.getElementById('bizType').value = '';
+          document.getElementById('bizServices').value = '';
+          document.getElementById('bizPhone').value = '';
+          document.getElementById('bizEmail').value = '';
+          document.getElementById('bizAddress').value = '';
+        } catch (err) {
+          overlay.classList.remove('open');
+          alert('⚠️ An error occurred. Please check your connection and try again.');
+        }
+      }, 400);
+    }
+  }, 800);
+}
 
-  function openPayment() { document.getElementById('successModal').style.display='none'; document.getElementById('paymentModal').style.display='flex'; }
-  function openPaymentFor(id, name) { currentWebsite = {id, name}; document.getElementById('paymentModal').style.display='flex'; }
-  function closeSuccess() { document.getElementById('successModal').style.display='none'; showPanel('dashboard',null); }
+// ════════════════════════════════════════════════
+// MODAL HELPERS
+// ════════════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-  async function processPayment() {
-    new Razorpay({
-      key: 'rzp_live_SaJ684rRC2TUwj',
-      amount: 29900, currency: 'INR',
-      name: 'AutoVision', description: 'Website Activation — ₹299',
-      handler: async function(res) {
-        document.getElementById('paymentModal').style.display='none';
-        await db.from('av_websites').update({status:'active'}).eq('id', currentWebsite.id);
-        await db.from('av_payments').insert([{ user_email: currentUser.email, website_id: currentWebsite.id, amount: 299, payment_id: res.razorpay_payment_id, type:'activation', status:'paid' }]);
+function openPaymentModal() {
+  closeModal('successModal');
+  openModal('paymentModal');
+}
+function openPaymentFor(id, name) {
+  currentWebsite = { id, name };
+  openModal('paymentModal');
+}
+function closeSuccessModal() {
+  closeModal('successModal');
+  showPanel('dashboard', null);
+}
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2200);
+  }).catch(() => { alert('Copy failed. Please copy manually:\n' + text); });
+}
+function copyLiveLink() {
+  const inp = document.getElementById('liveLinkUrl');
+  const btn = document.getElementById('copyLinkBtn');
+  navigator.clipboard.writeText(inp.value).then(() => {
+    btn.textContent = '✅ Copied!';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => { btn.textContent = '📋 Copy Link'; btn.style.background = 'var(--blue)'; }, 2400);
+  }).catch(() => { alert('Copy failed. Please copy manually.'); });
+}
+
+function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.trim()); }
+
+// ════════════════════════════════════════════════
+// PAYMENT — ACTIVATION (₹299)
+// ════════════════════════════════════════════════
+async function processActivationPayment() {
+  if (!currentWebsite?.id) { alert('⚠️ No website selected. Please try again.'); return; }
+
+  const payBtn = document.getElementById('payBtn');
+  payBtn.disabled = true;
+  payBtn.textContent = '⏳ Opening payment...';
+
+  const rzp = new Razorpay({
+    key: RAZORPAY_KEY,
+    amount: 29900,   // ₹299 in paise
+    currency: 'INR',
+    name: 'AutoVision',
+    description: 'Website Activation — ₹299',
+    handler: async function(response) {
+      // Payment succeeded — verify and activate
+      closeModal('paymentModal');
+      const overlay = document.getElementById('loadingOverlay');
+      document.getElementById('loadMsg').textContent = 'Verifying payment & activating website...';
+      document.getElementById('progressFill').style.width = '80%';
+      overlay.classList.add('open');
+
+      try {
+        // Update status in DB
+        const { error: updateErr } = await db.from('av_websites')
+          .update({ status: 'active' })
+          .eq('id', currentWebsite.id)
+          .eq('user_email', currentUser.email);  // Extra security: match user
+
+        if (updateErr) throw updateErr;
+
+        // Log payment
+        await db.from('av_payments').insert([{
+          user_email:  currentUser.email,
+          website_id:  currentWebsite.id,
+          amount:      299,
+          payment_id:  response.razorpay_payment_id,
+          type:        'activation',
+          status:      'paid',
+          created_at:  new Date().toISOString()
+        }]);
+
+        document.getElementById('progressFill').style.width = '100%';
         await loadStats();
         await renderWebsites('recentWebsites', 3);
 
-        // Show live link to user
-        const liveLink = `https://autovision-psi.vercel.app/preview.html?site=${currentWebsite.id}`;
-        document.getElementById('liveLinkUrl').value = liveLink;
-        document.getElementById('liveLinkModal').style.display = 'flex';
-      },
-      prefill: { email: currentUser.email || '' },
-      theme: { color: '#1a56ff' }
-    }).open();
-  }
+        overlay.classList.remove('open');
 
-  function copyLiveLink() {
-    const inp = document.getElementById('liveLinkUrl');
-    navigator.clipboard.writeText(inp.value).then(() => {
-      const btn = document.getElementById('copyLinkBtn');
-      btn.textContent = '✅ Copied!';
-      btn.style.background = '#16a34a';
-      setTimeout(() => { btn.textContent = '📋 Copy Link'; btn.style.background = '#1a56ff'; }, 2500);
-    });
-  }
-
-  async function deleteWebsite(id, containerId) {
-    if (!confirm('Delete this website permanently?')) return;
-    await db.from('av_websites').delete().eq('id', id);
-    await loadStats();
-    await renderWebsites(containerId);
-    await renderWebsites('recentWebsites', 3);
-  }
-
-  async function submitUpgrade() {
-    const phone    = document.getElementById('upPhone').value.trim();
-    const email    = document.getElementById('upEmail').value.trim();
-    const bizSize  = document.getElementById('bizSize').value;
-    const budget   = document.getElementById('budget').value;
-    const notes    = document.getElementById('upNotes').value.trim();
-    const features = [...document.querySelectorAll('.feat-grid input:checked')].map(i => i.value);
-
-    if (!phone || !email) { alert('Please fill in your phone and email.'); return; }
-
-    const btn = document.querySelector('#upgradePanel .btn-blue');
-    btn.textContent = 'Submitting...';
-    btn.disabled = true;
-
-    // 1. Save to Supabase
-    const { error } = await db.from('av_upgrades').insert([{
-      user_email:    currentUser.email,
-      features:      features.join(', '),
-      business_size: bizSize,
-      budget, phone, email, notes
-    }]);
-
-    // 2. Send email via EmailJS using fetch directly (most reliable way)
-    const emailData = {
-      service_id:  'service_6q18vqn',
-      template_id: 'template_8bq71z3',
-      user_id:     'H9mRJV2zi9LJ7OhBw',
-      template_params: {
-        from_name:     currentUser.name || currentUser.email,
-        name:          currentUser.name || currentUser.email,
-        from_contact:  `${phone} | ${email}`,
-        business_name: 'AutoVision — Upgrade Request',
-        message:       `NEW UPGRADE REQUEST\n\nAccount: ${currentUser.email}\nFeatures: ${features.join(', ') || 'None'}\nBusiness Size: ${bizSize}\nBudget: ${budget}\nPhone: ${phone}\nEmail: ${email}\nNotes: ${notes || 'None'}`,
-        reply_to:      email,
-        time:          new Date().toLocaleString('en-IN')
+        // Show live link
+        const liveUrl = `${BASE_URL}/preview.html?site=${currentWebsite.id}`;
+        document.getElementById('liveLinkUrl').value = liveUrl;
+        openModal('liveLinkModal');
+      } catch (err) {
+        overlay.classList.remove('open');
+        console.error('Activation error:', err);
+        alert('⚠️ Payment received but activation failed. Please contact support with Payment ID: ' + response.razorpay_payment_id);
       }
-    };
+    },
+    modal: {
+      ondismiss: function() {
+        payBtn.disabled = false;
+        payBtn.textContent = 'Pay ₹299 →';
+      }
+    },
+    prefill: { email: currentUser.email || '' },
+    theme: { color: '#1a56ff' }
+  });
+  rzp.open();
+}
 
-    try {
-      const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailData)
-      });
-      const result = await res.text();
-      console.log('EmailJS response:', res.status, result);
-    } catch(e) {
-      console.log('Email error:', e);
-    }
+// ════════════════════════════════════════════════
+// EDIT — BEFORE LIVE (free)
+// ════════════════════════════════════════════════
+function openFreeEdit(id, name) {
+  _editingWebsite    = { id, name, status: 'preview' };
+  _editPaidUnlocked  = false;
 
-    btn.textContent = 'Submit Request →';
-    btn.disabled = false;
+  document.getElementById('editModalTitle').textContent = `Edit "${name}"`;
+  document.getElementById('editLockedBanner').style.display = 'none';
+  document.getElementById('editSaveBtn').textContent = 'Save Changes →';
+  document.getElementById('editSaveBtn').disabled    = false;
+  hideInlineAlert('editError');
+  clearEditForm();
+  openModal('editModal');
+}
 
-    if (!error) {
-      document.getElementById('upgradePanel').innerHTML = `
-        <div style="text-align:center;padding:80px 40px">
-          <div style="font-size:64px;margin-bottom:20px">🎉</div>
-          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#0a1628;margin-bottom:12px">Request Submitted!</div>
-          <div style="font-size:16px;color:#64748b;margin-bottom:32px;line-height:1.7">
-            Thank you! Our team will review your requirements<br>and contact you within <strong>24 hours</strong>.
-          </div>
-          <div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:14px;padding:24px;max-width:400px;margin:0 auto 32px;text-align:left">
-            <div style="font-size:13px;color:#3d5470;font-weight:600;margin-bottom:8px">Your Request Summary:</div>
-            <div style="font-size:13px;color:#64748b;line-height:1.8">
-              📋 Features: ${features.join(', ') || 'None selected'}<br>
-              💼 Size: ${bizSize}<br>
-              💰 Budget: ${budget}<br>
-              📞 Contact: ${phone}
-            </div>
-          </div>
-          <button onclick="location.reload()" class="btn-blue" style="padding:13px 30px">← Back to Dashboard</button>
-        </div>`;
-    }
+// ════════════════════════════════════════════════
+// EDIT — AFTER LIVE (locked — requires ₹99)
+// ════════════════════════════════════════════════
+function openLockedEdit(id, name) {
+  _editingWebsite   = { id, name, status: 'active' };
+  _editPaidUnlocked = false;
+
+  // Show the edit payment modal first
+  closeModal('editModal');
+  openModal('editPayModal');
+}
+
+function processEditPayment() {
+  if (!_editingWebsite?.id) return;
+  closeModal('editPayModal');
+
+  const rzp = new Razorpay({
+    key: RAZORPAY_KEY,
+    amount: 9900,   // ₹99 in paise
+    currency: 'INR',
+    name: 'AutoVision',
+    description: `Website Edit — ₹99`,
+    handler: async function(response) {
+      // Log payment
+      await db.from('av_payments').insert([{
+        user_email:  currentUser.email,
+        website_id:  _editingWebsite.id,
+        amount:      99,
+        payment_id:  response.razorpay_payment_id,
+        type:        'edit',
+        status:      'paid',
+        created_at:  new Date().toISOString()
+      }]);
+
+      // NOW unlock editing in memory
+      _editPaidUnlocked = true;
+
+      // Open edit modal with locked banner shown (still shows what they paid for, fields enabled)
+      document.getElementById('editModalTitle').textContent = `Edit "${_editingWebsite.name}"`;
+      document.getElementById('editLockedBanner').style.display = 'flex';
+      document.getElementById('editLockedBanner').textContent   = '✅ Edit unlocked! Make your changes and save.';
+      document.getElementById('editLockedBanner').style.background = 'var(--green-light)';
+      document.getElementById('editLockedBanner').style.color       = 'var(--green)';
+      document.getElementById('editLockedBanner').style.border      = '1px solid #bbf7d0';
+      document.getElementById('editSaveBtn').textContent = 'Save Changes →';
+      document.getElementById('editSaveBtn').disabled    = false;
+      hideInlineAlert('editError');
+      clearEditForm();
+      openModal('editModal');
+    },
+    modal: { ondismiss: function() { _editingWebsite = null; } },
+    prefill: { email: currentUser.email || '' },
+    theme: { color: '#1a56ff' }
+  });
+  rzp.open();
+}
+
+// ── Save edit (called from Save button) ──
+async function handleEditSave() {
+  // Server-side enforcement: if website is active and not paid-unlocked, block
+  if (_editingWebsite?.status === 'active' && !_editPaidUnlocked) {
+    showInlineAlert('editError', '🔒 Editing is locked. Please pay ₹99 to unlock.');
+    return;
   }
+
+  const name     = document.getElementById('editName').value.trim();
+  const services = document.getElementById('editServices').value.trim();
+  const phone    = document.getElementById('editPhone').value.trim();
+  const email    = document.getElementById('editEmailField').value.trim();
+  const address  = document.getElementById('editAddress').value.trim();
+
+  if (!name) return showInlineAlert('editError', '⚠️ Business Name is required.');
+  if (email && !validEmail(email)) return showInlineAlert('editError', '⚠️ Please enter a valid email address.');
+
+  document.getElementById('editSaveBtn').disabled = true;
+  document.getElementById('editSaveBtn').textContent = '⏳ Saving...';
+
+  try {
+    const { error } = await db.from('av_websites')
+      .update({ name, services, phone, email, address })
+      .eq('id', _editingWebsite.id)
+      .eq('user_email', currentUser.email);  // Security: only update own sites
+
+    if (error) throw error;
+
+    closeModal('editModal');
+    _editingWebsite   = null;
+    _editPaidUnlocked = false;
+
+    await renderWebsites('recentWebsites', 3);
+    await renderWebsites('allWebsites');
+    await loadStats();
+  } catch (err) {
+    document.getElementById('editSaveBtn').disabled = false;
+    document.getElementById('editSaveBtn').textContent = 'Save Changes →';
+    showInlineAlert('editError', '⚠️ Failed to save changes. Please try again.');
+  }
+}
+
+function clearEditForm() {
+  ['editName','editServices','editPhone','editEmailField','editAddress'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+// ════════════════════════════════════════════════
+// DELETE WEBSITE
+// ════════════════════════════════════════════════
+async function deleteWebsite(id, containerId) {
+  if (!confirm('⚠️ Are you sure you want to permanently delete this website? This cannot be undone.')) return;
+
+  const { error } = await db.from('av_websites')
+    .delete()
+    .eq('id', id)
+    .eq('user_email', currentUser.email); // Security: only delete own sites
+
+  if (error) { alert('⚠️ Failed to delete website. Please try again.'); return; }
+
+  await loadStats();
+  await renderWebsites('recentWebsites', 3);
+  if (containerId !== 'recentWebsites') await renderWebsites(containerId);
+}
+
+// ════════════════════════════════════════════════
+// UPGRADE FORM
+// ════════════════════════════════════════════════
+async function submitUpgrade() {
+  hideInlineAlert('upgradeError');
+  hideInlineAlert('upgradeSuccess');
+
+  const phone    = document.getElementById('upPhone').value.trim();
+  const email    = document.getElementById('upEmail').value.trim();
+  const bizSize  = document.getElementById('bizSize').value;
+  const budget   = document.getElementById('budget').value;
+  const notes    = document.getElementById('upNotes').value.trim();
+  const features = [...document.querySelectorAll('.feat-grid input:checked')].map(i => i.value);
+
+  if (!phone) return showInlineAlert('upgradeError', '⚠️ Please enter your phone number.');
+  if (!email) return showInlineAlert('upgradeError', '⚠️ Please enter your email address.');
+  if (!validEmail(email)) return showInlineAlert('upgradeError', '⚠️ Please enter a valid email address.');
+
+  const btn = document.getElementById('upgradeBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Submitting...';
+
+  // Save to Supabase
+  const { error: dbErr } = await db.from('av_upgrades').insert([{
+    user_email:    currentUser.email,
+    features:      features.join(', '),
+    business_size: bizSize,
+    budget, phone, email, notes,
+    created_at:    new Date().toISOString()
+  }]);
+
+  // Send email via EmailJS
+  let emailSent = false;
+  try {
+    const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      from_name:     currentUser.name || currentUser.email,
+      name:          currentUser.name || currentUser.email,
+      from_contact:  `${phone} | ${email}`,
+      business_name: 'AutoVision — Upgrade Request',
+      message:       `NEW UPGRADE REQUEST\n\nAccount: ${currentUser.email}\nFeatures: ${features.join(', ') || 'None'}\nBusiness Size: ${bizSize}\nBudget: ${budget}\nPhone: ${phone}\nEmail: ${email}\nNotes: ${notes || 'None'}`,
+      reply_to:      email,
+      time:          new Date().toLocaleString('en-IN')
+    });
+    emailSent = result.status === 200;
+  } catch (e) {
+    console.error('EmailJS error:', e);
+    emailSent = false;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Submit Request →';
+
+  if (dbErr) {
+    showInlineAlert('upgradeError', '⚠️ Failed to submit. Please try again or contact kasmaniadnan812@gmail.com');
+    return;
+  }
+
+  // Show success
+  showInlineAlert('upgradeSuccess',
+    emailSent
+      ? '✅ Request submitted! We\'ll contact you within 24 hours.'
+      : '✅ Request saved! Note: email notification may be delayed — we\'ll still contact you within 24 hours.',
+    'success');
+
+  // Clear checkboxes
+  document.querySelectorAll('.feat-grid input').forEach(i => i.checked = false);
+  document.getElementById('upPhone').value = '';
+  document.getElementById('upEmail').value = '';
+  document.getElementById('upNotes').value = '';
+}
+
+// ════════════════════════════════════════════════
+// INLINE ALERT HELPERS
+// ════════════════════════════════════════════════
+function showInlineAlert(id, msg, type = 'error') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `alert alert-${type}`;
+  el.style.display = 'block';
+}
+function hideInlineAlert(id) {
+  const el = document.getElementById(id);
+  if (el) { el.style.display = 'none'; el.textContent = ''; }
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) {
+      overlay.classList.remove('open');
+    }
+  });
+});
 </script>
 </body>
 </html>
