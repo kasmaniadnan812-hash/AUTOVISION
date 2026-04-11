@@ -3,455 +3,594 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website Preview — AutoVision</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>AutoVision — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-
-/* PREVIEW BANNER */
-.preview-banner {
-  position:fixed; top:0; left:0; right:0; z-index:99999;
-  background:#080c14; padding:0 28px; height:52px;
-  display:flex; align-items:center; justify-content:space-between;
-  font-family:'DM Sans',sans-serif;
-  border-bottom:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 4px 24px rgba(0,0,0,0.5);
+:root{
+  --bg:#080c14;--bg2:#0d1320;--bg3:#111827;
+  --surface:#141d2e;--surface2:#1a2540;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --accent:#4f8eff;--accent2:#7b5ea7;--accent3:#00d4aa;
+  --text:#f0f4ff;--text2:#8899bb;--text3:#5a6f8e;
+  --grad:linear-gradient(135deg,#4f8eff 0%,#7b5ea7 100%);
+  --red:#f87171;--red-bg:rgba(248,113,113,0.08);--red-border:rgba(248,113,113,0.2);
+  --green:#34d399;--green-bg:rgba(52,211,153,0.08);--green-border:rgba(52,211,153,0.2);
+  --orange:#fb923c;--orange-bg:rgba(251,146,60,0.08);
 }
-.banner-left { display:flex; align-items:center; gap:12px; flex-shrink:0; }
-.banner-logo { font-size:16px; font-weight:800; color:white; text-decoration:none; background:linear-gradient(135deg,#4f8eff,#7b5ea7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.banner-pill { background:rgba(251,146,60,0.14); border:1px solid rgba(251,146,60,0.3); color:#fb923c; font-size:11px; font-weight:800; padding:3px 10px; border-radius:100px; white-space:nowrap; -webkit-text-fill-color:#fb923c; }
-.banner-pill.live { background:rgba(52,211,153,0.12); border-color:rgba(52,211,153,0.3); color:#34d399; -webkit-text-fill-color:#34d399; }
-.banner-text { font-size:13px; color:#8899bb; white-space:nowrap; }
-.banner-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
-.banner-expire { font-size:12px; color:#fb923c; font-weight:600; white-space:nowrap; }
-.btn-back { padding:7px 14px; background:transparent; border:1px solid rgba(255,255,255,0.12); color:#8899bb; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; text-decoration:none; font-family:'DM Sans',sans-serif; transition:all .2s; display:inline-block; }
-.btn-back:hover { border-color:rgba(79,142,255,0.5); color:#7aabff; }
-.btn-activate { padding:8px 20px; background:linear-gradient(135deg,#4f8eff,#7b5ea7); color:white; border:none; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .2s; box-shadow:0 4px 16px rgba(79,142,255,0.4); white-space:nowrap; }
-.btn-activate:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(79,142,255,0.55); }
-
-/* SITE */
-body { background:#fff; -webkit-font-smoothing:antialiased; }
-.site { padding-top:52px; font-family:'DM Sans',sans-serif; }
-
-/* SITE NAV */
-.s-nav { position:sticky; top:52px; z-index:100; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); border-bottom:1px solid #e8edf5; padding:0 72px; height:68px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 16px rgba(0,0,0,0.04); }
-.s-nav-logo { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:#0a1628; letter-spacing:-0.5px; }
-.s-nav-links { display:flex; gap:30px; list-style:none; }
-.s-nav-links a { font-size:14px; font-weight:500; color:#64748b; text-decoration:none; transition:color .2s; }
-.s-nav-links a:hover { color:var(--primary); }
-.s-nav-cta { padding:10px 22px; background:var(--primary) !important; color:white !important; border-radius:8px; font-weight:700 !important; box-shadow:0 4px 14px var(--primary-shadow); transition:all .2s; display:inline-block !important; }
-.s-nav-cta:hover { transform:translateY(-1px) !important; }
-
-/* HERO */
-.s-hero { background:var(--hero-bg); padding:88px 72px 0; overflow:hidden; position:relative; min-height:540px; display:flex; align-items:flex-end; gap:56px; }
-.s-hero::before { content:''; position:absolute; top:-200px; right:-200px; width:600px; height:600px; background:var(--hero-orb); border-radius:50%; filter:blur(80px); opacity:0.4; }
-.s-hero::after { content:''; position:absolute; bottom:-100px; left:30%; width:400px; height:400px; background:var(--hero-orb2); border-radius:50%; filter:blur(100px); opacity:0.25; }
-.hero-content { position:relative; z-index:2; flex:1; padding-bottom:76px; }
-.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:var(--eyebrow-bg); border:1px solid var(--eyebrow-border); color:var(--eyebrow-color); font-size:11.5px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:7px 16px; border-radius:100px; margin-bottom:22px; }
-.eyebrow-dot { width:6px; height:6px; border-radius:50%; background:var(--eyebrow-color); animation:pulse3 2s infinite; }
-@keyframes pulse3 { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.8);} }
-.hero-h1 { font-family:'Playfair Display',serif; font-size:clamp(38px,5vw,66px); font-weight:900; line-height:1.1; letter-spacing:-2px; color:var(--hero-text); margin-bottom:18px; }
-.hero-h1 em { font-style:italic; color:var(--primary-light); }
-.hero-p { font-size:17px; color:var(--hero-subtext); line-height:1.78; max-width:480px; margin-bottom:38px; }
-.hero-actions { display:flex; gap:14px; align-items:center; margin-bottom:46px; flex-wrap:wrap; }
-.btn-hero-main { padding:14px 30px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 22px var(--primary-shadow); transition:all .25s; }
-.btn-hero-main:hover { transform:translateY(-2px); }
-.btn-hero-ghost { padding:14px 30px; background:transparent; color:white; border:1.5px solid rgba(255,255,255,0.25); border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .25s; }
-.btn-hero-ghost:hover { background:rgba(255,255,255,0.1); }
-.hero-trust { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--hero-subtext); }
-.trust-stars { color:#fbbf24; }
-.hero-visual { position:relative; z-index:2; width:340px; flex-shrink:0; align-self:flex-end; }
-.hero-card { background:white; border-radius:20px 20px 0 0; padding:28px; box-shadow:0 -8px 50px rgba(0,0,0,0.14); }
-.hero-card-icon { font-size:50px; margin-bottom:12px; display:block; }
-.hero-card-name { font-family:'Playfair Display',serif; font-size:21px; font-weight:900; color:#0a1628; margin-bottom:5px; }
-.hero-card-type { font-size:13px; color:#64748b; font-weight:500; margin-bottom:16px; }
-.hero-card-badges { display:flex; gap:7px; flex-wrap:wrap; }
-.hc-badge { background:#eff6ff; color:#1a56ff; font-size:11px; font-weight:800; padding:4px 11px; border-radius:100px; }
-
-/* TRUST BAR */
-.trust-bar { background:var(--trust-bg); border-bottom:1px solid var(--trust-border); padding:20px 72px; display:flex; align-items:center; justify-content:center; gap:44px; flex-wrap:wrap; }
-.trust-item { display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; color:var(--trust-text); }
-.trust-icon { width:32px; height:32px; background:var(--trust-icon-bg); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
-
-/* STATS */
-.s-stats { background:var(--primary); padding:48px 72px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; }
-.stat-box { padding:10px; border-right:1px solid rgba(255,255,255,0.14); }
-.stat-box:last-child { border-right:none; }
-.stat-big { font-family:'Playfair Display',serif; font-size:46px; font-weight:900; color:white; line-height:1; margin-bottom:6px; }
-.stat-small { font-size:14px; color:rgba(255,255,255,0.68); font-weight:500; }
-
-/* ABOUT */
-.s-about { padding:96px 72px; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center; background:white; }
-.section-eyebrow { display:inline-flex; align-items:center; gap:6px; background:var(--tag-bg); color:var(--primary); font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-radius:100px; margin-bottom:16px; }
-.section-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:900; color:#0a1628; letter-spacing:-1.5px; line-height:1.15; margin-bottom:16px; }
-.section-title em { font-style:italic; color:var(--primary); }
-.section-body { font-size:16px; color:#475569; line-height:1.85; margin-bottom:28px; }
-.check-list { list-style:none; display:flex; flex-direction:column; gap:11px; }
-.check-list li { display:flex; align-items:center; gap:11px; font-size:15px; color:#334155; font-weight:500; }
-.cl-icon { width:22px; height:22px; background:var(--tag-bg); color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; flex-shrink:0; }
-.about-visual { position:relative; }
-.about-main-card { background:var(--hero-bg); border-radius:22px; padding:44px 36px; text-align:center; position:relative; overflow:hidden; }
-.about-main-card::before { content:''; position:absolute; top:-60px; right:-60px; width:200px; height:200px; background:var(--hero-orb); border-radius:50%; filter:blur(50px); opacity:.3; }
-.amc-icon { font-size:68px; margin-bottom:14px; display:block; }
-.amc-name { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--hero-text); margin-bottom:7px; }
-.amc-type { font-size:13px; color:var(--hero-subtext); }
-.about-float { position:absolute; bottom:-14px; left:-14px; background:white; border-radius:13px; padding:13px 16px; box-shadow:0 8px 28px rgba(0,0,0,.11); display:flex; align-items:center; gap:10px; }
-.af-icon { font-size:22px; }
-.af-num { font-family:'Playfair Display',serif; font-size:19px; font-weight:900; color:#0a1628; line-height:1; }
-.af-label { font-size:11px; color:#94a3b8; font-weight:600; }
-
-/* SERVICES */
-.s-services { background:#f8faff; padding:96px 72px; }
-.services-header { text-align:center; margin-bottom:56px; }
-.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:22px; }
-.svc-card { background:white; border:1.5px solid #e2e8f4; border-radius:20px; padding:32px 26px; transition:all .3s; position:relative; overflow:hidden; }
-.svc-card::after { content:''; position:absolute; bottom:0; left:0; width:0; height:3px; background:linear-gradient(90deg,var(--primary),#6366f1); transition:width .4s; }
-.svc-card:hover::after { width:100%; }
-.svc-card:hover { box-shadow:0 14px 44px rgba(0,0,0,.08); transform:translateY(-6px); border-color:var(--primary); }
-.svc-icon-wrap { width:56px; height:56px; background:var(--tag-bg); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:18px; transition:all .3s; }
-.svc-card:hover .svc-icon-wrap { background:var(--primary); }
-.svc-title { font-family:'Playfair Display',serif; font-size:19px; font-weight:800; color:#0a1628; margin-bottom:9px; }
-.svc-desc { font-size:14px; color:#64748b; line-height:1.68; }
-
-/* WHY US */
-.s-why { background:white; padding:96px 72px; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center; }
-.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
-.why-card { background:#f8faff; border:1px solid #e2e8f4; border-radius:14px; padding:22px 18px; transition:all .25s; }
-.why-card:hover { background:var(--tag-bg); border-color:var(--primary); transform:translateY(-3px); box-shadow:0 8px 22px rgba(26,86,255,.1); }
-.why-card-icon { font-size:26px; margin-bottom:9px; }
-.why-card-title { font-size:14.5px; font-weight:800; color:#0a1628; margin-bottom:5px; }
-.why-card-text { font-size:13px; color:#64748b; line-height:1.5; }
-
-/* TESTIMONIAL */
-.s-testimonial { background:var(--primary); padding:76px 72px; text-align:center; position:relative; overflow:hidden; }
-.s-testimonial::before { content:'"'; position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-size:280px; font-weight:900; color:rgba(255,255,255,0.04); line-height:1; }
-.test-stars { color:#fbbf24; font-size:19px; margin-bottom:18px; letter-spacing:3px; }
-.test-quote { font-family:'Playfair Display',serif; font-size:clamp(19px,3vw,28px); font-weight:700; font-style:italic; color:white; line-height:1.5; max-width:680px; margin:0 auto 24px; }
-.test-author { font-size:14px; color:rgba(255,255,255,0.68); font-weight:600; }
-
-/* FOOTER (no contact section) */
-.s-footer { background:#0a1628; padding:46px 72px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px; }
-.s-footer-logo { font-family:'Playfair Display',serif; font-size:21px; font-weight:900; color:white; }
-.s-footer-links { display:flex; gap:22px; }
-.s-footer-links a { font-size:13.5px; color:#475569; text-decoration:none; transition:color .2s; }
-.s-footer-links a:hover { color:#60a5fa; }
-.s-footer-copy { font-size:12.5px; color:#334155; }
-
-/* PAYMENT MODAL */
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); backdrop-filter:blur(8px); z-index:999999; align-items:center; justify-content:center; }
-.modal-overlay.open { display:flex; }
-.modal { background:#141d2e; border:1px solid rgba(255,255,255,0.1); border-radius:22px; padding:40px; max-width:450px; width:90%; box-shadow:0 40px 100px rgba(0,0,0,.6); text-align:center; animation:popUp .28s cubic-bezier(.34,1.56,.64,1); }
-@keyframes popUp { from{opacity:0;transform:scale(.92) translateY(14px);}to{opacity:1;transform:scale(1) translateY(0);} }
-.modal-emoji { font-size:52px; margin-bottom:16px; }
-.modal-title { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:#f0f4ff; margin-bottom:8px; }
-.modal-sub { font-size:14px; color:#8899bb; margin-bottom:22px; line-height:1.6; }
-.pay-box { background:#0d1320; border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:20px; display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; text-align:left; }
-.pay-label { font-size:11px; color:#5a6f8e; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
-.pay-amount { font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:#f0f4ff; line-height:1; }
-.pay-features { text-align:left; font-size:13px; color:#8899bb; line-height:2.1; margin-bottom:26px; }
-.modal-btns { display:flex; gap:11px; }
-.btn-pay { flex:2; padding:14px; background:linear-gradient(135deg,#4f8eff,#7b5ea7); color:white; border:none; border-radius:11px; font-size:14.5px; font-weight:800; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px rgba(79,142,255,.4); transition:all .2s; }
-.btn-pay:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(79,142,255,.55); }
-.btn-pay:disabled { opacity:.6; cursor:not-allowed; transform:none; }
-.btn-cancel { flex:1; padding:14px; background:rgba(255,255,255,.06); color:#8899bb; border:1px solid rgba(255,255,255,.1); border-radius:11px; font-size:13.5px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:background .2s; }
-.btn-cancel:hover { background:rgba(255,255,255,.1); }
-
-/* ERROR STATE */
-.error-state { text-align:center; padding:120px 40px; font-family:'DM Sans',sans-serif; }
-.error-state h2 { font-family:'Playfair Display',serif; font-size:30px; color:#0a1628; margin-bottom:11px; }
-.error-state p { color:#64748b; margin-bottom:26px; }
-
-/* RESPONSIVE */
-@media(max-width:900px) {
-  .s-nav { padding:0 22px; }
-  .s-nav-links { display:none; }
-  .s-hero { padding:56px 22px 0; flex-direction:column; }
-  .hero-visual { width:100%; }
-  .hero-card { border-radius:18px; }
-  .trust-bar { padding:24px 22px; gap:18px; }
-  .s-stats { padding:32px 22px; grid-template-columns:1fr; }
-  .stat-box { border-right:none; border-bottom:1px solid rgba(255,255,255,.1); padding-bottom:18px; }
-  .s-about,.s-why { grid-template-columns:1fr; padding:56px 22px; gap:36px; }
-  .s-services,.s-testimonial { padding:56px 22px; }
-  .s-footer { padding:32px 22px; flex-direction:column; text-align:center; }
-  .s-footer-links { flex-wrap:wrap; justify-content:center; }
-  .why-grid { grid-template-columns:1fr; }
-  .preview-banner { flex-direction:column; height:auto; padding:10px 14px; gap:7px; }
-  .site { padding-top:88px; }
-  .s-nav { top:88px; }
-}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;-webkit-font-smoothing:antialiased;}
+.left{background:var(--bg2);border-right:1px solid var(--border);padding:56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.left::before{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(79,142,255,.18) 0%,transparent 70%);}
+.left::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(123,94,167,.12) 0%,transparent 70%);}
+.left-top{position:relative;z-index:1;}
+.left-logo{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;text-decoration:none;display:block;margin-bottom:52px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.left-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--text);line-height:1.18;letter-spacing:-1.5px;margin-bottom:16px;}
+.left-title em{font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.left-sub{font-size:15px;color:var(--text2);line-height:1.72;margin-bottom:44px;}
+.left-feats{position:relative;z-index:1;}
+.left-feat{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.feat-ico{width:36px;height:36px;background:rgba(79,142,255,.12);border:1px solid rgba(79,142,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.feat-txt{font-size:14px;color:var(--text2);font-weight:500;}
+.left-bottom{position:relative;z-index:1;font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
+.right{display:flex;align-items:center;justify-content:center;padding:56px 64px;background:var(--bg);}
+.login-box{width:100%;max-width:400px;animation:fadeUp .55s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.login-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px;margin-bottom:5px;}
+.login-sub{font-size:14px;color:var(--text2);margin-bottom:30px;}
+.tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:28px;}
+.tab{flex:1;padding:10px;text-align:center;font-size:13.5px;font-weight:600;color:var(--text3);cursor:pointer;border-radius:10px;transition:all .2s;}
+.tab.active{background:var(--surface2);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.form-group{margin-bottom:15px;}
+label{display:block;font-size:12px;font-weight:700;color:var(--text3);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase;}
+input[type=text],input[type=email],input[type=password]{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:12px 15px;font-family:'Outfit',sans-serif;font-size:14.5px;border-radius:10px;outline:none;transition:all .2s;}
+input:focus{border-color:var(--accent);background:var(--surface2);box-shadow:0 0 0 3px rgba(79,142,255,.12);}
+input::placeholder{color:var(--text3);}
+.input-wrap{position:relative;}
+.toggle-pw{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:15px;padding:0;color:var(--text3);}
+.btn-submit{width:100%;padding:13px;background:var(--grad);color:white;font-size:14.5px;font-weight:700;border-radius:10px;border:none;cursor:pointer;transition:all .22s;box-shadow:0 4px 20px rgba(79,142,255,.3);margin-top:4px;font-family:'Outfit',sans-serif;}
+.btn-submit:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 28px rgba(79,142,255,.45);}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;}
+.strength-bar-wrap{height:3px;background:var(--border);border-radius:100px;overflow:hidden;margin-top:8px;}
+.strength-bar{height:100%;width:0%;border-radius:100px;transition:all .3s;}
+.strength-label{font-size:11px;font-weight:700;margin-top:4px;}
+.alert{padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:14px;display:none;line-height:1.5;border:1px solid;}
+.alert-error{background:var(--red-bg);border-color:var(--red-border);color:var(--red);}
+.alert-success{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+.alert-info{background:rgba(79,142,255,.08);border-color:rgba(79,142,255,.2);color:#7aabff;}
+.switch-text{text-align:center;font-size:13.5px;color:var(--text3);margin-top:18px;}
+.switch-text a{color:var(--accent);text-decoration:none;font-weight:600;cursor:pointer;}
+.form-panel{display:none;} .form-panel.active{display:block;}
+.otp-box{background:rgba(79,142,255,.07);border:1px solid rgba(79,142,255,.2);border-radius:12px;padding:16px 18px;margin-bottom:16px;}
+.otp-notice{font-size:11.5px;color:var(--accent);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;}
+.otp-inst{font-size:13px;color:var(--text2);line-height:1.55;}
+.lock-notice{background:var(--orange-bg);border:1px solid rgba(251,146,60,.2);border-radius:10px;padding:11px 14px;font-size:12.5px;color:var(--orange);font-weight:600;margin-bottom:16px;display:none;}
+.back-link{display:flex;align-items:center;gap:6px;color:var(--text3);text-decoration:none;font-size:13px;font-weight:500;margin-top:22px;transition:color .2s;}
+.forgot-link{font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;display:block;text-align:right;margin-bottom:16px;}
+@media(max-width:768px){body{grid-template-columns:1fr;}.left{display:none;}.right{padding:36px 22px;}}
 </style>
 </head>
 <body>
 
-<div class="preview-banner" id="previewBanner">
-  <div class="banner-left">
-    <a href="index.html" class="banner-logo">AutoVision</a>
-    <span class="banner-pill" id="bannerPill">⏳ Preview</span>
-    <span class="banner-text" id="bannerText">Free preview — activate to go live</span>
+<div class="left">
+  <div class="left-top">
+    <a href="index.html" class="left-logo">AutoVision</a>
+    <div class="left-title">Start building your <em>online presence</em> today</div>
+    <div class="left-sub">Join thousands of Indian businesses that trust AutoVision for their professional website needs.</div>
   </div>
-  <div class="banner-right" id="bannerRight">
-    <span class="banner-expire" id="bannerExpire">⚠️ Expires in 48 hours</span>
-    <a href="dashboard.html" class="btn-back">← Dashboard</a>
-    <button class="btn-activate" id="activateBtn" onclick="openPayModal()">Activate Now — ₹299</button>
+  <div class="left-feats">
+    <div class="left-feat"><div class="feat-ico">🌐</div><div class="feat-txt">Professional website ready in minutes</div></div>
+    <div class="left-feat"><div class="feat-ico">💰</div><div class="feat-txt">Go live for just ₹299 — no hidden fees</div></div>
+    <div class="left-feat"><div class="feat-ico">📱</div><div class="feat-txt">Mobile-ready and SEO-friendly by default</div></div>
+    <div class="left-feat"><div class="feat-ico">⚡</div><div class="feat-txt">Pay via UPI, GPay, PhonePe or card</div></div>
   </div>
+  <div class="left-bottom">© 2026 AutoVision — kasmaniadnan812@gmail.com</div>
 </div>
 
-<div class="site" id="site"></div>
-
-<!-- PAYMENT MODAL -->
-<div class="modal-overlay" id="payModal">
-  <div class="modal">
-    <div class="modal-emoji">🚀</div>
-    <div class="modal-title">Go Live for ₹299</div>
-    <div class="modal-sub">Your professional website will be live on the internet instantly.</div>
-    <div class="pay-box"><div><div class="pay-label">Activation Fee</div><div class="pay-amount">₹299</div></div><div style="font-size:38px">🌐</div></div>
-    <div class="pay-features">✅ Website goes live <strong style="color:#f0f4ff">instantly</strong><br>✅ Pay via UPI, GPay, PhonePe or Card<br>✅ 100% secure via Razorpay<br>✅ Mobile-ready professional website</div>
-    <div class="modal-btns">
-      <button class="btn-pay" id="payBtn" onclick="processPayment()">Pay ₹299 & Go Live →</button>
-      <button class="btn-cancel" onclick="closePayModal()">Later</button>
+<div class="right">
+  <div class="login-box">
+    <div class="login-title" id="formTitle">Welcome back</div>
+    <div class="login-sub" id="formSub">Sign in to your AutoVision account</div>
+    <div class="tabs" id="tabRow">
+      <div class="tab active" onclick="switchTab('login')">Sign In</div>
+      <div class="tab" onclick="switchTab('signup')">Create Account</div>
     </div>
+
+    <!-- LOGIN -->
+    <div class="form-panel active" id="loginPanel">
+      <div class="lock-notice" id="lockNotice"></div>
+      <div class="alert alert-error" id="loginError"></div>
+      <div class="alert alert-success" id="loginSuccess"></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password" style="padding-right:44px">
+          <button type="button" class="toggle-pw" onclick="togglePass('loginPass',this)">👁️</button>
+        </div>
+      </div>
+      <a onclick="switchTab('forgot');return false;" href="#" class="forgot-link">Forgot password?</a>
+      <button id="loginBtn" class="btn-submit" onclick="handleLogin()">Sign In →</button>
+      <div class="switch-text">Don't have an account? <a onclick="switchTab('signup')">Create one free</a></div>
+    </div>
+
+    <!-- SIGNUP -->
+    <div class="form-panel" id="signupPanel">
+      <div class="alert alert-error" id="signupError"></div>
+      <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Your full name" autocomplete="name"></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="form-group">
+        <label>Password <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(min 8 chars)</span></label>
+        <div class="input-wrap">
+          <input type="password" id="signupPass" placeholder="Create a strong password" autocomplete="new-password" oninput="updateStrength(this.value)" style="padding-right:44px">
+          <button type="button" class="toggle-pw" onclick="togglePass('signupPass',this)">👁️</button>
+        </div>
+        <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
+        <div class="strength-label" id="strengthLabel"></div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <div class="input-wrap">
+          <input type="password" id="signupConf" placeholder="Repeat your password" autocomplete="new-password" style="padding-right:44px">
+          <button type="button" class="toggle-pw" onclick="togglePass('signupConf',this)">👁️</button>
+        </div>
+      </div>
+      <button id="signupBtn" class="btn-submit" onclick="handleSignup()">Create Account Free →</button>
+      <div class="switch-text">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div class="form-panel" id="forgotPanel">
+
+      <!-- Step 1: Enter Email -->
+      <div id="forgotStep1">
+        <div class="alert alert-error" id="forgotError"></div>
+        <div class="alert alert-info" id="forgotInfo"></div>
+        <p style="font-size:14px;color:var(--text2);margin-bottom:20px;line-height:1.6">Enter your registered email. A 6-digit OTP will be sent to your inbox.</p>
+        <div class="form-group"><label>Email Address</label><input type="email" id="forgotEmail" placeholder="your@email.com"></div>
+        <button id="forgotBtn" class="btn-submit" onclick="handleForgotStep1()">Send OTP →</button>
+      </div>
+
+      <!-- Step 2: Enter OTP + New Password -->
+      <div id="forgotStep2" style="display:none">
+        <div class="alert alert-error" id="otpError"></div>
+        <div class="otp-box">
+          <div class="otp-notice">📧 OTP Sent to Your Email</div>
+          <div class="otp-inst">Check your inbox and spam folder. Enter the 6-digit code below. Expires in <strong>5 minutes</strong>.</div>
+        </div>
+        <div class="form-group" style="margin-top:14px">
+          <label>6-Digit OTP Code</label>
+          <input type="text" id="otpInput" placeholder="Enter 6-digit code" maxlength="6" style="letter-spacing:5px;text-align:center;font-size:22px;font-family:'JetBrains Mono',monospace" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <div class="input-wrap">
+            <input type="password" id="newPass" placeholder="New password (min 8 chars)" style="padding-right:44px">
+            <button type="button" class="toggle-pw" onclick="togglePass('newPass',this)">👁️</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <div class="input-wrap">
+            <input type="password" id="confPass" placeholder="Repeat new password" style="padding-right:44px">
+            <button type="button" class="toggle-pw" onclick="togglePass('confPass',this)">👁️</button>
+          </div>
+        </div>
+        <button id="resetBtn" class="btn-submit" onclick="handleForgotStep2()">Reset Password →</button>
+        <div style="text-align:center;margin-top:14px">
+          <a onclick="goBackToStep1();return false;" href="#" style="font-size:13px;color:var(--text3);cursor:pointer">← Resend OTP</a>
+        </div>
+      </div>
+
+      <div class="switch-text" style="margin-top:16px">Remember it? <a onclick="switchTab('login')">Back to Sign In</a></div>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to home</a>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-const SUPA_URL  = 'https://twneeawhdzgnavudanud.supabase.co';
-const SUPA_KEY  = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
-const RZP_KEY   = 'rzp_live_SaJ684rRC2TUwj';
-const BASE_URL  = 'https://autovision-psi.vercel.app';
+// ══════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════
+const EMAILJS_PUBLIC_KEY  = 'H9mRJV2zi9LJ7OhBw';
+const EMAILJS_SERVICE_ID  = 'service_6q18vqn';
+const EMAILJS_OTP_TEMPLATE= 'template_l4eyq5u';  // OTP template
+const MAX_ATTEMPTS  = 5;
+const LOCKOUT_MS    = 15 * 60 * 1000;
+const SESSION_MS    = 24 * 60 * 60 * 1000;
+const OTP_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes
 
-const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+// Init EmailJS
+emailjs.init(EMAILJS_PUBLIC_KEY);
 
-const themes = {
-  Modern:  { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.28)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
-  Classic: { primary:'#166534', primaryShadow:'rgba(22,101,52,0.28)', heroBg:'linear-gradient(135deg,#14532d 0%,#052e16 100%)', heroOrb:'#16a34a', heroOrb2:'#4ade80', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#86efac', trustBg:'#f0fdf4', trustBorder:'#bbf7d0', trustText:'#14532d', trustIconBg:'#dcfce7', tagBg:'#f0fdf4', primaryLight:'#86efac' },
-  Bold:    { primary:'#dc2626', primaryShadow:'rgba(220,38,38,0.28)', heroBg:'linear-gradient(135deg,#1c0a0a 0%,#450a0a 100%)', heroOrb:'#dc2626', heroOrb2:'#f97316', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#fca5a5', trustBg:'#fff5f5', trustBorder:'#fecaca', trustText:'#7f1d1d', trustIconBg:'#fee2e2', tagBg:'#fff5f5', primaryLight:'#fca5a5' },
-  Minimal: { primary:'#0f172a', primaryShadow:'rgba(15,23,42,0.18)', heroBg:'linear-gradient(135deg,#0f172a 0%,#1e293b 100%)', heroOrb:'#334155', heroOrb2:'#475569', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.6)', eyebrowBg:'rgba(255,255,255,0.08)', eyebrowBorder:'rgba(255,255,255,0.15)', eyebrowColor:'#cbd5e1', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#f1f5f9', tagBg:'#f8fafc', primaryLight:'#94a3b8' }
-};
-const typeIcons = { 'Restaurant / Cafe':'🍽️','Shop / Retail':'🛍️','Service Business':'⚙️','Healthcare / Clinic':'🏥','Education / Coaching':'📚','Portfolio / Freelance':'💼','Other':'🏢' };
-const svcIcons  = ['⚡','🎯','✅','🌟','💡','🔥'];
-const defaultSvc = {
-  'Restaurant / Cafe':    ['Fine Dining','Home Delivery','Catering Services','Takeaway Orders'],
-  'Shop / Retail':        ['Quality Products','Fast Delivery','Easy Returns','Wholesale Deals'],
-  'Service Business':     ['Professional Service','Expert Consultation','Quick Turnaround','Affordable Rates'],
-  'Healthcare / Clinic':  ['General Consultation','Health Checkup','Specialist Care','Emergency Support'],
-  'Education / Coaching': ['One-on-One Tuition','Group Classes','Study Materials','Online Sessions'],
-  'Portfolio / Freelance':['Creative Design','Web Development','Brand Strategy','Project Consulting'],
-  'Other':                ['Quality Service','Expert Team','Customer Support','Fast Delivery']
-};
-
-const params = new URLSearchParams(window.location.search);
-const siteId  = params.get('site');
-let currentSite = null;
-
-async function loadSite() {
-  if (!siteId) { renderError('No site ID provided.'); return; }
+// ══════════════════════════════════════
+// SESSION CHECK — redirect if logged in
+// ══════════════════════════════════════
+(function () {
   try {
-    const { data, error } = await db.from('av_websites').select('*').eq('id', siteId).single();
-    if (!error && data) { currentSite = data; updateBanner(data); renderSite(data); }
-    else renderError('Website not found.');
-  } catch { renderError('Failed to load website.'); }
+    const u = JSON.parse(localStorage.getItem('av_user') || '{}');
+    if (u.email && u.expiresAt && Date.now() < u.expiresAt) {
+      window.location.href = 'dashboard.html';
+    }
+  } catch { localStorage.removeItem('av_user'); }
+})();
+
+// ══════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════
+function sanitize(s) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(s));
+  return d.innerHTML;
+}
+function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.trim()); }
+function validPass(p)  { return p.length >= 8; }
+
+async function hashPassword(p) {
+  const salt = 'av_secure_salt_2026_x9k';
+  const data = new TextEncoder().encode(salt + p);
+  const buf  = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, '0')).join('');
 }
 
-function updateBanner(s) {
-  const pill = document.getElementById('bannerPill'), text = document.getElementById('bannerText'), expire = document.getElementById('bannerExpire'), actBtn = document.getElementById('activateBtn');
-  if (s.status === 'active') {
-    pill.textContent = '✅ Live'; pill.className = 'banner-pill live';
-    text.textContent = 'This website is live on the internet';
-    expire.style.display = 'none'; actBtn.style.display = 'none';
-    document.title = s.name + ' — Live';
-  } else if (s.status === 'preview') {
-    document.title = s.name + ' — Preview';
-  } else {
-    pill.textContent = '❌ Expired'; pill.style.background = 'rgba(248,113,113,0.12)'; pill.style.color = '#f87171'; pill.style.borderColor = 'rgba(248,113,113,0.3)';
-    expire.textContent = '❌ This preview expired.'; actBtn.style.display = 'none';
+function getAccounts() {
+  try { return JSON.parse(localStorage.getItem('av_accounts') || '{}'); } catch { return {}; }
+}
+function saveAccounts(a) { localStorage.setItem('av_accounts', JSON.stringify(a)); }
+
+function getAttempts(e) {
+  try { return JSON.parse(localStorage.getItem('av_atk_' + btoa(e)) || '{"n":0,"t":0}'); } catch { return { n: 0, t: 0 }; }
+}
+function setAttempts(e, d) { localStorage.setItem('av_atk_' + btoa(e), JSON.stringify(d)); }
+function clearAttempts(e)  { localStorage.removeItem('av_atk_' + btoa(e)); }
+
+function checkLock(e) {
+  const a = getAttempts(e);
+  if (a.n >= MAX_ATTEMPTS && Date.now() - a.t < LOCKOUT_MS) {
+    return Math.ceil((LOCKOUT_MS - (Date.now() - a.t)) / 60000);
+  }
+  return 0;
+}
+function recordFail(e) {
+  const a = getAttempts(e);
+  const n = (Date.now() - a.t < LOCKOUT_MS) ? a.n + 1 : 1;
+  setAttempts(e, { n, t: Date.now() });
+  return Math.max(0, MAX_ATTEMPTS - n);
+}
+
+function saveSession(u) {
+  localStorage.setItem('av_user', JSON.stringify({ ...u, expiresAt: Date.now() + SESSION_MS }));
+}
+
+function showAlert(id, msg, type = 'error') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'alert alert-' + type;
+  el.style.display = 'block';
+}
+function hideAlert(id) {
+  const el = document.getElementById(id);
+  if (el) { el.style.display = 'none'; el.textContent = ''; }
+}
+function setLoading(id, on, txt) {
+  const b = document.getElementById(id);
+  if (!b) return;
+  b.disabled = on;
+  b.textContent = on ? '⏳ Please wait...' : txt;
+}
+
+// ══════════════════════════════════════
+// TAB SWITCHER
+// ══════════════════════════════════════
+const tabMeta = {
+  login:  ['Welcome back',       'Sign in to your AutoVision account'],
+  signup: ['Get started free',   'Create your AutoVision account today'],
+  forgot: ['Reset your password','Enter your email to receive an OTP']
+};
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'signup' && i === 1));
+  });
+  ['loginPanel', 'signupPanel', 'forgotPanel'].forEach(p => {
+    document.getElementById(p).classList.toggle('active', p === tab + 'Panel');
+  });
+  document.getElementById('formTitle').textContent = tabMeta[tab][0];
+  document.getElementById('formSub').textContent   = tabMeta[tab][1];
+  ['loginError', 'loginSuccess', 'signupError', 'forgotError', 'forgotInfo', 'otpError'].forEach(hideAlert);
+  document.getElementById('lockNotice').style.display = 'none';
+  if (tab === 'forgot') {
+    document.getElementById('forgotStep1').style.display = 'block';
+    document.getElementById('forgotStep2').style.display = 'none';
   }
 }
 
-function renderSite(s) {
-  const t = themes[s.design] || themes.Modern;
-  const root = document.documentElement;
-  root.style.setProperty('--primary',       t.primary);
-  root.style.setProperty('--primary-shadow',t.primaryShadow);
-  root.style.setProperty('--primary-light', t.primaryLight);
-  root.style.setProperty('--hero-bg',       t.heroBg);
-  root.style.setProperty('--hero-orb',      t.heroOrb);
-  root.style.setProperty('--hero-orb2',     t.heroOrb2);
-  root.style.setProperty('--hero-text',     t.heroText);
-  root.style.setProperty('--hero-subtext',  t.heroSubtext);
-  root.style.setProperty('--eyebrow-bg',    t.eyebrowBg);
-  root.style.setProperty('--eyebrow-border',t.eyebrowBorder);
-  root.style.setProperty('--eyebrow-color', t.eyebrowColor);
-  root.style.setProperty('--trust-bg',      t.trustBg);
-  root.style.setProperty('--trust-border',  t.trustBorder);
-  root.style.setProperty('--trust-text',    t.trustText);
-  root.style.setProperty('--trust-icon-bg', t.trustIconBg);
-  root.style.setProperty('--tag-bg',        t.tagBg);
-
-  const icon   = typeIcons[s.type] || '🏢';
-  const rawSvc = s.services ? s.services.split(/[,\n]/).map(x => x.trim()).filter(Boolean).slice(0, 6) : (defaultSvc[s.type] || defaultSvc['Other']);
-  const svcHTML = rawSvc.map((sv, i) => `<div class="svc-card"><div class="svc-icon-wrap">${svcIcons[i]||'✨'}</div><div class="svc-title">${esc(sv)}</div><div class="svc-desc">We deliver exceptional ${esc(sv.toLowerCase())} with a focus on quality and customer satisfaction.</div></div>`).join('');
-  const whyHTML = [{icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence.'},{icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising quality.'},{icon:'💰',t:'Best Value',d:'Premium services at prices that work for you.'},{icon:'🤝',t:'Personal Touch',d:'We treat every customer like family.'}].map(w=>`<div class="why-card"><div class="why-card-icon">${w.icon}</div><div class="why-card-title">${w.t}</div><div class="why-card-text">${w.d}</div></div>`).join('');
-  const desc = s.services ? s.services.substring(0, 140) + (s.services.length > 140 ? '...' : '') : 'We are committed to providing exceptional quality and service. Your satisfaction is our highest priority.';
-
-  // ── CONTACT INFO (only phone/email/address display — NO form, NO EmailJS) ──
-  const contactItems = [
-    s.phone   ? `<div style="display:flex;align-items:center;gap:14px;background:white;border:1px solid #e2e8f4;border-radius:13px;padding:16px 18px;margin-bottom:12px"><div style="width:42px;height:42px;background:var(--tag-bg);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">📞</div><div><div style="font-size:11px;color:#94a3b8;font-weight:800;letter-spacing:1px;text-transform:uppercase">Phone</div><div style="font-size:15px;color:#0a1628;font-weight:700;margin-top:2px">${esc(s.phone)}</div></div></div>` : '',
-    s.email   ? `<div style="display:flex;align-items:center;gap:14px;background:white;border:1px solid #e2e8f4;border-radius:13px;padding:16px 18px;margin-bottom:12px"><div style="width:42px;height:42px;background:var(--tag-bg);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">✉️</div><div><div style="font-size:11px;color:#94a3b8;font-weight:800;letter-spacing:1px;text-transform:uppercase">Email</div><div style="font-size:15px;color:#0a1628;font-weight:700;margin-top:2px">${esc(s.email)}</div></div></div>` : '',
-    s.address ? `<div style="display:flex;align-items:center;gap:14px;background:white;border:1px solid #e2e8f4;border-radius:13px;padding:16px 18px;margin-bottom:12px"><div style="width:42px;height:42px;background:var(--tag-bg);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">📍</div><div><div style="font-size:11px;color:#94a3b8;font-weight:800;letter-spacing:1px;text-transform:uppercase">Address</div><div style="font-size:15px;color:#0a1628;font-weight:700;margin-top:2px">${esc(s.address)}</div></div></div>` : '',
-    (!s.phone && !s.email && !s.address) ? `<div style="display:flex;align-items:center;gap:14px;background:white;border:1px solid #e2e8f4;border-radius:13px;padding:16px 18px"><div style="width:42px;height:42px;background:var(--tag-bg);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">📍</div><div><div style="font-size:11px;color:#94a3b8;font-weight:800;letter-spacing:1px;text-transform:uppercase">Location</div><div style="font-size:15px;color:#0a1628;font-weight:700;margin-top:2px">India</div></div></div>` : ''
-  ].join('');
-
-  document.getElementById('site').innerHTML = `
-    <nav class="s-nav">
-      <div class="s-nav-logo">${esc(s.name)}</div>
-      <ul class="s-nav-links">
-        <li><a href="#sec-about" onclick="scrollTo('sec-about');return false;">About</a></li>
-        <li><a href="#sec-services" onclick="scrollTo('sec-services');return false;">Services</a></li>
-        <li><a href="#sec-contact" onclick="scrollTo('sec-contact');return false;" class="s-nav-cta">Contact Us</a></li>
-      </ul>
-    </nav>
-
-    <div class="s-hero">
-      <div class="hero-content">
-        <div class="hero-eyebrow"><span class="eyebrow-dot"></span>${esc(s.type||'Business')}</div>
-        <h1 class="hero-h1">Welcome to<br><em>${esc(s.name)}</em></h1>
-        <p class="hero-p">${esc(desc)}</p>
-        <div class="hero-actions">
-          <button class="btn-hero-main" onclick="scrollTo('sec-contact')">Get In Touch →</button>
-          <button class="btn-hero-ghost" onclick="scrollTo('sec-services')">Our Services</button>
-        </div>
-        <div class="hero-trust"><span class="trust-stars">★★★★★</span><span>Trusted by <strong>500+</strong> happy customers</span></div>
-      </div>
-      <div class="hero-visual">
-        <div class="hero-card">
-          <span class="hero-card-icon">${icon}</span>
-          <div class="hero-card-name">${esc(s.name)}</div>
-          <div class="hero-card-type">${esc(s.type||'')} · ${esc(s.design||'Modern')} Design</div>
-          <div class="hero-card-badges"><span class="hc-badge">✅ Verified</span><span class="hc-badge">⚡ Professional</span><span class="hc-badge">📱 Mobile Ready</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="trust-bar">
-      <div class="trust-item"><div class="trust-icon">🏆</div>Award Winning Quality</div>
-      <div class="trust-item"><div class="trust-icon">🔒</div>100% Trusted & Secure</div>
-      <div class="trust-item"><div class="trust-icon">⚡</div>Fast & Reliable Service</div>
-      <div class="trust-item"><div class="trust-icon">💬</div>24/7 Customer Support</div>
-    </div>
-
-    <div class="s-stats">
-      <div class="stat-box"><div class="stat-big">500+</div><div class="stat-small">Happy Customers</div></div>
-      <div class="stat-box"><div class="stat-big">10+</div><div class="stat-small">Years of Excellence</div></div>
-      <div class="stat-box"><div class="stat-big">100%</div><div class="stat-small">Satisfaction Rate</div></div>
-    </div>
-
-    <div class="s-about" id="sec-about">
-      <div>
-        <div class="section-eyebrow">✦ About Us</div>
-        <div class="section-title">The story behind <em>${esc(s.name)}</em></div>
-        <p class="section-body">We are a dedicated ${esc((s.type||'').toLowerCase())} passionate about serving our community with the very best. Every product and service is crafted to meet the highest standards.</p>
-        <ul class="check-list">
-          <li><span class="cl-icon">✓</span>Trusted by hundreds of loyal customers</li>
-          <li><span class="cl-icon">✓</span>Premium quality in everything we do</li>
-          <li><span class="cl-icon">✓</span>Transparent and fair pricing always</li>
-          <li><span class="cl-icon">✓</span>Friendly, professional and caring team</li>
-        </ul>
-      </div>
-      <div class="about-visual">
-        <div class="about-main-card"><span class="amc-icon">${icon}</span><div class="amc-name">${esc(s.name)}</div><div class="amc-type">${esc(s.type||'')}${s.address?' · '+esc(s.address):''}</div></div>
-        <div class="about-float"><div class="af-icon">⭐</div><div><div class="af-num">500+</div><div class="af-label">Happy Customers</div></div></div>
-      </div>
-    </div>
-
-    <div class="s-services" id="sec-services">
-      <div class="services-header">
-        <div class="section-eyebrow" style="justify-content:center">✦ What We Offer</div>
-        <div class="section-title" style="text-align:center">Our <em>Services</em></div>
-        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-top:8px;text-align:center">Everything you need, delivered with care and expertise.</p>
-      </div>
-      <div class="services-grid">${svcHTML}</div>
-    </div>
-
-    <div class="s-why">
-      <div>
-        <div class="section-eyebrow">✦ Why Choose Us</div>
-        <div class="section-title">We go <em>above and beyond</em> for you</div>
-        <p class="section-body">Our commitment to excellence makes us the trusted choice for thousands of customers.</p>
-        <button class="btn-hero-main" style="font-family:'DM Sans',sans-serif" onclick="scrollTo('sec-contact')">Get In Touch →</button>
-      </div>
-      <div class="why-grid">${whyHTML}</div>
-    </div>
-
-    <div class="s-testimonial">
-      <div class="test-stars">★ ★ ★ ★ ★</div>
-      <div class="test-quote">"${esc(s.name)} has been absolutely incredible. The quality of service and attention to detail is unmatched!"</div>
-      <div class="test-author">— A Happy Customer, India</div>
-    </div>
-
-    <!-- CONTACT — info only, NO form, NO EmailJS -->
-    <div id="sec-contact" style="background:#f8faff;padding:96px 72px;">
-      <div style="max-width:600px;margin:0 auto;text-align:center;">
-        <div class="section-eyebrow" style="justify-content:center">✦ Contact Us</div>
-        <div class="section-title" style="text-align:center">Get in <em>touch</em> today</div>
-        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-bottom:36px">We'd love to hear from you. Reach out using the details below.</p>
-        <div style="text-align:left;max-width:480px;margin:0 auto">${contactItems}</div>
-      </div>
-    </div>
-
-    <div class="s-footer">
-      <div class="s-footer-logo">${esc(s.name)}</div>
-      <div class="s-footer-links">
-        <a href="#" onclick="scrollTo('sec-about');return false;">About</a>
-        <a href="#" onclick="scrollTo('sec-services');return false;">Services</a>
-        <a href="#" onclick="scrollTo('sec-contact');return false;">Contact</a>
-      </div>
-      <div class="s-footer-copy">© ${new Date().getFullYear()} ${esc(s.name)}. All rights reserved.</div>
-    </div>`;
-
-  document.title = s.name + (s.status === 'active' ? '' : ' — Preview');
+// ══════════════════════════════════════
+// PASSWORD STRENGTH
+// ══════════════════════════════════════
+function updateStrength(p) {
+  const bar = document.getElementById('strengthBar');
+  const lbl = document.getElementById('strengthLabel');
+  if (!bar) return;
+  let s = 0;
+  if (p.length >= 8)  s++;
+  if (p.length >= 12) s++;
+  if (/[A-Z]/.test(p)) s++;
+  if (/[0-9]/.test(p)) s++;
+  if (/[^A-Za-z0-9]/.test(p)) s++;
+  const lvls = [
+    { c: '#f87171', l: 'Too short', w: '10%' },
+    { c: '#f87171', l: 'Weak',      w: '25%' },
+    { c: '#fb923c', l: 'Fair',      w: '50%' },
+    { c: '#fbbf24', l: 'Good',      w: '70%' },
+    { c: '#34d399', l: 'Strong',    w: '88%' },
+    { c: '#10b981', l: 'Very Strong',w: '100%' }
+  ];
+  const lv = lvls[Math.min(s, 5)];
+  bar.style.width      = p.length ? lv.w : '0%';
+  bar.style.background = lv.c;
+  lbl.textContent = p.length ? lv.l : '';
+  lbl.style.color = lv.c;
 }
 
-function renderError(msg) {
-  document.getElementById('site').innerHTML = `<div class="error-state"><div style="font-size:60px;margin-bottom:18px">😕</div><h2>Website Not Found</h2><p>${esc(msg)}</p><a href="dashboard.html" style="padding:13px 26px;background:linear-gradient(135deg,#4f8eff,#7b5ea7);color:white;border-radius:10px;text-decoration:none;font-weight:700;display:inline-block">← Back to Dashboard</a></div>`;
+function togglePass(id, btn) {
+  const inp = document.getElementById(id);
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
 }
 
-function scrollTo(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' }); }
-function esc(s) { const d = document.createElement('div'); d.appendChild(document.createTextNode(s||'')); return d.innerHTML; }
+// ══════════════════════════════════════
+// SIGN UP
+// ══════════════════════════════════════
+async function handleSignup() {
+  hideAlert('signupError');
+  const name  = sanitize(document.getElementById('signupName').value.trim());
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('signupPass').value;
+  const conf  = document.getElementById('signupConf').value;
 
-// PAYMENT
-function openPayModal() {
-  if (!currentSite) return;
-  if (currentSite.status === 'active') { alert('✅ This website is already live!'); return; }
-  document.getElementById('payModal').classList.add('open');
+  if (!name)            return showAlert('signupError', '⚠️ Please enter your full name.');
+  if (name.length < 2)  return showAlert('signupError', '⚠️ Name must be at least 2 characters.');
+  if (!validEmail(email)) return showAlert('signupError', '⚠️ Please enter a valid email address.');
+  if (!validPass(pass)) return showAlert('signupError', '⚠️ Password must be at least 8 characters.');
+  if (pass !== conf)    return showAlert('signupError', '⚠️ Passwords do not match.');
+
+  const accounts = getAccounts();
+  if (accounts[email])  return showAlert('signupError', '⚠️ This email is already registered. Please sign in.');
+
+  setLoading('signupBtn', true, 'Create Account Free →');
+  try {
+    const hashed = await hashPassword(pass);
+    accounts[email] = { name, email, password: hashed, createdAt: new Date().toISOString(), role: 'user' };
+    saveAccounts(accounts);
+    saveSession({ email, name });
+    window.location.href = 'dashboard.html';
+  } catch {
+    setLoading('signupBtn', false, 'Create Account Free →');
+    showAlert('signupError', '⚠️ Something went wrong. Please try again.');
+  }
 }
-function closePayModal() { document.getElementById('payModal').classList.remove('open'); }
 
-async function processPayment() {
-  if (!currentSite?.id) return;
-  const btn = document.getElementById('payBtn'); btn.disabled = true; btn.textContent = '⏳ Opening...';
-  let userEmail = '';
-  try { userEmail = JSON.parse(localStorage.getItem('av_user')||'{}').email||''; } catch {}
-  new Razorpay({
-    key: RZP_KEY, amount: 29900, currency: 'INR', name: 'AutoVision', description: 'Website Activation — ₹299',
-    handler: async function(res) {
-      closePayModal();
-      try {
-        await db.from('av_websites').update({ status:'active' }).eq('id', currentSite.id);
-        await db.from('av_payments').insert([{ user_email: currentSite.user_email, website_id: currentSite.id, amount:299, payment_id:res.razorpay_payment_id, type:'activation', status:'paid', created_at:new Date().toISOString() }]);
-        currentSite.status = 'active'; updateBanner(currentSite);
-        alert('🎉 Payment Successful! Your website is now LIVE!\n\nPayment ID: '+res.razorpay_payment_id+'\n\nShare this page link with your customers!');
-      } catch { alert('⚠️ Payment received but activation failed. Contact: kasmaniadnan812@gmail.com\nPayment ID: '+res.razorpay_payment_id); }
-    },
-    modal: { ondismiss: function() { btn.disabled=false; btn.textContent='Pay ₹299 & Go Live →'; } },
-    prefill: { email: userEmail }, theme: { color: '#4f8eff' }
-  }).open();
+// ══════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════
+async function handleLogin() {
+  hideAlert('loginError');
+  hideAlert('loginSuccess');
+  document.getElementById('lockNotice').style.display = 'none';
+
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('loginPass').value;
+
+  if (!email || !pass) return showAlert('loginError', '⚠️ Please enter your email and password.');
+  if (!validEmail(email)) return showAlert('loginError', '⚠️ Please enter a valid email address.');
+
+  const lockMins = checkLock(email);
+  if (lockMins > 0) {
+    const n = document.getElementById('lockNotice');
+    n.textContent = `🔒 Too many failed attempts. Try again in ${lockMins} minute${lockMins > 1 ? 's' : ''}.`;
+    n.style.display = 'block';
+    return;
+  }
+
+  const accounts = getAccounts();
+  if (!accounts[email]) return showAlert('loginError', '⚠️ No account found with this email. Please sign up first.');
+
+  setLoading('loginBtn', true, 'Sign In →');
+  try {
+    const hashed = await hashPassword(pass);
+    const stored = accounts[email].password;
+    const match  = stored === hashed || stored === btoa(pass);
+
+    if (!match) {
+      setLoading('loginBtn', false, 'Sign In →');
+      const rem = recordFail(email);
+      if (rem > 0) {
+        showAlert('loginError', `⚠️ Incorrect password. ${rem} attempt${rem !== 1 ? 's' : ''} remaining.`);
+      } else {
+        const n = document.getElementById('lockNotice');
+        n.textContent = '🔒 Account locked for 15 minutes due to too many failed attempts.';
+        n.style.display = 'block';
+      }
+      return;
+    }
+
+    // Upgrade old btoa hash silently
+    if (stored === btoa(pass)) {
+      accounts[email].password = hashed;
+      saveAccounts(accounts);
+    }
+
+    clearAttempts(email);
+    saveSession({ email, name: accounts[email].name || email });
+    window.location.href = 'dashboard.html';
+  } catch {
+    setLoading('loginBtn', false, 'Sign In →');
+    showAlert('loginError', '⚠️ Something went wrong. Please try again.');
+  }
 }
 
-document.getElementById('payModal').addEventListener('click', e => { if (e.target===document.getElementById('payModal')) closePayModal(); });
-loadSite();
+// ══════════════════════════════════════
+// FORGOT PASSWORD — STEP 1: Send OTP
+// ══════════════════════════════════════
+async function handleForgotStep1() {
+  hideAlert('forgotError');
+  hideAlert('forgotInfo');
+
+  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+
+  if (!email)             return showAlert('forgotError', '⚠️ Please enter your email address.');
+  if (!validEmail(email)) return showAlert('forgotError', '⚠️ Please enter a valid email address.');
+
+  const accounts = getAccounts();
+  if (!accounts[email])   return showAlert('forgotError', '⚠️ No account found with this email address.');
+
+  setLoading('forgotBtn', true, 'Send OTP →');
+
+  // Generate 6-digit OTP
+  const otp = String(Math.floor(100000 + Math.random() * 900000));
+  console.log('OTP GENERATED:', otp);
+
+  // Store OTP with expiry in localStorage
+  localStorage.setItem('reset_otp',   otp);
+  localStorage.setItem('reset_email', email);
+  localStorage.setItem('reset_expiry', String(Date.now() + OTP_EXPIRY_MS));
+
+  // Send OTP via EmailJS
+  try {
+    const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_OTP_TEMPLATE, {
+      to_email: email,
+      otp:      otp
+    });
+    console.log('SUCCESS', response);
+
+    setLoading('forgotBtn', false, 'Send OTP →');
+
+    // Move to Step 2
+    document.getElementById('forgotStep1').style.display = 'none';
+    document.getElementById('forgotStep2').style.display = 'block';
+
+  } catch (error) {
+    console.log('FAILED', error);
+    setLoading('forgotBtn', false, 'Send OTP →');
+
+    // Still move to step 2 but warn user
+    showAlert('forgotInfo',
+      'ℹ️ OTP may be delayed. Check your inbox and spam folder. If not received, click Resend OTP.',
+      'info'
+    );
+    setTimeout(() => {
+      document.getElementById('forgotStep1').style.display = 'none';
+      document.getElementById('forgotStep2').style.display = 'block';
+    }, 2000);
+  }
+}
+
+// ══════════════════════════════════════
+// FORGOT PASSWORD — STEP 2: Verify OTP + Reset
+// ══════════════════════════════════════
+async function handleForgotStep2() {
+  hideAlert('otpError');
+
+  const enteredOtp = document.getElementById('otpInput').value.trim();
+  const newPass    = document.getElementById('newPass').value;
+  const confPass   = document.getElementById('confPass').value;
+
+  if (!enteredOtp)          return showAlert('otpError', '⚠️ Please enter the OTP from your email.');
+  if (enteredOtp.length !== 6) return showAlert('otpError', '⚠️ OTP must be exactly 6 digits.');
+  if (!newPass)             return showAlert('otpError', '⚠️ Please enter a new password.');
+  if (!validPass(newPass))  return showAlert('otpError', '⚠️ Password must be at least 8 characters.');
+  if (newPass !== confPass) return showAlert('otpError', '⚠️ Passwords do not match.');
+
+  // Retrieve stored OTP data
+  const storedOtp    = localStorage.getItem('reset_otp');
+  const storedEmail  = localStorage.getItem('reset_email');
+  const storedExpiry = Number(localStorage.getItem('reset_expiry') || '0');
+
+  console.log('Entered OTP:', enteredOtp, '| Stored OTP:', storedOtp);
+
+  if (!storedOtp || !storedEmail) {
+    return showAlert('otpError', '⚠️ OTP session expired. Please request a new OTP.');
+  }
+  if (Date.now() > storedExpiry) {
+    localStorage.removeItem('reset_otp');
+    localStorage.removeItem('reset_email');
+    localStorage.removeItem('reset_expiry');
+    return showAlert('otpError', '⚠️ OTP has expired. Please click Resend OTP.');
+  }
+  if (enteredOtp !== storedOtp) {
+    return showAlert('otpError', '⚠️ Incorrect OTP. Please check your email and try again.');
+  }
+
+  // OTP is valid — update password
+  setLoading('resetBtn', true, 'Reset Password →');
+  try {
+    const hashed   = await hashPassword(newPass);
+    const accounts = getAccounts();
+
+    if (!accounts[storedEmail]) {
+      setLoading('resetBtn', false, 'Reset Password →');
+      return showAlert('otpError', '⚠️ Account not found. Please sign up.');
+    }
+
+    accounts[storedEmail].password = hashed;
+    delete accounts[storedEmail].resetToken;
+    saveAccounts(accounts);
+
+    // Clean up OTP data
+    localStorage.removeItem('reset_otp');
+    localStorage.removeItem('reset_email');
+    localStorage.removeItem('reset_expiry');
+    clearAttempts(storedEmail);
+
+    // Go back to login with success message
+    switchTab('login');
+    showAlert('loginSuccess', '✅ Password reset successfully! Please sign in with your new password.', 'success');
+    setLoading('resetBtn', false, 'Reset Password →');
+
+  } catch {
+    setLoading('resetBtn', false, 'Reset Password →');
+    showAlert('otpError', '⚠️ Something went wrong. Please try again.');
+  }
+}
+
+// Go back to step 1 (resend OTP)
+function goBackToStep1() {
+  localStorage.removeItem('reset_otp');
+  localStorage.removeItem('reset_email');
+  localStorage.removeItem('reset_expiry');
+  document.getElementById('forgotStep1').style.display = 'block';
+  document.getElementById('forgotStep2').style.display = 'none';
+  hideAlert('otpError');
+  hideAlert('forgotError');
+  hideAlert('forgotInfo');
+}
+
+// ══════════════════════════════════════
+// ENTER KEY SUPPORT
+// ══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const active = document.querySelector('.form-panel.active');
+  if (!active) return;
+  if (active.id === 'loginPanel')       handleLogin();
+  else if (active.id === 'signupPanel') handleSignup();
+  else if (active.id === 'forgotPanel') {
+    const s2 = document.getElementById('forgotStep2');
+    if (s2 && s2.style.display !== 'none') handleForgotStep2();
+    else handleForgotStep1();
+  }
+});
+
+// Show reset success if redirected back
+if (sessionStorage.getItem('av_reset_success')) {
+  sessionStorage.removeItem('av_reset_success');
+  showAlert('loginSuccess', '✅ Password reset! Please sign in.', 'success');
+}
 </script>
 </body>
 </html>
