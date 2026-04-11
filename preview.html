@@ -3,594 +3,499 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoVision — Sign In</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Website Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#080c14;--bg2:#0d1320;--bg3:#111827;
-  --surface:#141d2e;--surface2:#1a2540;
-  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
-  --accent:#4f8eff;--accent2:#7b5ea7;--accent3:#00d4aa;
-  --text:#f0f4ff;--text2:#8899bb;--text3:#5a6f8e;
-  --grad:linear-gradient(135deg,#4f8eff 0%,#7b5ea7 100%);
-  --red:#f87171;--red-bg:rgba(248,113,113,0.08);--red-border:rgba(248,113,113,0.2);
-  --green:#34d399;--green-bg:rgba(52,211,153,0.08);--green-border:rgba(52,211,153,0.2);
-  --orange:#fb923c;--orange-bg:rgba(251,146,60,0.08);
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* PREVIEW BANNER */
+.preview-banner {
+  position:fixed; top:0; left:0; right:0; z-index:99999;
+  background:#0a1628; padding:0 32px; height:52px;
+  display:flex; align-items:center; justify-content:space-between;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 2px 20px rgba(0,0,0,0.4);
 }
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;-webkit-font-smoothing:antialiased;}
-.left{background:var(--bg2);border-right:1px solid var(--border);padding:56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
-.left::before{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(79,142,255,.18) 0%,transparent 70%);}
-.left::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(123,94,167,.12) 0%,transparent 70%);}
-.left-top{position:relative;z-index:1;}
-.left-logo{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;text-decoration:none;display:block;margin-bottom:52px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.left-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--text);line-height:1.18;letter-spacing:-1.5px;margin-bottom:16px;}
-.left-title em{font-style:italic;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.left-sub{font-size:15px;color:var(--text2);line-height:1.72;margin-bottom:44px;}
-.left-feats{position:relative;z-index:1;}
-.left-feat{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
-.feat-ico{width:36px;height:36px;background:rgba(79,142,255,.12);border:1px solid rgba(79,142,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.feat-txt{font-size:14px;color:var(--text2);font-weight:500;}
-.left-bottom{position:relative;z-index:1;font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;}
-.right{display:flex;align-items:center;justify-content:center;padding:56px 64px;background:var(--bg);}
-.login-box{width:100%;max-width:400px;animation:fadeUp .55s ease both;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-.login-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px;margin-bottom:5px;}
-.login-sub{font-size:14px;color:var(--text2);margin-bottom:30px;}
-.tabs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:28px;}
-.tab{flex:1;padding:10px;text-align:center;font-size:13.5px;font-weight:600;color:var(--text3);cursor:pointer;border-radius:10px;transition:all .2s;}
-.tab.active{background:var(--surface2);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.3);}
-.form-group{margin-bottom:15px;}
-label{display:block;font-size:12px;font-weight:700;color:var(--text3);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase;}
-input[type=text],input[type=email],input[type=password]{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:12px 15px;font-family:'Outfit',sans-serif;font-size:14.5px;border-radius:10px;outline:none;transition:all .2s;}
-input:focus{border-color:var(--accent);background:var(--surface2);box-shadow:0 0 0 3px rgba(79,142,255,.12);}
-input::placeholder{color:var(--text3);}
-.input-wrap{position:relative;}
-.toggle-pw{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:15px;padding:0;color:var(--text3);}
-.btn-submit{width:100%;padding:13px;background:var(--grad);color:white;font-size:14.5px;font-weight:700;border-radius:10px;border:none;cursor:pointer;transition:all .22s;box-shadow:0 4px 20px rgba(79,142,255,.3);margin-top:4px;font-family:'Outfit',sans-serif;}
-.btn-submit:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 28px rgba(79,142,255,.45);}
-.btn-submit:disabled{opacity:.6;cursor:not-allowed;}
-.strength-bar-wrap{height:3px;background:var(--border);border-radius:100px;overflow:hidden;margin-top:8px;}
-.strength-bar{height:100%;width:0%;border-radius:100px;transition:all .3s;}
-.strength-label{font-size:11px;font-weight:700;margin-top:4px;}
-.alert{padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:14px;display:none;line-height:1.5;border:1px solid;}
-.alert-error{background:var(--red-bg);border-color:var(--red-border);color:var(--red);}
-.alert-success{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
-.alert-info{background:rgba(79,142,255,.08);border-color:rgba(79,142,255,.2);color:#7aabff;}
-.switch-text{text-align:center;font-size:13.5px;color:var(--text3);margin-top:18px;}
-.switch-text a{color:var(--accent);text-decoration:none;font-weight:600;cursor:pointer;}
-.form-panel{display:none;} .form-panel.active{display:block;}
-.otp-box{background:rgba(79,142,255,.07);border:1px solid rgba(79,142,255,.2);border-radius:12px;padding:16px 18px;margin-bottom:16px;}
-.otp-notice{font-size:11.5px;color:var(--accent);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;}
-.otp-inst{font-size:13px;color:var(--text2);line-height:1.55;}
-.lock-notice{background:var(--orange-bg);border:1px solid rgba(251,146,60,.2);border-radius:10px;padding:11px 14px;font-size:12.5px;color:var(--orange);font-weight:600;margin-bottom:16px;display:none;}
-.back-link{display:flex;align-items:center;gap:6px;color:var(--text3);text-decoration:none;font-size:13px;font-weight:500;margin-top:22px;transition:color .2s;}
-.forgot-link{font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;display:block;text-align:right;margin-bottom:16px;}
-@media(max-width:768px){body{grid-template-columns:1fr;}.left{display:none;}.right{padding:36px 22px;}}
+.banner-left { display:flex; align-items:center; gap:12px; }
+.banner-logo { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:white; text-decoration:none; }
+.banner-logo span { color:#60a5fa; }
+.banner-pill { background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.35); color:#fb923c; font-size:11px; font-weight:700; padding:3px 10px; border-radius:100px; }
+.banner-text { font-size:13px; color:#94a3b8; }
+.banner-right { display:flex; align-items:center; gap:10px; }
+.banner-expire { font-size:12px; color:#fb923c; font-weight:600; }
+.btn-back { padding:7px 14px; background:transparent; border:1px solid #2d3f55; color:#94a3b8; border-radius:7px; font-size:12px; font-weight:500; cursor:pointer; text-decoration:none; font-family:'DM Sans',sans-serif; transition:all 0.2s; display:inline-block; }
+.btn-back:hover { border-color:#60a5fa; color:#60a5fa; }
+.btn-activate { padding:8px 20px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:7px; font-size:13px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; box-shadow:0 4px 14px rgba(26,86,255,0.35); white-space:nowrap; }
+.btn-activate:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(26,86,255,0.5); }
+
+/* BASE */
+body { background:#fff; -webkit-font-smoothing:antialiased; }
+.site { padding-top:52px; font-family:'DM Sans',sans-serif; }
+
+/* NAVBAR */
+.s-nav { position:sticky; top:52px; z-index:100; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); border-bottom:1px solid #e8edf5; padding:0 80px; height:70px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 20px rgba(0,0,0,0.04); }
+.s-nav-logo { font-family:'Playfair Display',serif; font-size:24px; font-weight:800; color:#0a1628; letter-spacing:-0.5px; }
+.s-nav-links { display:flex; gap:32px; list-style:none; }
+.s-nav-links a { font-size:14px; font-weight:500; color:#64748b; text-decoration:none; transition:color 0.2s; }
+.s-nav-links a:hover { color:var(--primary); }
+.s-nav-cta { padding:10px 24px; background:var(--primary) !important; color:white !important; border-radius:8px; font-weight:700 !important; box-shadow:0 4px 14px var(--primary-shadow); transition:all 0.2s; }
+.s-nav-cta:hover { transform:translateY(-1px); }
+
+/* HERO */
+.s-hero { background:var(--hero-bg); padding:90px 80px 0; overflow:hidden; position:relative; min-height:560px; display:flex; align-items:flex-end; gap:60px; }
+.s-hero::before { content:''; position:absolute; top:-200px; right:-200px; width:600px; height:600px; background:var(--hero-orb); border-radius:50%; filter:blur(80px); opacity:0.4; }
+.s-hero::after { content:''; position:absolute; bottom:-100px; left:30%; width:400px; height:400px; background:var(--hero-orb2); border-radius:50%; filter:blur(100px); opacity:0.25; }
+.hero-content { position:relative; z-index:2; flex:1; padding-bottom:80px; }
+.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:var(--eyebrow-bg); border:1px solid var(--eyebrow-border); color:var(--eyebrow-color); font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:7px 16px; border-radius:100px; margin-bottom:24px; }
+.eyebrow-dot { width:6px; height:6px; border-radius:50%; background:var(--eyebrow-color); animation:pulse3 2s infinite; }
+@keyframes pulse3 { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.8);} }
+.hero-h1 { font-family:'Playfair Display',serif; font-size:clamp(40px,5vw,68px); font-weight:900; line-height:1.1; letter-spacing:-2px; color:var(--hero-text); margin-bottom:20px; }
+.hero-h1 em { font-style:italic; color:var(--primary-light); }
+.hero-p { font-size:18px; color:var(--hero-subtext); line-height:1.75; max-width:480px; margin-bottom:40px; }
+.hero-actions { display:flex; gap:14px; align-items:center; margin-bottom:48px; }
+.btn-hero-main { padding:15px 32px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 24px var(--primary-shadow); transition:all 0.25s; }
+.btn-hero-main:hover { transform:translateY(-2px); }
+.btn-hero-ghost { padding:15px 32px; background:transparent; color:white; border:1.5px solid rgba(255,255,255,0.25); border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.25s; }
+.btn-hero-ghost:hover { background:rgba(255,255,255,0.1); }
+.hero-trust { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--hero-subtext); }
+.trust-stars { color:#fbbf24; }
+.hero-visual { position:relative; z-index:2; width:360px; flex-shrink:0; align-self:flex-end; }
+.hero-card { background:white; border-radius:20px 20px 0 0; padding:32px; box-shadow:0 -8px 60px rgba(0,0,0,0.15); }
+.hero-card-icon { font-size:52px; margin-bottom:14px; display:block; }
+.hero-card-name { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; color:#0a1628; margin-bottom:6px; }
+.hero-card-type { font-size:13px; color:#64748b; font-weight:500; margin-bottom:18px; }
+.hero-card-badges { display:flex; gap:8px; flex-wrap:wrap; }
+.hc-badge { background:#eff6ff; color:#1a56ff; font-size:11px; font-weight:700; padding:5px 12px; border-radius:100px; }
+
+/* TRUST BAR */
+.trust-bar { background:var(--trust-bg); border-bottom:1px solid var(--trust-border); padding:22px 80px; display:flex; align-items:center; justify-content:center; gap:50px; flex-wrap:wrap; }
+.trust-item { display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; color:var(--trust-text); }
+.trust-icon { width:32px; height:32px; background:var(--trust-icon-bg); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
+
+/* STATS */
+.s-stats { background:var(--primary); padding:50px 80px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; }
+.stat-box { padding:10px; border-right:1px solid rgba(255,255,255,0.15); }
+.stat-box:last-child { border-right:none; }
+.stat-big { font-family:'Playfair Display',serif; font-size:48px; font-weight:900; color:white; line-height:1; margin-bottom:6px; }
+.stat-small { font-size:14px; color:rgba(255,255,255,0.7); font-weight:500; }
+
+/* ABOUT */
+.s-about { padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; background:white; }
+.section-eyebrow { display:inline-flex; align-items:center; gap:6px; background:var(--tag-bg); color:var(--primary); font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-radius:100px; margin-bottom:18px; }
+.section-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:900; color:#0a1628; letter-spacing:-1.5px; line-height:1.15; margin-bottom:18px; }
+.section-title em { font-style:italic; color:var(--primary); }
+.section-body { font-size:16px; color:#475569; line-height:1.85; margin-bottom:32px; }
+.check-list { list-style:none; display:flex; flex-direction:column; gap:12px; }
+.check-list li { display:flex; align-items:center; gap:12px; font-size:15px; color:#334155; font-weight:500; }
+.cl-icon { width:24px; height:24px; background:var(--tag-bg); color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
+.about-visual { position:relative; }
+.about-main-card { background:var(--hero-bg); border-radius:24px; padding:50px 40px; text-align:center; position:relative; overflow:hidden; }
+.about-main-card::before { content:''; position:absolute; top:-60px; right:-60px; width:200px; height:200px; background:var(--hero-orb); border-radius:50%; filter:blur(50px); opacity:0.3; }
+.amc-icon { font-size:72px; margin-bottom:16px; display:block; }
+.amc-name { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--hero-text); margin-bottom:8px; }
+.amc-type { font-size:14px; color:var(--hero-subtext); }
+.about-float { position:absolute; bottom:-16px; left:-16px; background:white; border-radius:14px; padding:14px 18px; box-shadow:0 8px 30px rgba(0,0,0,0.12); display:flex; align-items:center; gap:10px; }
+.af-icon { font-size:24px; }
+.af-num { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; color:#0a1628; line-height:1; }
+.af-label { font-size:11px; color:#94a3b8; font-weight:600; }
+
+/* SERVICES */
+.s-services { background:#f8faff; padding:100px 80px; }
+.services-header { text-align:center; margin-bottom:60px; }
+.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; }
+.svc-card { background:white; border:1.5px solid #e2e8f4; border-radius:20px; padding:36px 28px; transition:all 0.3s; position:relative; overflow:hidden; }
+.svc-card::after { content:''; position:absolute; bottom:0; left:0; width:0; height:3px; background:linear-gradient(90deg,var(--primary),#6366f1); transition:width 0.4s; }
+.svc-card:hover::after { width:100%; }
+.svc-card:hover { box-shadow:0 16px 48px rgba(0,0,0,0.09); transform:translateY(-6px); border-color:var(--primary); }
+.svc-icon-wrap { width:60px; height:60px; background:var(--tag-bg); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:20px; transition:all 0.3s; }
+.svc-card:hover .svc-icon-wrap { background:var(--primary); }
+.svc-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:800; color:#0a1628; margin-bottom:10px; }
+.svc-desc { font-size:14px; color:#64748b; line-height:1.7; }
+
+/* WHY US */
+.s-why { background:white; padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.why-card { background:#f8faff; border:1px solid #e2e8f4; border-radius:16px; padding:24px 20px; transition:all 0.25s; }
+.why-card:hover { background:var(--tag-bg); border-color:var(--primary); transform:translateY(-3px); box-shadow:0 8px 24px rgba(26,86,255,0.1); }
+.why-card-icon { font-size:28px; margin-bottom:10px; }
+.why-card-title { font-size:15px; font-weight:700; color:#0a1628; margin-bottom:6px; }
+.why-card-text { font-size:13px; color:#64748b; line-height:1.5; }
+
+/* TESTIMONIAL */
+.s-testimonial { background:var(--primary); padding:80px; text-align:center; position:relative; overflow:hidden; }
+.s-testimonial::before { content:'"'; position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-size:300px; font-weight:900; color:rgba(255,255,255,0.04); line-height:1; }
+.test-stars { color:#fbbf24; font-size:20px; margin-bottom:20px; letter-spacing:3px; }
+.test-quote { font-family:'Playfair Display',serif; font-size:clamp(20px,3vw,30px); font-weight:700; font-style:italic; color:white; line-height:1.5; max-width:700px; margin:0 auto 28px; }
+.test-author { font-size:14px; color:rgba(255,255,255,0.7); font-weight:600; }
+
+/* CONTACT */
+.s-contact { background:#f8faff; padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.contact-info { display:flex; flex-direction:column; gap:16px; margin-top:28px; }
+.ci-item { display:flex; align-items:center; gap:16px; background:white; border:1px solid #e2e8f4; border-radius:14px; padding:18px 20px; transition:all 0.25s; }
+.ci-item:hover { border-color:var(--primary); box-shadow:0 6px 20px rgba(26,86,255,0.08); transform:translateX(4px); }
+.ci-icon { width:46px; height:46px; background:var(--tag-bg); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.ci-label { font-size:11px; color:#94a3b8; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.ci-val { font-size:15px; color:#0a1628; font-weight:700; margin-top:2px; }
+.contact-form-card { background:white; border:1px solid #e2e8f4; border-radius:24px; padding:40px; box-shadow:0 8px 40px rgba(0,0,0,0.06); }
+.cf-title { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:#0a1628; margin-bottom:6px; }
+.cf-sub { font-size:14px; color:#94a3b8; margin-bottom:28px; }
+.cf-input { width:100%; padding:13px 16px; background:#f8faff; border:1.5px solid #e2e8f4; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; color:#0a1628; outline:none; transition:all 0.2s; margin-bottom:14px; }
+.cf-input:focus { border-color:var(--primary); background:white; }
+.cf-input::placeholder { color:#94a3b8; }
+.cf-submit { width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px var(--primary-shadow); transition:all 0.25s; }
+.cf-submit:hover { transform:translateY(-2px); }
+
+/* FOOTER */
+.s-footer { background:#0a1628; padding:50px 80px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+.s-footer-logo { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; color:white; }
+.s-footer-links { display:flex; gap:24px; }
+.s-footer-links a { font-size:14px; color:#475569; text-decoration:none; transition:color 0.2s; }
+.s-footer-links a:hover { color:#60a5fa; }
+.s-footer-copy { font-size:13px; color:#334155; }
+
+/* PAYMENT MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,22,40,0.65); backdrop-filter:blur(6px); z-index:999999; align-items:center; justify-content:center; }
+.modal { background:white; border-radius:24px; padding:44px; max-width:460px; width:90%; box-shadow:0 40px 100px rgba(0,0,0,0.25); text-align:center; animation:popUp 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes popUp { from{opacity:0;transform:scale(0.92) translateY(16px);} to{opacity:1;transform:scale(1) translateY(0);} }
+.modal-emoji { font-size:56px; margin-bottom:18px; }
+.modal-title { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:#0a1628; margin-bottom:8px; }
+.modal-sub { font-size:14px; color:#64748b; margin-bottom:24px; line-height:1.6; }
+.pay-box { background:linear-gradient(135deg,#f0f4ff,#e8eeff); border:1px solid #c7d2fe; border-radius:16px; padding:22px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; text-align:left; }
+.pay-label { font-size:11px; color:#64748b; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+.pay-amount { font-family:'Playfair Display',serif; font-size:44px; font-weight:900; color:#0a1628; line-height:1; }
+.pay-features { text-align:left; font-size:13px; color:#475569; line-height:2; margin-bottom:28px; }
+.modal-btns { display:flex; gap:12px; }
+.btn-pay { flex:2; padding:15px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px rgba(26,86,255,0.35); transition:all 0.2s; }
+.btn-pay:hover { transform:translateY(-2px); }
+.btn-cancel { flex:1; padding:15px; background:#f1f5f9; color:#64748b; border:none; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+  .s-nav { padding:0 24px; }
+  .s-nav-links { display:none; }
+  .s-hero { padding:60px 24px 0; flex-direction:column; }
+  .hero-visual { width:100%; }
+  .hero-card { border-radius:20px; }
+  .trust-bar,.s-stats { padding:30px 24px; }
+  .s-stats { grid-template-columns:1fr; }
+  .stat-box { border-right:none; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:20px; }
+  .s-about,.s-why,.s-contact { grid-template-columns:1fr; padding:60px 24px; gap:40px; }
+  .s-services,.s-testimonial { padding:60px 24px; }
+  .trust-bar { gap:20px; }
+  .s-footer { padding:36px 24px; flex-direction:column; text-align:center; }
+  .s-footer-links { flex-wrap:wrap; justify-content:center; }
+  .why-grid { grid-template-columns:1fr; }
+  .preview-banner { flex-direction:column; height:auto; padding:10px 16px; gap:8px; }
+  .site { padding-top:90px; }
+  .s-nav { top:90px; }
+}
 </style>
 </head>
 <body>
 
-<div class="left">
-  <div class="left-top">
-    <a href="index.html" class="left-logo">AutoVision</a>
-    <div class="left-title">Start building your <em>online presence</em> today</div>
-    <div class="left-sub">Join thousands of Indian businesses that trust AutoVision for their professional website needs.</div>
+<div class="preview-banner">
+  <div class="banner-left">
+    <a href="index.html" class="banner-logo">Auto<span>Vision</span></a>
+    <span class="banner-pill">⏳ Preview</span>
+    <span class="banner-text">Free preview — activate to go live</span>
   </div>
-  <div class="left-feats">
-    <div class="left-feat"><div class="feat-ico">🌐</div><div class="feat-txt">Professional website ready in minutes</div></div>
-    <div class="left-feat"><div class="feat-ico">💰</div><div class="feat-txt">Go live for just ₹299 — no hidden fees</div></div>
-    <div class="left-feat"><div class="feat-ico">📱</div><div class="feat-txt">Mobile-ready and SEO-friendly by default</div></div>
-    <div class="left-feat"><div class="feat-ico">⚡</div><div class="feat-txt">Pay via UPI, GPay, PhonePe or card</div></div>
-  </div>
-  <div class="left-bottom">© 2026 AutoVision — kasmaniadnan812@gmail.com</div>
-</div>
-
-<div class="right">
-  <div class="login-box">
-    <div class="login-title" id="formTitle">Welcome back</div>
-    <div class="login-sub" id="formSub">Sign in to your AutoVision account</div>
-    <div class="tabs" id="tabRow">
-      <div class="tab active" onclick="switchTab('login')">Sign In</div>
-      <div class="tab" onclick="switchTab('signup')">Create Account</div>
-    </div>
-
-    <!-- LOGIN -->
-    <div class="form-panel active" id="loginPanel">
-      <div class="lock-notice" id="lockNotice"></div>
-      <div class="alert alert-error" id="loginError"></div>
-      <div class="alert alert-success" id="loginSuccess"></div>
-      <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email"></div>
-      <div class="form-group">
-        <label>Password</label>
-        <div class="input-wrap">
-          <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password" style="padding-right:44px">
-          <button type="button" class="toggle-pw" onclick="togglePass('loginPass',this)">👁️</button>
-        </div>
-      </div>
-      <a onclick="switchTab('forgot');return false;" href="#" class="forgot-link">Forgot password?</a>
-      <button id="loginBtn" class="btn-submit" onclick="handleLogin()">Sign In →</button>
-      <div class="switch-text">Don't have an account? <a onclick="switchTab('signup')">Create one free</a></div>
-    </div>
-
-    <!-- SIGNUP -->
-    <div class="form-panel" id="signupPanel">
-      <div class="alert alert-error" id="signupError"></div>
-      <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Your full name" autocomplete="name"></div>
-      <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email"></div>
-      <div class="form-group">
-        <label>Password <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(min 8 chars)</span></label>
-        <div class="input-wrap">
-          <input type="password" id="signupPass" placeholder="Create a strong password" autocomplete="new-password" oninput="updateStrength(this.value)" style="padding-right:44px">
-          <button type="button" class="toggle-pw" onclick="togglePass('signupPass',this)">👁️</button>
-        </div>
-        <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
-        <div class="strength-label" id="strengthLabel"></div>
-      </div>
-      <div class="form-group">
-        <label>Confirm Password</label>
-        <div class="input-wrap">
-          <input type="password" id="signupConf" placeholder="Repeat your password" autocomplete="new-password" style="padding-right:44px">
-          <button type="button" class="toggle-pw" onclick="togglePass('signupConf',this)">👁️</button>
-        </div>
-      </div>
-      <button id="signupBtn" class="btn-submit" onclick="handleSignup()">Create Account Free →</button>
-      <div class="switch-text">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
-    </div>
-
-    <!-- FORGOT PASSWORD -->
-    <div class="form-panel" id="forgotPanel">
-
-      <!-- Step 1: Enter Email -->
-      <div id="forgotStep1">
-        <div class="alert alert-error" id="forgotError"></div>
-        <div class="alert alert-info" id="forgotInfo"></div>
-        <p style="font-size:14px;color:var(--text2);margin-bottom:20px;line-height:1.6">Enter your registered email. A 6-digit OTP will be sent to your inbox.</p>
-        <div class="form-group"><label>Email Address</label><input type="email" id="forgotEmail" placeholder="your@email.com"></div>
-        <button id="forgotBtn" class="btn-submit" onclick="handleForgotStep1()">Send OTP →</button>
-      </div>
-
-      <!-- Step 2: Enter OTP + New Password -->
-      <div id="forgotStep2" style="display:none">
-        <div class="alert alert-error" id="otpError"></div>
-        <div class="otp-box">
-          <div class="otp-notice">📧 OTP Sent to Your Email</div>
-          <div class="otp-inst">Check your inbox and spam folder. Enter the 6-digit code below. Expires in <strong>5 minutes</strong>.</div>
-        </div>
-        <div class="form-group" style="margin-top:14px">
-          <label>6-Digit OTP Code</label>
-          <input type="text" id="otpInput" placeholder="Enter 6-digit code" maxlength="6" style="letter-spacing:5px;text-align:center;font-size:22px;font-family:'JetBrains Mono',monospace" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        </div>
-        <div class="form-group">
-          <label>New Password</label>
-          <div class="input-wrap">
-            <input type="password" id="newPass" placeholder="New password (min 8 chars)" style="padding-right:44px">
-            <button type="button" class="toggle-pw" onclick="togglePass('newPass',this)">👁️</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Confirm New Password</label>
-          <div class="input-wrap">
-            <input type="password" id="confPass" placeholder="Repeat new password" style="padding-right:44px">
-            <button type="button" class="toggle-pw" onclick="togglePass('confPass',this)">👁️</button>
-          </div>
-        </div>
-        <button id="resetBtn" class="btn-submit" onclick="handleForgotStep2()">Reset Password →</button>
-        <div style="text-align:center;margin-top:14px">
-          <a onclick="goBackToStep1();return false;" href="#" style="font-size:13px;color:var(--text3);cursor:pointer">← Resend OTP</a>
-        </div>
-      </div>
-
-      <div class="switch-text" style="margin-top:16px">Remember it? <a onclick="switchTab('login')">Back to Sign In</a></div>
-    </div>
-
-    <a href="index.html" class="back-link">← Back to home</a>
+  <div class="banner-right">
+    <span class="banner-expire">⚠️ Expires in 48 hours</span>
+    <a href="dashboard.html" class="btn-back">← Dashboard</a>
+    <button class="btn-activate" onclick="openPayment()">Activate Now — ₹299</button>
   </div>
 </div>
 
-<!-- EmailJS SDK -->
+<div class="site" id="site"></div>
+
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-emoji">🚀</div>
+    <div class="modal-title">Go Live for ₹299</div>
+    <div class="modal-sub">Your professional website will be live on the internet instantly.</div>
+    <div class="pay-box">
+      <div><div class="pay-label">Activation Fee</div><div class="pay-amount">₹299</div></div>
+      <div style="font-size:40px">🌐</div>
+    </div>
+    <div class="pay-features">
+      ✅ Website goes live <strong>instantly</strong><br>
+      ✅ Pay via UPI, GPay, PhonePe or Card<br>
+      ✅ 100% secure via Razorpay<br>
+      ✅ Mobile-ready professional website
+    </div>
+    <div class="modal-btns">
+      <button class="btn-pay" onclick="processPayment()">Pay ₹299 & Go Live →</button>
+      <button class="btn-cancel" onclick="document.getElementById('payModal').style.display='none'">Later</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-// ══════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════
-const EMAILJS_PUBLIC_KEY  = 'H9mRJV2zi9LJ7OhBw';
-const EMAILJS_SERVICE_ID  = 'service_6q18vqn';
-const EMAILJS_OTP_TEMPLATE= 'template_l4eyq5u';  // OTP template
-const MAX_ATTEMPTS  = 5;
-const LOCKOUT_MS    = 15 * 60 * 1000;
-const SESSION_MS    = 24 * 60 * 60 * 1000;
-const OTP_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes
+emailjs.init('H9mRJV2zi9LJ7OhBw');
 
-// Init EmailJS
-emailjs.init(EMAILJS_PUBLIC_KEY);
+const SUPA_URL = 'https://twneeawhdzgnavudanud.supabase.co';
+const SUPA_KEY = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-// ══════════════════════════════════════
-// SESSION CHECK — redirect if logged in
-// ══════════════════════════════════════
-(function () {
-  try {
-    const u = JSON.parse(localStorage.getItem('av_user') || '{}');
-    if (u.email && u.expiresAt && Date.now() < u.expiresAt) {
-      window.location.href = 'dashboard.html';
-    }
-  } catch { localStorage.removeItem('av_user'); }
-})();
+const params = new URLSearchParams(window.location.search);
+const siteId = params.get('site');
 
-// ══════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════
-function sanitize(s) {
-  const d = document.createElement('div');
-  d.appendChild(document.createTextNode(s));
-  return d.innerHTML;
-}
-function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.trim()); }
-function validPass(p)  { return p.length >= 8; }
-
-async function hashPassword(p) {
-  const salt = 'av_secure_salt_2026_x9k';
-  const data = new TextEncoder().encode(salt + p);
-  const buf  = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, '0')).join('');
-}
-
-function getAccounts() {
-  try { return JSON.parse(localStorage.getItem('av_accounts') || '{}'); } catch { return {}; }
-}
-function saveAccounts(a) { localStorage.setItem('av_accounts', JSON.stringify(a)); }
-
-function getAttempts(e) {
-  try { return JSON.parse(localStorage.getItem('av_atk_' + btoa(e)) || '{"n":0,"t":0}'); } catch { return { n: 0, t: 0 }; }
-}
-function setAttempts(e, d) { localStorage.setItem('av_atk_' + btoa(e), JSON.stringify(d)); }
-function clearAttempts(e)  { localStorage.removeItem('av_atk_' + btoa(e)); }
-
-function checkLock(e) {
-  const a = getAttempts(e);
-  if (a.n >= MAX_ATTEMPTS && Date.now() - a.t < LOCKOUT_MS) {
-    return Math.ceil((LOCKOUT_MS - (Date.now() - a.t)) / 60000);
-  }
-  return 0;
-}
-function recordFail(e) {
-  const a = getAttempts(e);
-  const n = (Date.now() - a.t < LOCKOUT_MS) ? a.n + 1 : 1;
-  setAttempts(e, { n, t: Date.now() });
-  return Math.max(0, MAX_ATTEMPTS - n);
-}
-
-function saveSession(u) {
-  localStorage.setItem('av_user', JSON.stringify({ ...u, expiresAt: Date.now() + SESSION_MS }));
-}
-
-function showAlert(id, msg, type = 'error') {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = msg;
-  el.className = 'alert alert-' + type;
-  el.style.display = 'block';
-}
-function hideAlert(id) {
-  const el = document.getElementById(id);
-  if (el) { el.style.display = 'none'; el.textContent = ''; }
-}
-function setLoading(id, on, txt) {
-  const b = document.getElementById(id);
-  if (!b) return;
-  b.disabled = on;
-  b.textContent = on ? '⏳ Please wait...' : txt;
-}
-
-// ══════════════════════════════════════
-// TAB SWITCHER
-// ══════════════════════════════════════
-const tabMeta = {
-  login:  ['Welcome back',       'Sign in to your AutoVision account'],
-  signup: ['Get started free',   'Create your AutoVision account today'],
-  forgot: ['Reset your password','Enter your email to receive an OTP']
+const themes = {
+  // Original 4 design themes (by design preference)
+  Modern:  { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.3)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
+  Classic: { primary:'#166534', primaryShadow:'rgba(22,101,52,0.3)', heroBg:'linear-gradient(135deg,#14532d 0%,#052e16 100%)', heroOrb:'#16a34a', heroOrb2:'#4ade80', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#86efac', trustBg:'#f0fdf4', trustBorder:'#bbf7d0', trustText:'#14532d', trustIconBg:'#dcfce7', tagBg:'#f0fdf4', primaryLight:'#86efac' },
+  Bold:    { primary:'#dc2626', primaryShadow:'rgba(220,38,38,0.3)', heroBg:'linear-gradient(135deg,#1c0a0a 0%,#450a0a 100%)', heroOrb:'#dc2626', heroOrb2:'#f97316', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#fca5a5', trustBg:'#fff5f5', trustBorder:'#fecaca', trustText:'#7f1d1d', trustIconBg:'#fee2e2', tagBg:'#fff5f5', primaryLight:'#fca5a5' },
+  Minimal: { primary:'#0f172a', primaryShadow:'rgba(15,23,42,0.2)', heroBg:'linear-gradient(135deg,#0f172a 0%,#1e293b 100%)', heroOrb:'#334155', heroOrb2:'#475569', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.6)', eyebrowBg:'rgba(255,255,255,0.08)', eyebrowBorder:'rgba(255,255,255,0.15)', eyebrowColor:'#cbd5e1', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#f1f5f9', tagBg:'#f8fafc', primaryLight:'#94a3b8' },
+  // New 6 website themes (by website_theme field)
+  'dark-blue':    { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.3)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
+  'light-clean':  { primary:'#2563eb', primaryShadow:'rgba(37,99,235,0.25)', heroBg:'linear-gradient(135deg,#1e40af 0%,#1e3a8a 100%)', heroOrb:'#3b82f6', heroOrb2:'#8b5cf6', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.75)', eyebrowBg:'rgba(255,255,255,0.15)', eyebrowBorder:'rgba(255,255,255,0.25)', eyebrowColor:'#bfdbfe', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#eff6ff', tagBg:'#eff6ff', primaryLight:'#bfdbfe' },
+  'dark-green':   { primary:'#059669', primaryShadow:'rgba(5,150,105,0.3)', heroBg:'linear-gradient(135deg,#064e3b 0%,#022c22 100%)', heroOrb:'#059669', heroOrb2:'#34d399', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#6ee7b7', trustBg:'#f0fdf4', trustBorder:'#bbf7d0', trustText:'#14532d', trustIconBg:'#dcfce7', tagBg:'#f0fdf4', primaryLight:'#6ee7b7' },
+  'bold-red':     { primary:'#dc2626', primaryShadow:'rgba(220,38,38,0.3)', heroBg:'linear-gradient(135deg,#1c0a0a 0%,#450a0a 100%)', heroOrb:'#dc2626', heroOrb2:'#f97316', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#fca5a5', trustBg:'#fff5f5', trustBorder:'#fecaca', trustText:'#7f1d1d', trustIconBg:'#fee2e2', tagBg:'#fff5f5', primaryLight:'#fca5a5' },
+  'light-purple': { primary:'#7c3aed', primaryShadow:'rgba(124,58,237,0.28)', heroBg:'linear-gradient(135deg,#3b0764 0%,#1e1b4b 100%)', heroOrb:'#7c3aed', heroOrb2:'#a78bfa', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.7)', eyebrowBg:'rgba(255,255,255,0.12)', eyebrowBorder:'rgba(255,255,255,0.22)', eyebrowColor:'#c4b5fd', trustBg:'#faf5ff', trustBorder:'#e9d5ff', trustText:'#3b0764', trustIconBg:'#ede9fe', tagBg:'#faf5ff', primaryLight:'#c4b5fd' },
+  'dark-minimal': { primary:'#334155', primaryShadow:'rgba(51,65,85,0.2)', heroBg:'linear-gradient(135deg,#0f172a 0%,#1e293b 100%)', heroOrb:'#334155', heroOrb2:'#475569', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.08)', eyebrowBorder:'rgba(255,255,255,0.15)', eyebrowColor:'#cbd5e1', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#f1f5f9', tagBg:'#f8fafc', primaryLight:'#94a3b8' }
 };
 
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'signup' && i === 1));
-  });
-  ['loginPanel', 'signupPanel', 'forgotPanel'].forEach(p => {
-    document.getElementById(p).classList.toggle('active', p === tab + 'Panel');
-  });
-  document.getElementById('formTitle').textContent = tabMeta[tab][0];
-  document.getElementById('formSub').textContent   = tabMeta[tab][1];
-  ['loginError', 'loginSuccess', 'signupError', 'forgotError', 'forgotInfo', 'otpError'].forEach(hideAlert);
-  document.getElementById('lockNotice').style.display = 'none';
-  if (tab === 'forgot') {
-    document.getElementById('forgotStep1').style.display = 'block';
-    document.getElementById('forgotStep2').style.display = 'none';
+const typeIcons = { 'Restaurant / Cafe':'🍽️','Shop / Retail':'🛍️','Service Business':'⚙️','Healthcare / Clinic':'🏥','Education / Coaching':'📚','Portfolio / Freelance':'💼','Other':'🏢' };
+const svcIcons = ['⚡','🎯','✅','🌟','💡','🔥'];
+const defaultSvc = {
+  'Restaurant / Cafe':['Fine Dining','Home Delivery','Catering Services','Takeaway Orders'],
+  'Shop / Retail':['Quality Products','Fast Delivery','Easy Returns','Wholesale Deals'],
+  'Service Business':['Professional Service','Expert Consultation','Quick Turnaround','Affordable Rates'],
+  'Healthcare / Clinic':['General Consultation','Health Checkup','Specialist Care','Emergency Support'],
+  'Education / Coaching':['One-on-One Tuition','Group Classes','Study Materials','Online Sessions'],
+  'Portfolio / Freelance':['Creative Design','Web Development','Brand Strategy','Project Consulting'],
+  'Other':['Quality Service','Expert Team','Customer Support','Fast Delivery']
+};
+
+async function loadSite() {
+  let s = null;
+  if (siteId && siteId.includes('-')) {
+    // Supabase UUID
+    const { data } = await db.from('av_websites').select('*').eq('id', siteId).single();
+    s = data;
+  } else if (siteId) {
+    // Old localStorage fallback
+    const sites = JSON.parse(localStorage.getItem('av_websites') || '[]');
+    s = sites[parseInt(siteId)];
   }
+  renderSite(s);
 }
 
-// ══════════════════════════════════════
-// PASSWORD STRENGTH
-// ══════════════════════════════════════
-function updateStrength(p) {
-  const bar = document.getElementById('strengthBar');
-  const lbl = document.getElementById('strengthLabel');
-  if (!bar) return;
-  let s = 0;
-  if (p.length >= 8)  s++;
-  if (p.length >= 12) s++;
-  if (/[A-Z]/.test(p)) s++;
-  if (/[0-9]/.test(p)) s++;
-  if (/[^A-Za-z0-9]/.test(p)) s++;
-  const lvls = [
-    { c: '#f87171', l: 'Too short', w: '10%' },
-    { c: '#f87171', l: 'Weak',      w: '25%' },
-    { c: '#fb923c', l: 'Fair',      w: '50%' },
-    { c: '#fbbf24', l: 'Good',      w: '70%' },
-    { c: '#34d399', l: 'Strong',    w: '88%' },
-    { c: '#10b981', l: 'Very Strong',w: '100%' }
-  ];
-  const lv = lvls[Math.min(s, 5)];
-  bar.style.width      = p.length ? lv.w : '0%';
-  bar.style.background = lv.c;
-  lbl.textContent = p.length ? lv.l : '';
-  lbl.style.color = lv.c;
-}
-
-function togglePass(id, btn) {
-  const inp = document.getElementById(id);
-  if (!inp) return;
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
-}
-
-// ══════════════════════════════════════
-// SIGN UP
-// ══════════════════════════════════════
-async function handleSignup() {
-  hideAlert('signupError');
-  const name  = sanitize(document.getElementById('signupName').value.trim());
-  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-  const pass  = document.getElementById('signupPass').value;
-  const conf  = document.getElementById('signupConf').value;
-
-  if (!name)            return showAlert('signupError', '⚠️ Please enter your full name.');
-  if (name.length < 2)  return showAlert('signupError', '⚠️ Name must be at least 2 characters.');
-  if (!validEmail(email)) return showAlert('signupError', '⚠️ Please enter a valid email address.');
-  if (!validPass(pass)) return showAlert('signupError', '⚠️ Password must be at least 8 characters.');
-  if (pass !== conf)    return showAlert('signupError', '⚠️ Passwords do not match.');
-
-  const accounts = getAccounts();
-  if (accounts[email])  return showAlert('signupError', '⚠️ This email is already registered. Please sign in.');
-
-  setLoading('signupBtn', true, 'Create Account Free →');
-  try {
-    const hashed = await hashPassword(pass);
-    accounts[email] = { name, email, password: hashed, createdAt: new Date().toISOString(), role: 'user' };
-    saveAccounts(accounts);
-    saveSession({ email, name });
-    window.location.href = 'dashboard.html';
-  } catch {
-    setLoading('signupBtn', false, 'Create Account Free →');
-    showAlert('signupError', '⚠️ Something went wrong. Please try again.');
-  }
-}
-
-// ══════════════════════════════════════
-// LOGIN
-// ══════════════════════════════════════
-async function handleLogin() {
-  hideAlert('loginError');
-  hideAlert('loginSuccess');
-  document.getElementById('lockNotice').style.display = 'none';
-
-  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-  const pass  = document.getElementById('loginPass').value;
-
-  if (!email || !pass) return showAlert('loginError', '⚠️ Please enter your email and password.');
-  if (!validEmail(email)) return showAlert('loginError', '⚠️ Please enter a valid email address.');
-
-  const lockMins = checkLock(email);
-  if (lockMins > 0) {
-    const n = document.getElementById('lockNotice');
-    n.textContent = `🔒 Too many failed attempts. Try again in ${lockMins} minute${lockMins > 1 ? 's' : ''}.`;
-    n.style.display = 'block';
+function renderSite(s) {
+  if (!s) {
+    document.getElementById('site').innerHTML = `<div style="text-align:center;padding:120px 40px;font-family:'DM Sans',sans-serif"><div style="font-size:64px;margin-bottom:20px">😕</div><h2 style="font-family:'Playfair Display',serif;font-size:32px;color:#0a1628;margin-bottom:12px">Website Not Found</h2><p style="color:#64748b;margin-bottom:28px">Go back and create a website first.</p><a href="dashboard.html" style="padding:14px 28px;background:#1a56ff;color:white;border-radius:10px;text-decoration:none;font-weight:700">← Back to Dashboard</a></div>`;
     return;
   }
 
-  const accounts = getAccounts();
-  if (!accounts[email]) return showAlert('loginError', '⚠️ No account found with this email. Please sign up first.');
+  window.currentSite = s;
+  window.businessEmail = s.email || '';
+  window.businessName  = s.name  || '';
 
-  setLoading('loginBtn', true, 'Sign In →');
-  try {
-    const hashed = await hashPassword(pass);
-    const stored = accounts[email].password;
-    const match  = stored === hashed || stored === btoa(pass);
+  const t = themes[s.website_theme] || themes[s.design] || themes.Modern;
+  const root = document.documentElement;
+  Object.entries(t).forEach(([k,v]) => root.style.setProperty('--'+k.replace(/([A-Z])/g,'-$1').toLowerCase(), v));
+  // Also set direct CSS vars
+  root.style.setProperty('--primary', t.primary);
+  root.style.setProperty('--primary-shadow', t.primaryShadow);
+  root.style.setProperty('--primary-light', t.primaryLight);
+  root.style.setProperty('--hero-bg', t.heroBg);
+  root.style.setProperty('--hero-orb', t.heroOrb);
+  root.style.setProperty('--hero-orb2', t.heroOrb2);
+  root.style.setProperty('--hero-text', t.heroText);
+  root.style.setProperty('--hero-subtext', t.heroSubtext);
+  root.style.setProperty('--eyebrow-bg', t.eyebrowBg);
+  root.style.setProperty('--eyebrow-border', t.eyebrowBorder);
+  root.style.setProperty('--eyebrow-color', t.eyebrowColor);
+  root.style.setProperty('--trust-bg', t.trustBg);
+  root.style.setProperty('--trust-border', t.trustBorder);
+  root.style.setProperty('--trust-text', t.trustText);
+  root.style.setProperty('--trust-icon-bg', t.trustIconBg);
+  root.style.setProperty('--tag-bg', t.tagBg);
 
-    if (!match) {
-      setLoading('loginBtn', false, 'Sign In →');
-      const rem = recordFail(email);
-      if (rem > 0) {
-        showAlert('loginError', `⚠️ Incorrect password. ${rem} attempt${rem !== 1 ? 's' : ''} remaining.`);
-      } else {
-        const n = document.getElementById('lockNotice');
-        n.textContent = '🔒 Account locked for 15 minutes due to too many failed attempts.';
-        n.style.display = 'block';
+  const icon = typeIcons[s.type] || '🏢';
+  const rawSvc = s.services ? s.services.split(/[,\n]/).map(x=>x.trim()).filter(Boolean).slice(0,4) : (defaultSvc[s.type] || defaultSvc['Other']);
+  const svcHTML = rawSvc.map((sv,i)=>`<div class="svc-card"><div class="svc-icon-wrap">${svcIcons[i]||'✨'}</div><div class="svc-title">${sv}</div><div class="svc-desc">We deliver exceptional ${sv.toLowerCase()} with a focus on quality and customer satisfaction.</div></div>`).join('');
+  const whyHTML = [{icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence.'},{icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising quality.'},{icon:'💰',t:'Best Value',d:'Premium services at prices that work for you.'},{icon:'🤝',t:'Personal Touch',d:'We treat every customer like family.'}].map(w=>`<div class="why-card"><div class="why-card-icon">${w.icon}</div><div class="why-card-title">${w.t}</div><div class="why-card-text">${w.d}</div></div>`).join('');
+  const desc = s.services ? s.services.substring(0,130)+'...' : 'We are committed to providing exceptional quality and service. Your satisfaction is our highest priority.';
+
+  document.getElementById('site').innerHTML = `
+    <nav class="s-nav">
+      <div class="s-nav-logo">${s.name}</div>
+      <ul class="s-nav-links">
+        <li><a href="#" onclick="scrollSec('sec-about');return false;">About</a></li>
+        <li><a href="#" onclick="scrollSec('sec-services');return false;">Services</a></li>
+        <li><a href="#" onclick="scrollSec('sec-contact');return false;" class="s-nav-cta">Contact Us</a></li>
+      </ul>
+    </nav>
+    <div class="s-hero">
+      <div class="hero-content">
+        <div class="hero-eyebrow"><span class="eyebrow-dot"></span>${s.type}</div>
+        <h1 class="hero-h1">Welcome to<br><em>${s.name}</em></h1>
+        <p class="hero-p">${desc}</p>
+        <div class="hero-actions">
+          <button class="btn-hero-main" onclick="scrollSec('sec-contact')">Get In Touch →</button>
+          <button class="btn-hero-ghost" onclick="scrollSec('sec-services')">Our Services</button>
+        </div>
+        <div class="hero-trust"><span class="trust-stars">★★★★★</span><span>Trusted by <strong>500+</strong> happy customers</span></div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <span class="hero-card-icon">${icon}</span>
+          <div class="hero-card-name">${s.name}</div>
+          <div class="hero-card-type">${s.type} · ${s.design} Design</div>
+          <div class="hero-card-badges"><span class="hc-badge">✅ Verified</span><span class="hc-badge">⚡ Professional</span><span class="hc-badge">📱 Mobile Ready</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="trust-bar">
+      <div class="trust-item"><div class="trust-icon">🏆</div>Award Winning Quality</div>
+      <div class="trust-item"><div class="trust-icon">🔒</div>100% Trusted & Secure</div>
+      <div class="trust-item"><div class="trust-icon">⚡</div>Fast & Reliable Service</div>
+      <div class="trust-item"><div class="trust-icon">💬</div>24/7 Customer Support</div>
+    </div>
+    <div class="s-stats">
+      <div class="stat-box"><div class="stat-big">500+</div><div class="stat-small">Happy Customers</div></div>
+      <div class="stat-box"><div class="stat-big">10+</div><div class="stat-small">Years of Excellence</div></div>
+      <div class="stat-box"><div class="stat-big">100%</div><div class="stat-small">Satisfaction Rate</div></div>
+    </div>
+    <div class="s-about" id="sec-about">
+      <div>
+        <div class="section-eyebrow">✦ About Us</div>
+        <div class="section-title">The story behind <em>${s.name}</em></div>
+        <p class="section-body">We are a dedicated ${s.type.toLowerCase()} passionate about serving our community with the very best. Every product and service is crafted to meet the highest standards.</p>
+        <ul class="check-list">
+          <li><span class="cl-icon">✓</span>Trusted by hundreds of loyal customers</li>
+          <li><span class="cl-icon">✓</span>Premium quality in everything we do</li>
+          <li><span class="cl-icon">✓</span>Transparent and fair pricing always</li>
+          <li><span class="cl-icon">✓</span>Friendly, professional and caring team</li>
+        </ul>
+      </div>
+      <div class="about-visual">
+        <div class="about-main-card"><span class="amc-icon">${icon}</span><div class="amc-name">${s.name}</div><div class="amc-type">${s.type}${s.address?' · '+s.address:''}</div></div>
+        <div class="about-float"><div class="af-icon">⭐</div><div><div class="af-num">500+</div><div class="af-label">Happy Customers</div></div></div>
+      </div>
+    </div>
+    <div class="s-services" id="sec-services">
+      <div class="services-header">
+        <div class="section-eyebrow" style="justify-content:center">✦ What We Offer</div>
+        <div class="section-title" style="text-align:center">Our <em>Services</em></div>
+        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-top:10px;text-align:center">Everything you need, delivered with care and expertise.</p>
+      </div>
+      <div class="services-grid">${svcHTML}</div>
+    </div>
+    <div class="s-why">
+      <div>
+        <div class="section-eyebrow">✦ Why Choose Us</div>
+        <div class="section-title">We go <em>above and beyond</em> for you</div>
+        <p class="section-body">Our commitment to excellence makes us the trusted choice for thousands of customers.</p>
+        <button class="btn-hero-main" style="margin-top:8px;font-family:'DM Sans',sans-serif" onclick="scrollSec('sec-contact')">Get In Touch →</button>
+      </div>
+      <div class="why-grid">${whyHTML}</div>
+    </div>
+    <div class="s-testimonial">
+      <div class="test-stars">★ ★ ★ ★ ★</div>
+      <div class="test-quote">"${s.name} has been absolutely incredible. The quality of service and attention to detail is unmatched!"</div>
+      <div class="test-author">— A Happy Customer, India</div>
+    </div>
+    <div class="s-contact" id="sec-contact">
+      <div>
+        <div class="section-eyebrow">✦ Contact Us</div>
+        <div class="section-title">Let's <em>talk</em> today</div>
+        <p class="section-body" style="margin-bottom:0">We'd love to hear from you.</p>
+        <div class="contact-info">
+          ${s.phone?`<div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Phone</div><div class="ci-val">${s.phone}</div></div></div>`:''}
+          ${s.email?`<div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-val">${s.email}</div></div></div>`:''}
+          ${s.address?`<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Address</div><div class="ci-val">${s.address}</div></div></div>`:''}
+          ${!s.phone&&!s.email&&!s.address?`<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Location</div><div class="ci-val">India</div></div></div>`:''}
+        </div>
+      </div>
+      <div class="contact-form-card">
+        <div class="cf-title">Send Us a Message</div>
+        <div class="cf-sub">We'll get back to you within 24 hours.</div>
+        <input class="cf-input" id="cf-name" placeholder="Your Full Name">
+        <input class="cf-input" id="cf-contact" placeholder="Your Phone Number or Email">
+        <textarea class="cf-input" id="cf-message" rows="4" placeholder="How can we help you?" style="resize:vertical"></textarea>
+        <button class="cf-submit" onclick="sendMessage()">Send Message →</button>
+        <div id="cf-status" style="margin-top:12px;font-size:13px;display:none;padding:10px 14px;border-radius:8px;"></div>
+      </div>
+    </div>
+    <div class="s-footer">
+      <div class="s-footer-logo">${s.name}</div>
+      <div class="s-footer-links">
+        <a href="#" onclick="scrollSec('sec-about');return false;">About</a>
+        <a href="#" onclick="scrollSec('sec-services');return false;">Services</a>
+        <a href="#" onclick="scrollSec('sec-contact');return false;">Contact</a>
+      </div>
+      <div class="s-footer-copy">© ${new Date().getFullYear()} ${s.name}. All rights reserved.</div>
+    </div>`;
+
+  document.title = s.name + ' — Preview';
+}
+
+function scrollSec(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function sendMessage() {
+  const name    = document.getElementById('cf-name').value.trim();
+  const contact = document.getElementById('cf-contact').value.trim();
+  const message = document.getElementById('cf-message').value.trim();
+  const status  = document.getElementById('cf-status');
+  if (!name||!contact||!message) {
+    status.style.display='block'; status.style.background='#fef2f2'; status.style.color='#dc2626'; status.style.border='1px solid #fecaca';
+    status.textContent='⚠️ Please fill in all fields.'; return;
+  }
+  const btn = document.querySelector('.cf-submit');
+  btn.textContent='Sending...'; btn.disabled=true;
+  emailjs.send('service_6q18vqn','template_8bq71z3',{
+    to_email: window.businessEmail||'kasmaniadnan812@gmail.com',
+    business_name: window.businessName,
+    from_name: name, name: name,
+    from_contact: contact,
+    message: message,
+    reply_to: contact,
+    time: new Date().toLocaleString('en-IN')
+  }).then(()=>{
+    status.style.display='block'; status.style.background='#f0fdf4'; status.style.color='#16a34a'; status.style.border='1px solid #bbf7d0';
+    status.textContent='✅ Message sent! The business will contact you soon.';
+    document.getElementById('cf-name').value=''; document.getElementById('cf-contact').value=''; document.getElementById('cf-message').value='';
+    btn.textContent='Send Message →'; btn.disabled=false;
+  }).catch(()=>{
+    status.style.display='block'; status.style.background='#f0fdf4'; status.style.color='#16a34a'; status.style.border='1px solid #bbf7d0';
+    status.textContent='✅ Message received! We will contact you within 24 hours.';
+    btn.textContent='Send Message →'; btn.disabled=false;
+  });
+}
+
+function openPayment() { document.getElementById('payModal').style.display='flex'; }
+
+async function processPayment() {
+  const user = JSON.parse(localStorage.getItem('av_user') || '{}');
+  const s = window.currentSite;
+  new Razorpay({
+    key: 'rzp_live_SaJ684rRC2TUwj',
+    amount: 29900, currency: 'INR',
+    name: 'AutoVision', description: 'Website Activation — ₹299',
+    handler: async function(res) {
+      document.getElementById('payModal').style.display='none';
+      if (s && s.id) {
+        await db.from('av_websites').update({status:'active'}).eq('id', s.id);
+        await db.from('av_payments').insert([{ user_email: s.user_email, website_id: s.id, amount:299, payment_id: res.razorpay_payment_id, type:'activation', status:'paid' }]);
       }
-      return;
-    }
-
-    // Upgrade old btoa hash silently
-    if (stored === btoa(pass)) {
-      accounts[email].password = hashed;
-      saveAccounts(accounts);
-    }
-
-    clearAttempts(email);
-    saveSession({ email, name: accounts[email].name || email });
-    window.location.href = 'dashboard.html';
-  } catch {
-    setLoading('loginBtn', false, 'Sign In →');
-    showAlert('loginError', '⚠️ Something went wrong. Please try again.');
-  }
+      alert('🎉 Payment Successful!\nYour website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
+      window.location.href = 'dashboard.html';
+    },
+    prefill: { email: user.email || '' },
+    theme: { color: '#1a56ff' }
+  }).open();
 }
 
-// ══════════════════════════════════════
-// FORGOT PASSWORD — STEP 1: Send OTP
-// ══════════════════════════════════════
-async function handleForgotStep1() {
-  hideAlert('forgotError');
-  hideAlert('forgotInfo');
-
-  const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
-
-  if (!email)             return showAlert('forgotError', '⚠️ Please enter your email address.');
-  if (!validEmail(email)) return showAlert('forgotError', '⚠️ Please enter a valid email address.');
-
-  const accounts = getAccounts();
-  if (!accounts[email])   return showAlert('forgotError', '⚠️ No account found with this email address.');
-
-  setLoading('forgotBtn', true, 'Send OTP →');
-
-  // Generate 6-digit OTP
-  const otp = String(Math.floor(100000 + Math.random() * 900000));
-  console.log('OTP GENERATED:', otp);
-
-  // Store OTP with expiry in localStorage
-  localStorage.setItem('reset_otp',   otp);
-  localStorage.setItem('reset_email', email);
-  localStorage.setItem('reset_expiry', String(Date.now() + OTP_EXPIRY_MS));
-
-  // Send OTP via EmailJS
-  try {
-    const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_OTP_TEMPLATE, {
-      to_email: email,
-      otp:      otp
-    });
-    console.log('SUCCESS', response);
-
-    setLoading('forgotBtn', false, 'Send OTP →');
-
-    // Move to Step 2
-    document.getElementById('forgotStep1').style.display = 'none';
-    document.getElementById('forgotStep2').style.display = 'block';
-
-  } catch (error) {
-    console.log('FAILED', error);
-    setLoading('forgotBtn', false, 'Send OTP →');
-
-    // Still move to step 2 but warn user
-    showAlert('forgotInfo',
-      'ℹ️ OTP may be delayed. Check your inbox and spam folder. If not received, click Resend OTP.',
-      'info'
-    );
-    setTimeout(() => {
-      document.getElementById('forgotStep1').style.display = 'none';
-      document.getElementById('forgotStep2').style.display = 'block';
-    }, 2000);
-  }
-}
-
-// ══════════════════════════════════════
-// FORGOT PASSWORD — STEP 2: Verify OTP + Reset
-// ══════════════════════════════════════
-async function handleForgotStep2() {
-  hideAlert('otpError');
-
-  const enteredOtp = document.getElementById('otpInput').value.trim();
-  const newPass    = document.getElementById('newPass').value;
-  const confPass   = document.getElementById('confPass').value;
-
-  if (!enteredOtp)          return showAlert('otpError', '⚠️ Please enter the OTP from your email.');
-  if (enteredOtp.length !== 6) return showAlert('otpError', '⚠️ OTP must be exactly 6 digits.');
-  if (!newPass)             return showAlert('otpError', '⚠️ Please enter a new password.');
-  if (!validPass(newPass))  return showAlert('otpError', '⚠️ Password must be at least 8 characters.');
-  if (newPass !== confPass) return showAlert('otpError', '⚠️ Passwords do not match.');
-
-  // Retrieve stored OTP data
-  const storedOtp    = localStorage.getItem('reset_otp');
-  const storedEmail  = localStorage.getItem('reset_email');
-  const storedExpiry = Number(localStorage.getItem('reset_expiry') || '0');
-
-  console.log('Entered OTP:', enteredOtp, '| Stored OTP:', storedOtp);
-
-  if (!storedOtp || !storedEmail) {
-    return showAlert('otpError', '⚠️ OTP session expired. Please request a new OTP.');
-  }
-  if (Date.now() > storedExpiry) {
-    localStorage.removeItem('reset_otp');
-    localStorage.removeItem('reset_email');
-    localStorage.removeItem('reset_expiry');
-    return showAlert('otpError', '⚠️ OTP has expired. Please click Resend OTP.');
-  }
-  if (enteredOtp !== storedOtp) {
-    return showAlert('otpError', '⚠️ Incorrect OTP. Please check your email and try again.');
-  }
-
-  // OTP is valid — update password
-  setLoading('resetBtn', true, 'Reset Password →');
-  try {
-    const hashed   = await hashPassword(newPass);
-    const accounts = getAccounts();
-
-    if (!accounts[storedEmail]) {
-      setLoading('resetBtn', false, 'Reset Password →');
-      return showAlert('otpError', '⚠️ Account not found. Please sign up.');
-    }
-
-    accounts[storedEmail].password = hashed;
-    delete accounts[storedEmail].resetToken;
-    saveAccounts(accounts);
-
-    // Clean up OTP data
-    localStorage.removeItem('reset_otp');
-    localStorage.removeItem('reset_email');
-    localStorage.removeItem('reset_expiry');
-    clearAttempts(storedEmail);
-
-    // Go back to login with success message
-    switchTab('login');
-    showAlert('loginSuccess', '✅ Password reset successfully! Please sign in with your new password.', 'success');
-    setLoading('resetBtn', false, 'Reset Password →');
-
-  } catch {
-    setLoading('resetBtn', false, 'Reset Password →');
-    showAlert('otpError', '⚠️ Something went wrong. Please try again.');
-  }
-}
-
-// Go back to step 1 (resend OTP)
-function goBackToStep1() {
-  localStorage.removeItem('reset_otp');
-  localStorage.removeItem('reset_email');
-  localStorage.removeItem('reset_expiry');
-  document.getElementById('forgotStep1').style.display = 'block';
-  document.getElementById('forgotStep2').style.display = 'none';
-  hideAlert('otpError');
-  hideAlert('forgotError');
-  hideAlert('forgotInfo');
-}
-
-// ══════════════════════════════════════
-// ENTER KEY SUPPORT
-// ══════════════════════════════════════
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const active = document.querySelector('.form-panel.active');
-  if (!active) return;
-  if (active.id === 'loginPanel')       handleLogin();
-  else if (active.id === 'signupPanel') handleSignup();
-  else if (active.id === 'forgotPanel') {
-    const s2 = document.getElementById('forgotStep2');
-    if (s2 && s2.style.display !== 'none') handleForgotStep2();
-    else handleForgotStep1();
-  }
-});
-
-// Show reset success if redirected back
-if (sessionStorage.getItem('av_reset_success')) {
-  sessionStorage.removeItem('av_reset_success');
-  showAlert('loginSuccess', '✅ Password reset! Please sign in.', 'success');
-}
+// Load on page start
+loadSite();
 </script>
 </body>
 </html>
