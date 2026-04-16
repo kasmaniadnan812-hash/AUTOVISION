@@ -2,230 +2,433 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Website Preview</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 
-/* PREVIEW BANNER */
-.preview-banner {
-  position:fixed; top:0; left:0; right:0; z-index:99999;
-  background:#0a1628; padding:0 32px; height:52px;
-  display:flex; align-items:center; justify-content:space-between;
-  font-family:'DM Sans',sans-serif;
-  box-shadow:0 2px 20px rgba(0,0,0,0.4);
-}
-.banner-left { display:flex; align-items:center; gap:12px; }
-.banner-logo { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:white; text-decoration:none; }
-.banner-logo span { color:#60a5fa; }
-.banner-pill { background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.35); color:#fb923c; font-size:11px; font-weight:700; padding:3px 10px; border-radius:100px; }
-.banner-text { font-size:13px; color:#94a3b8; }
-.banner-right { display:flex; align-items:center; gap:10px; }
-.banner-expire { font-size:12px; color:#fb923c; font-weight:600; }
-.btn-back { padding:7px 14px; background:transparent; border:1px solid #2d3f55; color:#94a3b8; border-radius:7px; font-size:12px; font-weight:500; cursor:pointer; text-decoration:none; font-family:'DM Sans',sans-serif; transition:all 0.2s; display:inline-block; }
-.btn-back:hover { border-color:#60a5fa; color:#60a5fa; }
-.btn-activate { padding:8px 20px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:7px; font-size:13px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; box-shadow:0 4px 14px rgba(26,86,255,0.35); white-space:nowrap; }
-.btn-activate:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(26,86,255,0.5); }
+/* ─── PREVIEW BANNER ─── */
+.preview-banner{position:fixed;top:0;left:0;right:0;z-index:99999;background:#050d1a;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;font-family:'DM Sans',sans-serif;border-bottom:1px solid rgba(255,255,255,0.08);}
+.banner-left{display:flex;align-items:center;gap:10px;min-width:0;}
+.banner-logo{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:white;text-decoration:none;white-space:nowrap;}
+.banner-logo span{color:#4f8eff;}
+.banner-pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;white-space:nowrap;flex-shrink:0;}
+.banner-pill.basic{background:rgba(251,146,60,.15);border:1px solid rgba(251,146,60,.35);color:#fb923c;}
+.banner-pill.premium{background:rgba(201,162,39,.18);border:1px solid rgba(201,162,39,.4);color:#f0c040;}
+.banner-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.banner-expire{font-size:11px;color:#fb923c;font-weight:600;white-space:nowrap;}
+.btn-back{padding:6px 12px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#94a3b8;border-radius:7px;font-size:11px;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif;transition:all .2s;display:inline-block;white-space:nowrap;}
+.btn-back:hover{border-color:#4f8eff;color:#4f8eff;}
+.btn-activate{padding:7px 16px;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;color:white;}
+.btn-activate.basic{background:linear-gradient(135deg,#1a56ff,#6366f1);}
+.btn-activate.premium{background:linear-gradient(135deg,#b8860b,#d4a017,#f0c040);color:#0d0800;}
+.btn-activate:hover{transform:translateY(-1px);}
 
-/* BASE */
-body { background:#fff; -webkit-font-smoothing:antialiased; }
-.site { padding-top:52px; font-family:'DM Sans',sans-serif; }
+/* ─── LOADER ─── */
+.av-loader{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:'DM Sans',sans-serif;padding-top:52px;}
+.av-loader-spinner{width:44px;height:44px;border-radius:50%;border:3px solid rgba(79,142,255,0.15);border-top-color:#4f8eff;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.av-loader p{font-size:14px;color:#64748b;}
 
-/* NAVBAR */
-.s-nav { position:sticky; top:52px; z-index:100; background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); border-bottom:1px solid #e8edf5; padding:0 80px; height:70px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 20px rgba(0,0,0,0.04); }
-.s-nav-logo { font-family:'Playfair Display',serif; font-size:24px; font-weight:800; color:#0a1628; letter-spacing:-0.5px; }
-.s-nav-links { display:flex; gap:32px; list-style:none; }
-.s-nav-links a { font-size:14px; font-weight:500; color:#64748b; text-decoration:none; transition:color 0.2s; }
-.s-nav-links a:hover { color:var(--primary); }
-.s-nav-cta { padding:10px 24px; background:var(--primary) !important; color:white !important; border-radius:8px; font-weight:700 !important; box-shadow:0 4px 14px var(--primary-shadow); transition:all 0.2s; }
-.s-nav-cta:hover { transform:translateY(-1px); }
+/* ─── UPLOAD PANEL (premium only) ─── */
+.upload-panel{position:fixed;top:52px;right:0;z-index:9990;background:rgba(5,13,26,.97);border-left:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);padding:14px 18px;font-family:'DM Sans',sans-serif;border-radius:0 0 0 14px;display:none;min-width:220px;}
+.upload-panel-title{font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+.upload-slot{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.upload-slot label{font-size:11px;color:#64748b;min-width:60px;}
+.upload-slot input[type=file]{font-size:10px;color:#94a3b8;background:transparent;border:none;cursor:pointer;}
+.upload-slot input[type=file]::-webkit-file-upload-button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#94a3b8;font-size:10px;padding:3px 8px;border-radius:4px;cursor:pointer;}
+.upload-apply{margin-top:10px;padding:8px 14px;background:rgba(79,142,255,.15);border:1px solid rgba(79,142,255,.3);color:#4f8eff;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;}
 
-/* HERO */
-.s-hero { background:var(--hero-bg); padding:90px 80px 0; overflow:hidden; position:relative; min-height:560px; display:flex; align-items:flex-end; gap:60px; }
-.s-hero::before { content:''; position:absolute; top:-200px; right:-200px; width:600px; height:600px; background:var(--hero-orb); border-radius:50%; filter:blur(80px); opacity:0.4; }
-.s-hero::after { content:''; position:absolute; bottom:-100px; left:30%; width:400px; height:400px; background:var(--hero-orb2); border-radius:50%; filter:blur(100px); opacity:0.25; }
-.hero-content { position:relative; z-index:2; flex:1; padding-bottom:80px; }
-.hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:var(--eyebrow-bg); border:1px solid var(--eyebrow-border); color:var(--eyebrow-color); font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:7px 16px; border-radius:100px; margin-bottom:24px; }
-.eyebrow-dot { width:6px; height:6px; border-radius:50%; background:var(--eyebrow-color); animation:pulse3 2s infinite; }
-@keyframes pulse3 { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.8);} }
-.hero-h1 { font-family:'Playfair Display',serif; font-size:clamp(40px,5vw,68px); font-weight:900; line-height:1.1; letter-spacing:-2px; color:var(--hero-text); margin-bottom:20px; }
-.hero-h1 em { font-style:italic; color:var(--primary-light); }
-.hero-p { font-size:18px; color:var(--hero-subtext); line-height:1.75; max-width:480px; margin-bottom:40px; }
-.hero-actions { display:flex; gap:14px; align-items:center; margin-bottom:48px; }
-.btn-hero-main { padding:15px 32px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 24px var(--primary-shadow); transition:all 0.25s; }
-.btn-hero-main:hover { transform:translateY(-2px); }
-.btn-hero-ghost { padding:15px 32px; background:transparent; color:white; border:1.5px solid rgba(255,255,255,0.25); border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.25s; }
-.btn-hero-ghost:hover { background:rgba(255,255,255,0.1); }
-.hero-trust { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--hero-subtext); }
-.trust-stars { color:#fbbf24; }
-.hero-visual { position:relative; z-index:2; width:360px; flex-shrink:0; align-self:flex-end; }
-.hero-card { background:white; border-radius:20px 20px 0 0; padding:32px; box-shadow:0 -8px 60px rgba(0,0,0,0.15); }
-.hero-card-icon { font-size:52px; margin-bottom:14px; display:block; }
-.hero-card-name { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; color:#0a1628; margin-bottom:6px; }
-.hero-card-type { font-size:13px; color:#64748b; font-weight:500; margin-bottom:18px; }
-.hero-card-badges { display:flex; gap:8px; flex-wrap:wrap; }
-.hc-badge { background:#eff6ff; color:#1a56ff; font-size:11px; font-weight:700; padding:5px 12px; border-radius:100px; }
+.site{padding-top:52px;}
 
-/* TRUST BAR */
-.trust-bar { background:var(--trust-bg); border-bottom:1px solid var(--trust-border); padding:22px 80px; display:flex; align-items:center; justify-content:center; gap:50px; flex-wrap:wrap; }
-.trust-item { display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; color:var(--trust-text); }
-.trust-icon { width:32px; height:32px; background:var(--trust-icon-bg); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; }
+/* ════════════════════════════════════════
+   BASIC WEBSITE STYLES
+════════════════════════════════════════ */
+.b-nav{position:sticky;top:52px;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-bottom:1px solid #e8edf5;padding:0 5%;height:68px;display:flex;align-items:center;justify-content:space-between;}
+.b-nav-logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#0a1628;}
+.b-nav-links{display:flex;gap:28px;list-style:none;}
+.b-nav-links a{font-size:14px;font-weight:500;color:#64748b;text-decoration:none;transition:color .2s;}
+.b-nav-links a:hover,.b-nav-links a:focus{color:var(--bp);}
+.b-nav-cta{padding:9px 20px;background:var(--bp);color:white;border-radius:8px;font-weight:700;}
 
-/* STATS */
-.s-stats { background:var(--primary); padding:50px 80px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; }
-.stat-box { padding:10px; border-right:1px solid rgba(255,255,255,0.15); }
-.stat-box:last-child { border-right:none; }
-.stat-big { font-family:'Playfair Display',serif; font-size:48px; font-weight:900; color:white; line-height:1; margin-bottom:6px; }
-.stat-small { font-size:14px; color:rgba(255,255,255,0.7); font-weight:500; }
+.b-hero{background:var(--bheroBg);padding:80px 5% 0;position:relative;min-height:520px;display:flex;align-items:flex-end;gap:48px;overflow:hidden;}
+.b-hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:var(--bheroOrb);border-radius:50%;filter:blur(90px);opacity:.35;}
+.b-hero-content{position:relative;z-index:2;flex:1;padding-bottom:72px;}
+.b-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:100px;margin-bottom:22px;}
+.b-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:bdot 2s infinite;}
+@keyframes bdot{0%,100%{opacity:1;}50%{opacity:.3;}}
+.b-hero h1{font-family:'Syne',sans-serif;font-size:clamp(34px,5vw,62px);font-weight:800;line-height:1.1;color:#fff;margin-bottom:18px;letter-spacing:-1px;}
+.b-hero h1 em{font-style:italic;color:var(--blight);font-family:'DM Sans',sans-serif;}
+.b-hero-p{font-size:16px;color:rgba(255,255,255,.7);line-height:1.8;max-width:440px;margin-bottom:36px;}
+.b-hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.b-btn-main{padding:13px 28px;background:white;color:var(--bp);border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;box-shadow:0 6px 20px rgba(0,0,0,.2);}
+.b-btn-main:hover{transform:translateY(-2px);}
+.b-btn-ghost{padding:13px 28px;background:transparent;color:white;border:1.5px solid rgba(255,255,255,.3);border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;}
+.b-btn-ghost:hover{background:rgba(255,255,255,.1);}
+.b-hero-card{position:relative;z-index:2;width:300px;flex-shrink:0;align-self:flex-end;background:white;border-radius:18px 18px 0 0;padding:24px;box-shadow:0 -8px 50px rgba(0,0,0,.15);}
+.b-hero-card-icon{font-size:44px;margin-bottom:10px;display:block;}
+.b-hero-card-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#0a1628;margin-bottom:4px;}
+.b-hero-card-type{font-size:12px;color:#64748b;margin-bottom:14px;}
+.b-badges{display:flex;gap:6px;flex-wrap:wrap;}
+.b-badge{background:#eff6ff;color:var(--bp);font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;}
 
-/* ABOUT */
-.s-about { padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; background:white; }
-.section-eyebrow { display:inline-flex; align-items:center; gap:6px; background:var(--tag-bg); color:var(--primary); font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-radius:100px; margin-bottom:18px; }
-.section-title { font-family:'Playfair Display',serif; font-size:clamp(28px,3.5vw,44px); font-weight:900; color:#0a1628; letter-spacing:-1.5px; line-height:1.15; margin-bottom:18px; }
-.section-title em { font-style:italic; color:var(--primary); }
-.section-body { font-size:16px; color:#475569; line-height:1.85; margin-bottom:32px; }
-.check-list { list-style:none; display:flex; flex-direction:column; gap:12px; }
-.check-list li { display:flex; align-items:center; gap:12px; font-size:15px; color:#334155; font-weight:500; }
-.cl-icon { width:24px; height:24px; background:var(--tag-bg); color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
-.about-visual { position:relative; }
-.about-main-card { background:var(--hero-bg); border-radius:24px; padding:50px 40px; text-align:center; position:relative; overflow:hidden; }
-.about-main-card::before { content:''; position:absolute; top:-60px; right:-60px; width:200px; height:200px; background:var(--hero-orb); border-radius:50%; filter:blur(50px); opacity:0.3; }
-.amc-icon { font-size:72px; margin-bottom:16px; display:block; }
-.amc-name { font-family:'Playfair Display',serif; font-size:26px; font-weight:900; color:var(--hero-text); margin-bottom:8px; }
-.amc-type { font-size:14px; color:var(--hero-subtext); }
-.about-float { position:absolute; bottom:-16px; left:-16px; background:white; border-radius:14px; padding:14px 18px; box-shadow:0 8px 30px rgba(0,0,0,0.12); display:flex; align-items:center; gap:10px; }
-.af-icon { font-size:24px; }
-.af-num { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; color:#0a1628; line-height:1; }
-.af-label { font-size:11px; color:#94a3b8; font-weight:600; }
+.b-trust{background:var(--btrustBg);border-bottom:1px solid var(--btrustBorder);padding:18px 5%;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;}
+.b-trust-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--btrustText);}
+.b-trust-icon{width:30px;height:30px;background:var(--btrustIconBg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+
+.b-stats{background:var(--bp);padding:40px 5%;display:grid;grid-template-columns:repeat(3,1fr);text-align:center;}
+.b-stat{padding:10px;border-right:1px solid rgba(255,255,255,.15);}
+.b-stat:last-child{border-right:none;}
+.b-stat-num{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:white;line-height:1;margin-bottom:5px;}
+.b-stat-lbl{font-size:12px;color:rgba(255,255,255,.7);font-weight:500;}
+
+.b-section{padding:80px 5%;}
+.b-section.alt{background:#f8faff;}
+.b-sec-eye{display:inline-flex;align-items:center;gap:6px;background:var(--btagBg);color:var(--bp);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 13px;border-radius:100px;margin-bottom:14px;}
+.b-sec-title{font-family:'Syne',sans-serif;font-size:clamp(24px,3.5vw,38px);font-weight:800;color:#0a1628;letter-spacing:-1px;line-height:1.15;margin-bottom:14px;}
+.b-sec-title em{font-style:italic;color:var(--bp);font-family:'DM Sans',sans-serif;}
+.b-sec-body{font-size:15px;color:#475569;line-height:1.85;margin-bottom:24px;}
+
+.b-about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.b-checklist{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.b-checklist li{display:flex;align-items:center;gap:10px;font-size:14px;color:#334155;font-weight:500;}
+.b-check-icon{width:22px;height:22px;background:var(--btagBg);color:var(--bp);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.b-about-visual{background:var(--bheroBg);border-radius:20px;padding:40px 32px;text-align:center;position:relative;overflow:hidden;}
+.b-about-visual::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:var(--bheroOrb);border-radius:50%;filter:blur(50px);opacity:.3;}
+.b-about-icon{font-size:64px;margin-bottom:12px;display:block;}
+.b-about-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:white;margin-bottom:4px;}
+.b-about-type{font-size:12px;color:rgba(255,255,255,.6);}
+.b-about-float{position:absolute;bottom:-10px;left:-10px;background:white;border-radius:12px;padding:10px 14px;box-shadow:0 6px 24px rgba(0,0,0,.12);display:flex;align-items:center;gap:8px;}
+.b-float-num{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#0a1628;line-height:1;}
+.b-float-lbl{font-size:10px;color:#94a3b8;font-weight:600;}
+
+.b-svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.b-svc-card{background:white;border:1.5px solid #e2e8f4;border-radius:16px;padding:28px 22px;transition:all .3s;position:relative;overflow:hidden;}
+.b-svc-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:3px;background:var(--bp);transition:width .4s;}
+.b-svc-card:hover::after{width:100%;}
+.b-svc-card:hover{box-shadow:0 12px 40px rgba(0,0,0,.08);transform:translateY(-4px);border-color:var(--bp);}
+.b-svc-icon{width:52px;height:52px;background:var(--btagBg);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;}
+.b-svc-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#0a1628;margin-bottom:8px;}
+.b-svc-desc{font-size:13px;color:#64748b;line-height:1.65;}
+
+.b-why-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.b-why-card{background:#f8faff;border:1px solid #e2e8f4;border-radius:13px;padding:20px 16px;transition:all .25s;}
+.b-why-card:hover{background:var(--btagBg);border-color:var(--bp);transform:translateY(-3px);}
+.b-why-icon{font-size:24px;margin-bottom:8px;}
+.b-why-title{font-size:14px;font-weight:700;color:#0a1628;margin-bottom:4px;}
+.b-why-text{font-size:12px;color:#64748b;line-height:1.5;}
+
+.b-testimonial{background:var(--bp);padding:64px 5%;text-align:center;}
+.b-test-stars{color:#fbbf24;font-size:18px;margin-bottom:16px;letter-spacing:3px;}
+.b-test-quote{font-family:'DM Sans',sans-serif;font-size:clamp(17px,2.5vw,24px);font-weight:500;font-style:italic;color:white;line-height:1.55;max-width:640px;margin:0 auto 20px;}
+.b-test-author{font-size:12px;color:rgba(255,255,255,.65);font-weight:600;}
+
+.b-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+.b-contact-info{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.b-ci-item{display:flex;align-items:center;gap:12px;background:white;border:1px solid #e2e8f4;border-radius:12px;padding:14px 16px;transition:all .25s;}
+.b-ci-item:hover{border-color:var(--bp);transform:translateX(4px);}
+.b-ci-icon{width:40px;height:40px;background:var(--btagBg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.b-ci-label{font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.b-ci-val{font-size:13.5px;color:#0a1628;font-weight:700;margin-top:1px;}
+.b-form-card{background:white;border:1px solid #e2e8f4;border-radius:20px;padding:32px;box-shadow:0 8px 36px rgba(0,0,0,.05);}
+.b-form-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#0a1628;margin-bottom:4px;}
+.b-form-sub{font-size:12px;color:#94a3b8;margin-bottom:22px;}
+.b-input{width:100%;padding:11px 13px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:#0a1628;outline:none;transition:all .2s;margin-bottom:11px;}
+.b-input:focus{border-color:var(--bp);background:white;}
+.b-input::placeholder{color:#94a3b8;}
+.b-submit{width:100%;padding:13px;background:var(--bp);color:white;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;}
+.b-submit:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
+
+.b-footer{background:#0a1628;padding:36px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.b-footer-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:white;}
+.b-footer-links{display:flex;gap:20px;}
+.b-footer-links a{font-size:13px;color:#475569;text-decoration:none;transition:color .2s;}
+.b-footer-links a:hover{color:#60a5fa;}
+.b-footer-copy{font-size:12px;color:#334155;}
+
+/* ════════════════════════════════════════
+   PREMIUM WEBSITE STYLES — LUXURY LEVEL
+════════════════════════════════════════ */
+
+/* CSS Vars set by JS: --pa --pa-text --pa-glow --ps-bg --pb-bg --ps-hover --ps-border --ps-text --ps-text2 --pf-bg */
+
+.p-site{font-family:'DM Sans',sans-serif;background:var(--ps-bg);color:var(--ps-text);}
+
+.p-nav{position:fixed;top:52px;left:0;right:0;z-index:500;padding:0 5%;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all .35s;}
+.p-nav.scrolled{background:rgba(5,8,15,.92);backdrop-filter:blur(30px);border-bottom:1px solid rgba(255,255,255,.05);box-shadow:0 4px 40px rgba(0,0,0,.5);}
+.p-nav-logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:white;letter-spacing:1px;}
+.p-nav-links{display:flex;gap:36px;list-style:none;}
+.p-nav-links a{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.65);text-decoration:none;transition:color .2s;}
+.p-nav-links a:hover{color:white;}
+.p-nav-cta{padding:9px 22px;border:1px solid rgba(255,255,255,.3);color:white;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;background:transparent;font-family:'Outfit',sans-serif;transition:all .22s;}
+.p-nav-cta:hover{background:var(--pa);border-color:var(--pa);color:var(--pa-text);}
+
+/* HERO — FULL SCREEN WITH BG IMAGE */
+.p-hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.p-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .8s;z-index:0;}
+.p-hero-bg.loading{background:linear-gradient(135deg,#050a14 0%,#0a1428 100%);}
+.p-hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(0,0,0,.55) 0%,rgba(0,0,0,.2) 40%,rgba(0,0,0,.75) 100%);}
+.p-hero-content{position:relative;z-index:3;text-align:center;padding:0 5%;max-width:900px;animation:phIn 1.2s cubic-bezier(.16,1,.3,1) both;}
+@keyframes phIn{from{opacity:0;transform:translateY(50px);}to{opacity:1;transform:translateY(0);}}
+.p-hero-badge{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.82);font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;padding:8px 22px;margin-bottom:32px;backdrop-filter:blur(10px);background:rgba(255,255,255,.07);}
+.p-hero-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--pa);animation:pdot 1.8s infinite;}
+@keyframes pdot{0%,100%{opacity:1;}50%{opacity:.2;}}
+.p-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(54px,8vw,110px);font-weight:300;line-height:.95;color:white;letter-spacing:-2px;margin-bottom:26px;text-shadow:0 4px 60px rgba(0,0,0,.5);}
+.p-hero h1 em{font-style:italic;color:var(--pa);}
+.p-hero-sub{font-size:17px;color:rgba(255,255,255,.72);line-height:1.8;max-width:520px;margin:0 auto 44px;font-family:'Outfit',sans-serif;font-weight:300;}
+.p-hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.p-btn-primary{padding:16px 44px;background:var(--pa);color:var(--pa-text);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .28s;box-shadow:0 8px 32px var(--pa-glow);}
+.p-btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 48px var(--pa-glow);}
+.p-btn-ghost{padding:16px 44px;background:transparent;color:white;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;border:1.5px solid rgba(255,255,255,.28);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .28s;}
+.p-btn-ghost:hover{background:rgba(255,255,255,.1);}
+.p-scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.38);animation:pscrl 2.5s ease-in-out infinite;}
+@keyframes pscrl{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+.p-scroll-line{width:1px;height:42px;background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);}
+
+/* TICKER */
+.p-ticker{background:var(--pa);padding:14px 0;overflow:hidden;}
+.p-ticker-track{display:flex;animation:tick 25s linear infinite;width:max-content;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.p-ticker-item{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--pa-text);white-space:nowrap;padding:0 40px;opacity:.9;}
+.p-ticker-sep{opacity:.4;padding-right:40px;}
+
+/* STATS BAR */
+.p-stats{background:var(--pb-bg);padding:56px 5%;display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--ps-border);}
+.p-stat{padding:16px;text-align:center;border-right:1px solid var(--ps-border);}
+.p-stat:last-child{border-right:none;}
+.p-stat-num{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:400;color:var(--pa);line-height:1;margin-bottom:6px;}
+.p-stat-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ps-text2);}
+
+/* ABOUT — SPLIT */
+.p-about{display:grid;grid-template-columns:1fr 1fr;background:var(--ps-bg);min-height:580px;}
+.p-about-img-wrap{position:relative;overflow:hidden;min-height:520px;}
+.p-about-img{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:transform .8s ease;}
+.p-about-img.loading{background:var(--ps-hover);}
+.p-about-img-wrap:hover .p-about-img{transform:scale(1.04);}
+.p-about-img-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.25) 0%,transparent 60%);}
+.p-about-float{position:absolute;bottom:0;right:0;background:var(--pa);padding:20px 28px;}
+.p-about-float-num{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:400;color:var(--pa-text);line-height:1;}
+.p-about-float-lbl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--pa-text);opacity:.75;margin-top:3px;}
+.p-about-content{padding:72px 60px;display:flex;flex-direction:column;justify-content:center;background:var(--ps-bg);}
+.p-about-ornament{font-family:'Cormorant Garamond',serif;font-size:120px;font-weight:300;color:var(--pa);opacity:.08;line-height:.7;margin-bottom:-20px;user-select:none;}
+.p-about-tag{font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--pa);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.p-about-tag::before{content:'';display:inline-block;width:28px;height:1.5px;background:var(--pa);}
+.p-about-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,48px);font-weight:400;color:var(--ps-text);line-height:1.15;margin-bottom:18px;letter-spacing:.5px;}
+.p-about-body{font-size:14px;color:var(--ps-text2);line-height:1.95;margin-bottom:28px;font-family:'Outfit',sans-serif;font-weight:300;}
+.p-about-checks{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+.p-about-checks li{display:flex;align-items:center;gap:11px;font-size:13.5px;font-weight:500;color:var(--ps-text);font-family:'Outfit',sans-serif;}
+.p-check-box{width:20px;height:20px;border:1.5px solid var(--pa);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--pa);flex-shrink:0;}
+.p-about-cta{display:inline-flex;align-items:center;gap:10px;padding:13px 28px;background:transparent;border:1.5px solid var(--pa);color:var(--pa);font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;align-self:flex-start;}
+.p-about-cta:hover{background:var(--pa);color:var(--pa-text);}
 
 /* SERVICES */
-.s-services { background:#f8faff; padding:100px 80px; }
-.services-header { text-align:center; margin-bottom:60px; }
-.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; }
-.svc-card { background:white; border:1.5px solid #e2e8f4; border-radius:20px; padding:36px 28px; transition:all 0.3s; position:relative; overflow:hidden; }
-.svc-card::after { content:''; position:absolute; bottom:0; left:0; width:0; height:3px; background:linear-gradient(90deg,var(--primary),#6366f1); transition:width 0.4s; }
-.svc-card:hover::after { width:100%; }
-.svc-card:hover { box-shadow:0 16px 48px rgba(0,0,0,0.09); transform:translateY(-6px); border-color:var(--primary); }
-.svc-icon-wrap { width:60px; height:60px; background:var(--tag-bg); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:20px; transition:all 0.3s; }
-.svc-card:hover .svc-icon-wrap { background:var(--primary); }
-.svc-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:800; color:#0a1628; margin-bottom:10px; }
-.svc-desc { font-size:14px; color:#64748b; line-height:1.7; }
+.p-services{padding:90px 5%;background:var(--pb-bg);}
+.p-sec-tag{font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--pa);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.p-sec-tag::before{content:'';display:inline-block;width:24px;height:1.5px;background:var(--pa);}
+.p-sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4.5vw,58px);font-weight:400;color:var(--ps-text);letter-spacing:.5px;line-height:1.05;margin-bottom:52px;}
+.p-sec-title em{font-style:italic;color:var(--pa);}
+.p-svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0;border:1px solid var(--ps-border);}
+.p-svc-card{padding:44px 32px;border-right:1px solid var(--ps-border);border-bottom:1px solid var(--ps-border);background:var(--pb-bg);transition:background .3s;position:relative;overflow:hidden;cursor:pointer;}
+.p-svc-card:hover{background:var(--ps-hover);}
+.p-svc-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--pa);transition:width .5s;}
+.p-svc-card:hover::after{width:100%;}
+.p-svc-num{font-family:'Cormorant Garamond',serif;font-size:60px;font-weight:300;color:var(--pa);opacity:.12;line-height:1;margin-bottom:6px;}
+.p-svc-emoji{font-size:36px;margin-bottom:16px;display:block;}
+.p-svc-title{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:400;color:var(--ps-text);margin-bottom:10px;letter-spacing:.5px;}
+.p-svc-desc{font-size:13px;color:var(--ps-text2);line-height:1.7;font-family:'Outfit',sans-serif;font-weight:300;}
+.p-svc-arrow{position:absolute;bottom:24px;right:24px;width:36px;height:36px;border:1.5px solid var(--ps-border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ps-text2);transition:all .25s;}
+.p-svc-card:hover .p-svc-arrow{background:var(--pa);border-color:var(--pa);color:var(--pa-text);}
 
-/* WHY US */
-.s-why { background:white; padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
-.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.why-card { background:#f8faff; border:1px solid #e2e8f4; border-radius:16px; padding:24px 20px; transition:all 0.25s; }
-.why-card:hover { background:var(--tag-bg); border-color:var(--primary); transform:translateY(-3px); box-shadow:0 8px 24px rgba(26,86,255,0.1); }
-.why-card-icon { font-size:28px; margin-bottom:10px; }
-.why-card-title { font-size:15px; font-weight:700; color:#0a1628; margin-bottom:6px; }
-.why-card-text { font-size:13px; color:#64748b; line-height:1.5; }
+/* GALLERY — MASONRY STYLE */
+.p-gallery{padding:90px 5%;background:var(--ps-bg);}
+.p-gallery-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:280px 280px;gap:10px;margin-top:48px;}
+.p-gitem{position:relative;overflow:hidden;cursor:pointer;background:var(--ps-hover);}
+.p-gitem:first-child{grid-row:span 2;}
+.p-gitem-img{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:transform .7s cubic-bezier(.25,.46,.45,.94);}
+.p-gitem-img.loading{background:var(--ps-hover);}
+.p-gitem:hover .p-gitem-img{transform:scale(1.08);}
+.p-gitem-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 55%);opacity:0;transition:opacity .35s;}
+.p-gitem:hover .p-gitem-overlay{opacity:1;}
+.p-gitem-label{position:absolute;bottom:18px;left:20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.9);opacity:0;transition:opacity .35s;font-family:'Outfit',sans-serif;}
+.p-gitem:hover .p-gitem-label{opacity:1;}
+.p-gitem-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.5;}
 
-/* TESTIMONIAL */
-.s-testimonial { background:var(--primary); padding:80px; text-align:center; position:relative; overflow:hidden; }
-.s-testimonial::before { content:'"'; position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-family:'Playfair Display',serif; font-size:300px; font-weight:900; color:rgba(255,255,255,0.04); line-height:1; }
-.test-stars { color:#fbbf24; font-size:20px; margin-bottom:20px; letter-spacing:3px; }
-.test-quote { font-family:'Playfair Display',serif; font-size:clamp(20px,3vw,30px); font-weight:700; font-style:italic; color:white; line-height:1.5; max-width:700px; margin:0 auto 28px; }
-.test-author { font-size:14px; color:rgba(255,255,255,0.7); font-weight:600; }
+/* TESTIMONIALS */
+.p-testimonials{padding:90px 5%;background:var(--pb-bg);}
+.p-test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ps-border);margin-top:48px;border:1px solid var(--ps-border);}
+.p-test-card{background:var(--pb-bg);padding:38px 30px;transition:background .3s;}
+.p-test-card:hover{background:var(--ps-hover);}
+.p-test-stars{color:var(--pa);font-size:13px;letter-spacing:2px;margin-bottom:16px;}
+.p-test-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:400;font-style:italic;color:var(--ps-text2);line-height:1.85;margin-bottom:22px;}
+.p-test-author{display:flex;align-items:center;gap:12px;}
+.p-test-av{width:40px;height:40px;border-radius:50%;background:var(--pa);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--pa-text);flex-shrink:0;font-family:'Cormorant Garamond',serif;}
+.p-test-name{font-size:12.5px;font-weight:700;color:var(--ps-text);font-family:'Outfit',sans-serif;}
+.p-test-role{font-size:11px;color:var(--ps-text2);font-family:'Outfit',sans-serif;}
+
+/* CTA BLOCK */
+.p-cta{background:var(--pa);padding:88px 5%;text-align:center;position:relative;overflow:hidden;}
+.p-cta::before{content:'';position:absolute;top:-120px;left:-120px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.06);}
+.p-cta::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);}
+.p-cta-inner{position:relative;z-index:1;}
+.p-cta-tag{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:18px;display:block;}
+.p-cta-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5.5vw,68px);font-weight:300;color:white;line-height:1;margin-bottom:14px;letter-spacing:1px;}
+.p-cta-sub{font-size:15px;color:rgba(255,255,255,.68);font-family:'Outfit',sans-serif;font-weight:300;margin-bottom:40px;line-height:1.7;}
+.p-cta-btn{display:inline-flex;align-items:center;gap:12px;padding:18px 48px;background:white;color:var(--pa-text-dark,#0a0a0a);font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .28s;box-shadow:0 8px 36px rgba(0,0,0,.25);}
+.p-cta-btn:hover{transform:translateY(-3px);}
 
 /* CONTACT */
-.s-contact { background:#f8faff; padding:100px 80px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
-.contact-info { display:flex; flex-direction:column; gap:16px; margin-top:28px; }
-.ci-item { display:flex; align-items:center; gap:16px; background:white; border:1px solid #e2e8f4; border-radius:14px; padding:18px 20px; transition:all 0.25s; }
-.ci-item:hover { border-color:var(--primary); box-shadow:0 6px 20px rgba(26,86,255,0.08); transform:translateX(4px); }
-.ci-icon { width:46px; height:46px; background:var(--tag-bg); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-.ci-label { font-size:11px; color:#94a3b8; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
-.ci-val { font-size:15px; color:#0a1628; font-weight:700; margin-top:2px; }
-.contact-form-card { background:white; border:1px solid #e2e8f4; border-radius:24px; padding:40px; box-shadow:0 8px 40px rgba(0,0,0,0.06); }
-.cf-title { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:#0a1628; margin-bottom:6px; }
-.cf-sub { font-size:14px; color:#94a3b8; margin-bottom:28px; }
-.cf-input { width:100%; padding:13px 16px; background:#f8faff; border:1.5px solid #e2e8f4; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; color:#0a1628; outline:none; transition:all 0.2s; margin-bottom:14px; }
-.cf-input:focus { border-color:var(--primary); background:white; }
-.cf-input::placeholder { color:#94a3b8; }
-.cf-submit { width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px var(--primary-shadow); transition:all 0.25s; }
-.cf-submit:hover { transform:translateY(-2px); }
+.p-contact{padding:90px 5%;background:var(--ps-bg);display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
+.p-contact-list{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
+.p-contact-item{display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--pb-bg);border:1px solid var(--ps-border);transition:all .25s;}
+.p-contact-item:hover{border-color:var(--pa);transform:translateX(5px);}
+.p-contact-icon{width:44px;height:44px;background:var(--pa);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:var(--pa-text);}
+.p-contact-lbl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--pa);margin-bottom:3px;font-family:'Outfit',sans-serif;}
+.p-contact-val{font-size:13px;font-weight:600;color:var(--ps-text);font-family:'Outfit',sans-serif;}
+.p-contact-visual{background:var(--pa);padding:52px 40px;text-align:center;position:relative;overflow:hidden;}
+.p-contact-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,transparent 50%);}
+.p-cv-icon{font-size:52px;margin-bottom:14px;position:relative;z-index:1;}
+.p-cv-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--pa-text);letter-spacing:1px;margin-bottom:6px;position:relative;z-index:1;}
+.p-cv-type{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--pa-text);opacity:.65;font-family:'Outfit',sans-serif;position:relative;z-index:1;}
 
 /* FOOTER */
-.s-footer { background:#0a1628; padding:50px 80px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
-.s-footer-logo { font-family:'Playfair Display',serif; font-size:22px; font-weight:800; color:white; }
-.s-footer-links { display:flex; gap:24px; }
-.s-footer-links a { font-size:14px; color:#475569; text-decoration:none; transition:color 0.2s; }
-.s-footer-links a:hover { color:#60a5fa; }
-.s-footer-copy { font-size:13px; color:#334155; }
+.p-footer{background:var(--pf-bg);padding:56px 5% 28px;border-top:1px solid var(--ps-border);}
+.p-footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:40px;}
+.p-footer-brand{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--ps-text);letter-spacing:2px;margin-bottom:12px;}
+.p-footer-tagline{font-size:13px;color:var(--ps-text2);line-height:1.75;max-width:250px;font-family:'Outfit',sans-serif;font-weight:300;}
+.p-footer-col-title{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--pa);margin-bottom:16px;font-family:'Outfit',sans-serif;}
+.p-footer-links{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.p-footer-links a{font-size:13px;color:var(--ps-text2);text-decoration:none;transition:color .2s;font-family:'Outfit',sans-serif;}
+.p-footer-links a:hover{color:var(--pa);}
+.p-footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--ps-border);}
+.p-footer-copy{font-size:12px;color:var(--ps-text2);font-family:'Outfit',sans-serif;}
+
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .75s ease,transform .75s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-44px);transition:opacity .8s ease,transform .8s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(44px);transition:opacity .8s ease,transform .8s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+.reveal-scale{opacity:0;transform:scale(.9);transition:opacity .65s ease,transform .65s ease;}
+.reveal-scale.visible{opacity:1;transform:scale(1);}
+
+/* IMAGE LOADING STATES */
+.img-skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.img-fade-in{animation:imgIn .7s ease both;}
+@keyframes imgIn{from{opacity:0;}to{opacity:1;}}
 
 /* PAYMENT MODAL */
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,22,40,0.65); backdrop-filter:blur(6px); z-index:999999; align-items:center; justify-content:center; }
-.modal { background:white; border-radius:24px; padding:44px; max-width:460px; width:90%; box-shadow:0 40px 100px rgba(0,0,0,0.25); text-align:center; animation:popUp 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-@keyframes popUp { from{opacity:0;transform:scale(0.92) translateY(16px);} to{opacity:1;transform:scale(1) translateY(0);} }
-.modal-emoji { font-size:56px; margin-bottom:18px; }
-.modal-title { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:#0a1628; margin-bottom:8px; }
-.modal-sub { font-size:14px; color:#64748b; margin-bottom:24px; line-height:1.6; }
-.pay-box { background:linear-gradient(135deg,#f0f4ff,#e8eeff); border:1px solid #c7d2fe; border-radius:16px; padding:22px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; text-align:left; }
-.pay-label { font-size:11px; color:#64748b; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
-.pay-amount { font-family:'Playfair Display',serif; font-size:44px; font-weight:900; color:#0a1628; line-height:1; }
-.pay-features { text-align:left; font-size:13px; color:#475569; line-height:2; margin-bottom:28px; }
-.modal-btns { display:flex; gap:12px; }
-.btn-pay { flex:2; padding:15px; background:linear-gradient(135deg,#1a56ff,#6366f1); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px rgba(26,86,255,0.35); transition:all 0.2s; }
-.btn-pay:hover { transform:translateY(-2px); }
-.btn-cancel { flex:1; padding:15px; background:#f1f5f9; color:#64748b; border:none; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:999999;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:white;border-radius:22px;padding:40px;max-width:440px;width:90%;box-shadow:0 40px 100px rgba(0,0,0,.3);text-align:center;animation:mIn .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto;}
+@keyframes mIn{from{opacity:0;transform:scale(.9)translateY(16px);}to{opacity:1;transform:scale(1)translateY(0);}}
+.modal-emoji{font-size:52px;margin-bottom:14px;}
+.modal-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#0a1628;margin-bottom:8px;}
+.modal-sub{font-size:13px;color:#64748b;margin-bottom:18px;line-height:1.6;}
+.pay-box{border-radius:14px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;text-align:left;background:linear-gradient(135deg,#f0f4ff,#e8eeff);border:1px solid #c7d2fe;}
+.pay-box.prem{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fde68a;}
+.pay-lbl{font-size:10px;color:#64748b;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.pay-amount{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:#0a1628;line-height:1;}
+.pay-feats{text-align:left;font-size:12.5px;color:#475569;line-height:2.1;margin-bottom:22px;}
+.modal-btns{display:flex;gap:10px;}
+.btn-pay{flex:2;padding:13px;color:white;border:none;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;background:linear-gradient(135deg,#1a56ff,#6366f1);}
+.btn-pay.prem{background:linear-gradient(135deg,#b8860b,#d4a017);}
+.btn-pay:hover{transform:translateY(-2px);}
+.btn-cancel{flex:1;padding:13px;background:#f1f5f9;color:#64748b;border:none;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;}
+.cf-status-box{margin-top:10px;font-size:13px;display:none;padding:9px 13px;border-radius:8px;}
 
-/* RESPONSIVE */
-@media(max-width:900px) {
-  .s-nav { padding:0 24px; }
-  .s-nav-links { display:none; }
-  .s-hero { padding:60px 24px 0; flex-direction:column; }
-  .hero-visual { width:100%; }
-  .hero-card { border-radius:20px; }
-  .trust-bar,.s-stats { padding:30px 24px; }
-  .s-stats { grid-template-columns:1fr; }
-  .stat-box { border-right:none; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:20px; }
-  .s-about,.s-why,.s-contact { grid-template-columns:1fr; padding:60px 24px; gap:40px; }
-  .s-services,.s-testimonial { padding:60px 24px; }
-  .trust-bar { gap:20px; }
-  .s-footer { padding:36px 24px; flex-direction:column; text-align:center; }
-  .s-footer-links { flex-wrap:wrap; justify-content:center; }
-  .why-grid { grid-template-columns:1fr; }
-  .preview-banner { flex-direction:column; height:auto; padding:10px 16px; gap:8px; }
-  .site { padding-top:90px; }
-  .s-nav { top:90px; }
+@media(max-width:900px){
+  .b-nav{padding:0 4%;}.b-nav-links{display:none;}
+  .b-hero{padding:56px 4% 0;flex-direction:column;gap:28px;min-height:auto;}
+  .b-hero-card{width:100%;border-radius:16px;}
+  .b-trust{padding:16px 4%;gap:16px;}
+  .b-stats{padding:32px 4%;grid-template-columns:1fr;}
+  .b-stat{border-right:none;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:14px;}
+  .b-about-grid,.b-contact-grid{grid-template-columns:1fr;gap:32px;}
+  .b-section{padding:56px 4%;}
+  .b-why-grid{grid-template-columns:1fr;}
+  .b-footer{padding:28px 4%;flex-direction:column;text-align:center;}
+  .b-footer-links{flex-wrap:wrap;justify-content:center;}
+  .p-nav{padding:0 4%;}.p-nav-links{display:none;}
+  .p-hero h1{font-size:clamp(44px,10vw,72px);}
+  .p-stats{grid-template-columns:repeat(2,1fr);padding:36px 4%;}
+  .p-stats .p-stat{border-right:none;border-bottom:1px solid var(--ps-border);}
+  .p-about{grid-template-columns:1fr;}
+  .p-about-img-wrap{min-height:320px;}
+  .p-about-content{padding:44px 4%;}
+  .p-about-float{display:none;}
+  .p-services,.p-gallery,.p-testimonials,.p-contact{padding:56px 4%;}
+  .p-gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .p-gitem:first-child{grid-row:span 1;}
+  .p-gitem{min-height:200px;}
+  .p-test-grid{grid-template-columns:1fr;}
+  .p-contact{grid-template-columns:1fr;gap:36px;}
+  .p-cta{padding:56px 4%;}
+  .p-footer{padding:40px 4% 24px;}
+  .p-footer-top{grid-template-columns:1fr;gap:22px;}
+  .p-footer-bottom{flex-direction:column;gap:8px;text-align:center;}
+}
+@media(max-width:560px){
+  .preview-banner{padding:0 12px;}
+  .banner-expire{display:none;}
+  .site{padding-top:48px;}
+  .b-hero h1,.p-hero h1{font-size:clamp(32px,9vw,52px);}
+  .b-hero-btns,.p-hero-btns{flex-direction:column;align-items:flex-start;}
+  .p-hero-btns{align-items:center;}
+  .p-gallery-grid{grid-template-columns:1fr;}
+  .p-gitem{min-height:220px;}
 }
 </style>
 </head>
 <body>
 
+<!-- BANNER -->
 <div class="preview-banner">
   <div class="banner-left">
-    <a href="index.html" class="banner-logo">Auto<span>Vision</span></a>
-    <span class="banner-pill">⏳ Preview</span>
-    <span class="banner-text">Free preview — activate to go live</span>
+    <a href="dashboard.html" class="banner-logo">Auto<span>Vision</span></a>
+    <span class="banner-pill basic" id="bannerPill">⏳ Preview</span>
   </div>
   <div class="banner-right">
-    <span class="banner-expire">⚠️ Expires in 48 hours</span>
+    <span class="banner-expire">⚠️ Expires 48h</span>
     <a href="dashboard.html" class="btn-back">← Dashboard</a>
-    <button class="btn-activate" onclick="openPayment()">Activate Now — ₹299</button>
+    <button class="btn-activate basic" id="activateBtn" onclick="openPayModal()">Activate — ₹299</button>
   </div>
 </div>
 
-<div class="site" id="site"></div>
+<!-- UPLOAD PANEL (premium only) -->
+<div class="upload-panel" id="uploadPanel">
+  <div class="upload-panel-title">📷 Upload Your Photos</div>
+  <div class="upload-slot"><label>Hero bg</label><input type="file" accept="image/*" onchange="handleUpload('hero',this)"></div>
+  <div class="upload-slot"><label>About</label><input type="file" accept="image/*" onchange="handleUpload('about',this)"></div>
+  <div class="upload-slot"><label>Gallery 1</label><input type="file" accept="image/*" onchange="handleUpload('g0',this)"></div>
+  <div class="upload-slot"><label>Gallery 2</label><input type="file" accept="image/*" onchange="handleUpload('g1',this)"></div>
+  <div class="upload-slot"><label>Gallery 3</label><input type="file" accept="image/*" onchange="handleUpload('g2',this)"></div>
+  <button class="upload-apply" onclick="applyUserImages()">✓ Apply Photos</button>
+</div>
 
+<!-- SITE OUTPUT -->
+<div class="site" id="site">
+  <div class="av-loader"><div class="av-loader-spinner"></div><p id="loaderMsg">Loading your website…</p></div>
+</div>
+
+<!-- PAYMENT MODAL -->
 <div class="modal-overlay" id="payModal">
   <div class="modal">
-    <div class="modal-emoji">🚀</div>
-    <div class="modal-title">Go Live for ₹299</div>
-    <div class="modal-sub">Your professional website will be live on the internet instantly.</div>
-    <div class="pay-box">
-      <div><div class="pay-label">Activation Fee</div><div class="pay-amount">₹299</div></div>
-      <div style="font-size:40px">🌐</div>
+    <div class="modal-emoji" id="payEmoji">🚀</div>
+    <div class="modal-title" id="payTitle">Go Live — ₹299</div>
+    <div class="modal-sub">Your website will be live on the internet instantly.</div>
+    <div class="pay-box" id="payBox">
+      <div><div class="pay-lbl">Activation Fee</div><div class="pay-amount" id="payAmount">₹299</div></div>
+      <div style="font-size:40px" id="payIcon">🌐</div>
     </div>
-    <div class="pay-features">
-      ✅ Website goes live <strong>instantly</strong><br>
-      ✅ Pay via UPI, GPay, PhonePe or Card<br>
-      ✅ 100% secure via Razorpay<br>
-      ✅ Mobile-ready professional website
-    </div>
+    <div class="pay-feats" id="payFeats">✅ Website goes live <strong>instantly</strong><br>✅ Pay via UPI, GPay, PhonePe or Card<br>✅ 100% secure via Razorpay<br>✅ Mobile-ready professional website</div>
     <div class="modal-btns">
-      <button class="btn-pay" onclick="processPayment()">Pay ₹299 & Go Live →</button>
-      <button class="btn-cancel" onclick="document.getElementById('payModal').style.display='none'">Later</button>
+      <button class="btn-pay" id="payBtn" onclick="processPayment()">Pay ₹299 & Go Live →</button>
+      <button class="btn-cancel" onclick="closePayModal()">Later</button>
     </div>
   </div>
 </div>
@@ -234,267 +437,892 @@ body { background:#fff; -webkit-font-smoothing:antialiased; }
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+// ══════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════
 emailjs.init('H9mRJV2zi9LJ7OhBw');
+const SUPA_URL   = 'https://twneeawhdzgnavudanud.supabase.co';
+const SUPA_KEY   = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+const PEXELS_KEY = 'YdYkG3y4W1Hw2miLpLTiQoxWoOeknnmSDra6ahTKCfIAdpWD5w5hpO2w';
+const RZP_KEY    = 'rzp_live_SaJ684rRC2TUwj';
+const BASE_URL   = 'https://autovision-psi.vercel.app';
 
-const SUPA_URL = 'https://twneeawhdzgnavudanud.supabase.co';
-const SUPA_KEY = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
-const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+const db          = supabase.createClient(SUPA_URL, SUPA_KEY);
+const params      = new URLSearchParams(window.location.search);
+const SITE_ID     = params.get('site');
+const LOCAL_ID    = params.get('localsite');
 
-const params = new URLSearchParams(window.location.search);
-const siteId = params.get('site');
+// ══════════════════════════════════════════════
+// USER UPLOADS
+// ══════════════════════════════════════════════
+const userUploads = { hero: null, about: null, g0: null, g1: null, g2: null };
 
-const themes = {
-  // Original 4 design themes (by design preference)
-  Modern:  { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.3)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
-  Classic: { primary:'#166534', primaryShadow:'rgba(22,101,52,0.3)', heroBg:'linear-gradient(135deg,#14532d 0%,#052e16 100%)', heroOrb:'#16a34a', heroOrb2:'#4ade80', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#86efac', trustBg:'#f0fdf4', trustBorder:'#bbf7d0', trustText:'#14532d', trustIconBg:'#dcfce7', tagBg:'#f0fdf4', primaryLight:'#86efac' },
-  Bold:    { primary:'#dc2626', primaryShadow:'rgba(220,38,38,0.3)', heroBg:'linear-gradient(135deg,#1c0a0a 0%,#450a0a 100%)', heroOrb:'#dc2626', heroOrb2:'#f97316', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#fca5a5', trustBg:'#fff5f5', trustBorder:'#fecaca', trustText:'#7f1d1d', trustIconBg:'#fee2e2', tagBg:'#fff5f5', primaryLight:'#fca5a5' },
-  Minimal: { primary:'#0f172a', primaryShadow:'rgba(15,23,42,0.2)', heroBg:'linear-gradient(135deg,#0f172a 0%,#1e293b 100%)', heroOrb:'#334155', heroOrb2:'#475569', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.6)', eyebrowBg:'rgba(255,255,255,0.08)', eyebrowBorder:'rgba(255,255,255,0.15)', eyebrowColor:'#cbd5e1', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#f1f5f9', tagBg:'#f8fafc', primaryLight:'#94a3b8' },
-  // New 6 website themes (by website_theme field)
-  'dark-blue':    { primary:'#1a56ff', primaryShadow:'rgba(26,86,255,0.3)', heroBg:'linear-gradient(135deg,#0a1628 0%,#162550 100%)', heroOrb:'#1a56ff', heroOrb2:'#6366f1', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#93c5fd', trustBg:'#f0f4ff', trustBorder:'#dbeafe', trustText:'#1e3a5f', trustIconBg:'#dbeafe', tagBg:'#eff6ff', primaryLight:'#93c5fd' },
-  'light-clean':  { primary:'#2563eb', primaryShadow:'rgba(37,99,235,0.25)', heroBg:'linear-gradient(135deg,#1e40af 0%,#1e3a8a 100%)', heroOrb:'#3b82f6', heroOrb2:'#8b5cf6', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.75)', eyebrowBg:'rgba(255,255,255,0.15)', eyebrowBorder:'rgba(255,255,255,0.25)', eyebrowColor:'#bfdbfe', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#eff6ff', tagBg:'#eff6ff', primaryLight:'#bfdbfe' },
-  'dark-green':   { primary:'#059669', primaryShadow:'rgba(5,150,105,0.3)', heroBg:'linear-gradient(135deg,#064e3b 0%,#022c22 100%)', heroOrb:'#059669', heroOrb2:'#34d399', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#6ee7b7', trustBg:'#f0fdf4', trustBorder:'#bbf7d0', trustText:'#14532d', trustIconBg:'#dcfce7', tagBg:'#f0fdf4', primaryLight:'#6ee7b7' },
-  'bold-red':     { primary:'#dc2626', primaryShadow:'rgba(220,38,38,0.3)', heroBg:'linear-gradient(135deg,#1c0a0a 0%,#450a0a 100%)', heroOrb:'#dc2626', heroOrb2:'#f97316', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.1)', eyebrowBorder:'rgba(255,255,255,0.2)', eyebrowColor:'#fca5a5', trustBg:'#fff5f5', trustBorder:'#fecaca', trustText:'#7f1d1d', trustIconBg:'#fee2e2', tagBg:'#fff5f5', primaryLight:'#fca5a5' },
-  'light-purple': { primary:'#7c3aed', primaryShadow:'rgba(124,58,237,0.28)', heroBg:'linear-gradient(135deg,#3b0764 0%,#1e1b4b 100%)', heroOrb:'#7c3aed', heroOrb2:'#a78bfa', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.7)', eyebrowBg:'rgba(255,255,255,0.12)', eyebrowBorder:'rgba(255,255,255,0.22)', eyebrowColor:'#c4b5fd', trustBg:'#faf5ff', trustBorder:'#e9d5ff', trustText:'#3b0764', trustIconBg:'#ede9fe', tagBg:'#faf5ff', primaryLight:'#c4b5fd' },
-  'dark-minimal': { primary:'#334155', primaryShadow:'rgba(51,65,85,0.2)', heroBg:'linear-gradient(135deg,#0f172a 0%,#1e293b 100%)', heroOrb:'#334155', heroOrb2:'#475569', heroText:'#ffffff', heroSubtext:'rgba(255,255,255,0.65)', eyebrowBg:'rgba(255,255,255,0.08)', eyebrowBorder:'rgba(255,255,255,0.15)', eyebrowColor:'#cbd5e1', trustBg:'#f8fafc', trustBorder:'#e2e8f0', trustText:'#1e293b', trustIconBg:'#f1f5f9', tagBg:'#f8fafc', primaryLight:'#94a3b8' }
-};
+function handleUpload(key, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    userUploads[key] = e.target.result;
+    console.log('[AV] User uploaded:', key);
+  };
+  reader.readAsDataURL(file);
+}
 
-const typeIcons = { 'Restaurant / Cafe':'🍽️','Shop / Retail':'🛍️','Service Business':'⚙️','Healthcare / Clinic':'🏥','Education / Coaching':'📚','Portfolio / Freelance':'💼','Other':'🏢' };
-const svcIcons = ['⚡','🎯','✅','🌟','💡','🔥'];
-const defaultSvc = {
-  'Restaurant / Cafe':['Fine Dining','Home Delivery','Catering Services','Takeaway Orders'],
-  'Shop / Retail':['Quality Products','Fast Delivery','Easy Returns','Wholesale Deals'],
-  'Service Business':['Professional Service','Expert Consultation','Quick Turnaround','Affordable Rates'],
-  'Healthcare / Clinic':['General Consultation','Health Checkup','Specialist Care','Emergency Support'],
-  'Education / Coaching':['One-on-One Tuition','Group Classes','Study Materials','Online Sessions'],
-  'Portfolio / Freelance':['Creative Design','Web Development','Brand Strategy','Project Consulting'],
-  'Other':['Quality Service','Expert Team','Customer Support','Fast Delivery']
-};
-
-async function loadSite() {
-  let s = null;
-  if (siteId && siteId.includes('-')) {
-    // Supabase UUID
-    const { data } = await db.from('av_websites').select('*').eq('id', siteId).single();
-    s = data;
-  } else if (siteId) {
-    // Old localStorage fallback
-    const sites = JSON.parse(localStorage.getItem('av_websites') || '[]');
-    s = sites[parseInt(siteId)];
+function applyUserImages() {
+  if (window._currentSite) {
+    console.log('[AV] Re-rendering with user images...');
+    renderPremium(window._currentSite);
   }
+}
+
+// ══════════════════════════════════════════════
+// PEXELS IMAGE FETCHER — CORE ENGINE
+// ══════════════════════════════════════════════
+const pxCache = {};
+
+async function fetchPexels(query, count = 4) {
+  if (!query) return [];
+  const key = query.toLowerCase().trim();
+  if (pxCache[key]) { console.log('[AV] Pexels cache hit:', key); return pxCache[key]; }
+  console.log('[AV] Fetching Pexels:', query);
+  try {
+    const res = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=${count + 4}&orientation=landscape`,
+      { headers: { Authorization: PEXELS_KEY } }
+    );
+    if (!res.ok) { console.warn('[AV] Pexels HTTP', res.status, 'for:', query); return []; }
+    const data = await res.json();
+    const urls = (data.photos || []).map(p => p.src.large2x || p.src.large);
+    console.log('[AV] Pexels got', urls.length, 'images for:', query);
+    pxCache[key] = urls;
+    return urls;
+  } catch (e) {
+    console.error('[AV] Pexels error for:', query, e.message);
+    return [];
+  }
+}
+
+// ── KEYWORD EXTRACTOR ──
+const STOPWORDS = new Set(['a','an','the','and','or','but','in','on','at','to','for','of','with','by','from','we','our','your','us','is','are','was','were','be','been','have','has','do','does','will','that','this','i','you','he','she','they','which','how','as','if','so','not','no','very','just','also','about','like','more','all','any','each','every','some','such','own','provide','offer','help','quality','best','great','good','top','professional','service','services','business','customer','clients','company','team','sell','using','get','make','give','dedicated','trusted','focused','expert','special','new','latest','high','wide','range']);
+
+function extractKeywords(text) {
+  if (!text) return [];
+  return [...new Set(
+    text.toLowerCase()
+      .replace(/[^a-z0-9\s]/g,' ')
+      .split(/\s+/)
+      .filter(w => w.length >= 3 && !STOPWORDS.has(w))
+  )].slice(0, 10);
+}
+
+// ── TYPE → IMAGE QUERIES MAPPING ──
+const TYPE_QUERIES = {
+  'Restaurant / Cafe':    ['coffee shop interior cozy','restaurant food plating gourmet','bakery pastry cafe','tea coffee latte cup','dining table elegant food'],
+  'Shop / Retail':        ['retail store modern display','product showcase shelf elegant','boutique interior luxury','shopping store display','merchandise product premium'],
+  'Service Business':     ['professional office workspace','business meeting consultation','corporate modern office','team working professional','handshake business deal'],
+  'Healthcare / Clinic':  ['modern medical clinic clean','doctor healthcare professional','pharmacy medicine clean','wellness health care','clinic interior bright'],
+  'Education / Coaching': ['classroom modern education','books studying desk learning','coaching session professional','students learning together','library books study'],
+  'Portfolio / Freelance':['creative workspace laptop desk','designer studio creative','graphic design artwork','art creative studio','portfolio photography creative'],
+  'Fashion / Boutique':   ['fashion boutique luxury store','clothing display elegant','luxury handbag accessories','fashion style modern','boutique interior chic'],
+  'Beauty / Salon':       ['hair salon beauty modern','spa wellness relaxing','makeup cosmetics luxury','nail salon beauty care','skincare treatment spa'],
+  'Other':                ['modern professional business office','corporate workspace elegant','business team professional','startup office modern','professional service company']
+};
+
+function getQueries(s) {
+  const kws = extractKeywords(s.services || s.description || '');
+  const typeFallbacks = TYPE_QUERIES[s.type] || TYPE_QUERIES['Other'];
+  const typeName = (s.type || 'business').split('/')[0].trim().toLowerCase();
+
+  // Build smart queries from user's actual description keywords
+  const smartHero    = kws.length >= 2 ? `${kws[0]} ${kws[1]} ${typeName}` : typeFallbacks[0];
+  const smartAbout   = kws.length >= 1 ? `${kws[0]} professional` : typeFallbacks[1];
+  const galleryQs = [
+    kws[2] ? `${kws[2]} ${typeName}` : typeFallbacks[2] || typeFallbacks[0],
+    kws[3] ? `${kws[3]} detail product` : typeFallbacks[3] || typeFallbacks[1],
+    kws[4] ? `${kws[4]}` : typeFallbacks[4] || typeFallbacks[2],
+    kws[0] ? `${kws[0]} closeup detail` : typeFallbacks[0],
+    typeFallbacks[1] || typeFallbacks[0]
+  ];
+
+  console.log('[AV] Image queries →', { hero: smartHero, about: smartAbout, gallery: galleryQs });
+  return { hero: smartHero, about: smartAbout, gallery: galleryQs };
+}
+
+// ── PICK A DETERMINISTIC URL FROM ARRAY ──
+function pick(arr, seed) {
+  const valid = (arr || []).filter(Boolean);
+  if (!valid.length) return null;
+  return valid[seed % valid.length];
+}
+
+function siteSeed(s) {
+  const str = (s.id || '') + (s.name || '') + (s.user_email || '');
+  let h = 0;
+  for (let i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0; }
+  return Math.abs(h);
+}
+
+// ── MAIN IMAGE RESOLVER ──
+async function resolveImages(s) {
+  // 1. User uploads take priority
+  const hasUser = Object.values(userUploads).some(Boolean);
+  if (hasUser) {
+    console.log('[AV] Using user-uploaded images');
+    const vals = Object.values(userUploads).filter(Boolean);
+    return {
+      hero:    userUploads.hero  || vals[0],
+      about:   userUploads.about || vals[1] || vals[0],
+      gallery: [userUploads.g0||vals[0], userUploads.g1||vals[1]||vals[0], userUploads.g2||vals[2]||vals[0], vals[0], vals[1]||vals[0]]
+    };
+  }
+
+  // 2. Fetch from Pexels in parallel
+  console.log('[AV] Fetching images from Pexels for:', s.name, '|', s.type);
+  const queries = getQueries(s);
+  const seed    = siteSeed(s);
+
+  const [heroUrls, aboutUrls, g0, g1, g2, g3, g4] = await Promise.all([
+    fetchPexels(queries.hero, 5),
+    fetchPexels(queries.about, 5),
+    fetchPexels(queries.gallery[0], 4),
+    fetchPexels(queries.gallery[1], 4),
+    fetchPexels(queries.gallery[2], 4),
+    fetchPexels(queries.gallery[3], 4),
+    fetchPexels(queries.gallery[4], 4)
+  ]);
+
+  // 3. If primary hero fetch got nothing, try type fallback
+  let fallback = [];
+  if (!heroUrls.length && !aboutUrls.length) {
+    const fbQuery = (TYPE_QUERIES[s.type] || TYPE_QUERIES['Other'])[0];
+    console.warn('[AV] Primary queries empty, trying fallback:', fbQuery);
+    fallback = await fetchPexels(fbQuery, 6);
+  }
+
+  const result = {
+    hero:    pick(heroUrls, seed)  || pick(fallback, seed) || null,
+    about:   pick(aboutUrls, seed) || pick(fallback, seed+1) || null,
+    gallery: [
+      pick(g0, seed)   || pick(fallback, seed) || null,
+      pick(g1, seed+1) || pick(fallback, seed+1) || null,
+      pick(g2, seed+2) || pick(fallback, seed+2) || null,
+      pick(g3, seed+3) || pick(fallback, seed+3) || null,
+      pick(g4, seed+4) || pick(fallback, seed+4) || null
+    ]
+  };
+
+  console.log('[AV] Images resolved:', {
+    hero:    result.hero ? '✅' : '❌',
+    about:   result.about ? '✅' : '❌',
+    gallery: result.gallery.map(u => u ? '✅' : '❌').join(' ')
+  });
+  return result;
+}
+
+// ══════════════════════════════════════════════
+// THEME DEFINITIONS
+// ══════════════════════════════════════════════
+
+// Basic themes (CSS vars applied to :root)
+const BASIC_THEMES = {
+  'dark-blue':    { bp:'#1a56ff', blight:'#93c5fd', bheroBg:'linear-gradient(135deg,#0a1628,#162550)', bheroOrb:'#1a56ff', btrustBg:'#f0f4ff', btrustBorder:'#dbeafe', btrustText:'#1e3a5f', btrustIconBg:'#dbeafe', btagBg:'#eff6ff' },
+  'light-clean':  { bp:'#2563eb', blight:'#bfdbfe', bheroBg:'linear-gradient(135deg,#1e40af,#1e3a8a)', bheroOrb:'#3b82f6', btrustBg:'#f8fafc', btrustBorder:'#e2e8f0', btrustText:'#1e293b', btrustIconBg:'#eff6ff', btagBg:'#eff6ff' },
+  'dark-green':   { bp:'#059669', blight:'#6ee7b7', bheroBg:'linear-gradient(135deg,#064e3b,#022c22)', bheroOrb:'#059669', btrustBg:'#f0fdf4', btrustBorder:'#bbf7d0', btrustText:'#14532d', btrustIconBg:'#dcfce7', btagBg:'#f0fdf4' },
+  'bold-red':     { bp:'#dc2626', blight:'#fca5a5', bheroBg:'linear-gradient(135deg,#1c0a0a,#450a0a)', bheroOrb:'#dc2626', btrustBg:'#fff5f5', btrustBorder:'#fecaca', btrustText:'#7f1d1d', btrustIconBg:'#fee2e2', btagBg:'#fff5f5' },
+  'light-purple': { bp:'#7c3aed', blight:'#c4b5fd', bheroBg:'linear-gradient(135deg,#3b0764,#1e1b4b)', bheroOrb:'#7c3aed', btrustBg:'#faf5ff', btrustBorder:'#e9d5ff', btrustText:'#3b0764', btrustIconBg:'#ede9fe', btagBg:'#faf5ff' },
+  'dark-minimal': { bp:'#334155', blight:'#94a3b8', bheroBg:'linear-gradient(135deg,#0f172a,#1e293b)', bheroOrb:'#334155', btrustBg:'#f8fafc', btrustBorder:'#e2e8f0', btrustText:'#1e293b', btrustIconBg:'#f1f5f9', btagBg:'#f8fafc' },
+  'Modern':       { bp:'#1a56ff', blight:'#93c5fd', bheroBg:'linear-gradient(135deg,#0a1628,#162550)', bheroOrb:'#1a56ff', btrustBg:'#f0f4ff', btrustBorder:'#dbeafe', btrustText:'#1e3a5f', btrustIconBg:'#dbeafe', btagBg:'#eff6ff' },
+  'Classic':      { bp:'#166534', blight:'#86efac', bheroBg:'linear-gradient(135deg,#14532d,#052e16)', bheroOrb:'#16a34a', btrustBg:'#f0fdf4', btrustBorder:'#bbf7d0', btrustText:'#14532d', btrustIconBg:'#dcfce7', btagBg:'#f0fdf4' },
+  'Bold':         { bp:'#dc2626', blight:'#fca5a5', bheroBg:'linear-gradient(135deg,#1c0a0a,#450a0a)', bheroOrb:'#dc2626', btrustBg:'#fff5f5', btrustBorder:'#fecaca', btrustText:'#7f1d1d', btrustIconBg:'#fee2e2', btagBg:'#fff5f5' },
+  'Minimal':      { bp:'#0f172a', blight:'#94a3b8', bheroBg:'linear-gradient(135deg,#0f172a,#1e293b)', bheroOrb:'#334155', btrustBg:'#f8fafc', btrustBorder:'#e2e8f0', btrustText:'#1e293b', btrustIconBg:'#f1f5f9', btagBg:'#f8fafc' }
+};
+
+// Premium themes (much richer)
+const PREMIUM_THEMES = {
+  'dark-blue':    { pa:'#4a90e2', paText:'#020810', paTextDark:'#020810', paGlow:'rgba(74,144,226,.4)', psBg:'#020810', pbBg:'#030d18', psHover:'#061428', psBorder:'rgba(74,144,226,.18)', psText:'#d8ecff', psText2:'rgba(216,236,255,.55)', pfBg:'#010509' },
+  'light-clean':  { pa:'#f0f0f0', paText:'#0a0a0a', paTextDark:'#0a0a0a', paGlow:'rgba(240,240,240,.25)', psBg:'#0a0a0a', pbBg:'#111', psHover:'#181818', psBorder:'rgba(255,255,255,.08)', psText:'#f0f0f0', psText2:'rgba(240,240,240,.5)', pfBg:'#050505' },
+  'dark-green':   { pa:'#2ea87a', paText:'#010c06', paTextDark:'#010c06', paGlow:'rgba(46,168,122,.4)', psBg:'#020e07', pbBg:'#031409', psHover:'#051e0d', psBorder:'rgba(46,168,122,.18)', psText:'#d0f5e8', psText2:'rgba(208,245,232,.55)', pfBg:'#010806' },
+  'bold-red':     { pa:'#c07060', paText:'#0f0408', paTextDark:'#0f0408', paGlow:'rgba(192,112,96,.4)', psBg:'#0f0408', pbBg:'#150608', psHover:'#1e080c', psBorder:'rgba(192,112,96,.18)', psText:'#faeae8', psText2:'rgba(250,234,232,.55)', pfBg:'#08020a' },
+  'light-purple': { pa:'#b09ae0', paText:'#08040f', paTextDark:'#08040f', paGlow:'rgba(176,154,224,.4)', psBg:'#06030f', pbBg:'#0a0516', psHover:'#110824', psBorder:'rgba(176,154,224,.18)', psText:'#ede8ff', psText2:'rgba(237,232,255,.55)', pfBg:'#04020a' },
+  'dark-minimal': { pa:'#c9a227', paText:'#0d0800', paTextDark:'#0d0800', paGlow:'rgba(201,162,39,.4)', psBg:'#0d0a00', pbBg:'#0a0800', psHover:'#1a1500', psBorder:'rgba(201,162,39,.18)', psText:'#f5edd0', psText2:'rgba(245,237,208,.55)', pfBg:'#080600' },
+  'Modern':       { pa:'#4a90e2', paText:'#020810', paTextDark:'#020810', paGlow:'rgba(74,144,226,.4)', psBg:'#020810', pbBg:'#030d18', psHover:'#061428', psBorder:'rgba(74,144,226,.18)', psText:'#d8ecff', psText2:'rgba(216,236,255,.55)', pfBg:'#010509' },
+  'Classic':      { pa:'#2ea87a', paText:'#010c06', paTextDark:'#010c06', paGlow:'rgba(46,168,122,.4)', psBg:'#020e07', pbBg:'#031409', psHover:'#051e0d', psBorder:'rgba(46,168,122,.18)', psText:'#d0f5e8', psText2:'rgba(208,245,232,.55)', pfBg:'#010806' },
+  'Bold':         { pa:'#c07060', paText:'#0f0408', paTextDark:'#0f0408', paGlow:'rgba(192,112,96,.4)', psBg:'#0f0408', pbBg:'#150608', psHover:'#1e080c', psBorder:'rgba(192,112,96,.18)', psText:'#faeae8', psText2:'rgba(250,234,232,.55)', pfBg:'#08020a' },
+  'Minimal':      { pa:'#c9a227', paText:'#0d0800', paTextDark:'#0d0800', paGlow:'rgba(201,162,39,.4)', psBg:'#0d0a00', pbBg:'#0a0800', psHover:'#1a1500', psBorder:'rgba(201,162,39,.18)', psText:'#f5edd0', psText2:'rgba(245,237,208,.55)', pfBg:'#080600' }
+};
+
+const TYPE_ICONS  = { 'Restaurant / Cafe':'🍽️','Shop / Retail':'🛍️','Service Business':'⚙️','Healthcare / Clinic':'🏥','Education / Coaching':'📚','Portfolio / Freelance':'💼','Fashion / Boutique':'👗','Beauty / Salon':'💅','Other':'🏢' };
+const SVC_EMOJIS  = { 'Restaurant / Cafe':['☕','🥘','🍰','🥗','🍜','🍲'],'Shop / Retail':['🛍️','💎','📦','🎁','🏷️','✨'],'Service Business':['⚙️','🤝','📋','💼','🔧','📊'],'Healthcare / Clinic':['🏥','💊','🩺','❤️','🌿','🔬'],'Education / Coaching':['📚','🎓','✏️','🧠','🏆','💡'],'Portfolio / Freelance':['🎨','💡','🚀','⭐','💻','🖌️'],'Fashion / Boutique':['👗','👜','💄','🌸','✨','👠'],'Beauty / Salon':['💅','✂️','🌺','🪞','💄','🌹'],'Other':['🏢','⚡','✅','🌟','💡','🔑'] };
+const DEFAULT_SVC = { 'Restaurant / Cafe':['Fine Dining','Home Delivery','Catering Services','Takeaway Orders','Special Events','Custom Cakes'],'Shop / Retail':['Quality Products','Fast Delivery','Easy Returns','Wholesale Deals','Custom Orders','Gift Wrapping'],'Service Business':['Expert Consultation','Professional Service','Quick Turnaround','Affordable Rates','24/7 Support','Custom Solutions'],'Healthcare / Clinic':['General Consultation','Health Checkup','Specialist Care','Emergency Support','Wellness Plans','Home Visits'],'Education / Coaching':['One-on-One Tuition','Group Classes','Study Materials','Online Sessions','Exam Prep','Career Guidance'],'Portfolio / Freelance':['Creative Design','Web Development','Brand Strategy','Project Consulting','Photography','Content Creation'],'Fashion / Boutique':['Latest Collection','Custom Stitching','Style Consultation','Premium Fabrics','Alterations','Bridal Wear'],'Beauty / Salon':['Hair Styling','Skin Treatment','Nail Art','Bridal Makeup','Facials','Spa Packages'],'Other':['Quality Service','Expert Team','Customer Support','Fast Delivery','Custom Solutions','Free Consultation'] };
+
+// ══════════════════════════════════════════════
+// LOAD SITE
+// ══════════════════════════════════════════════
+async function loadSite() {
+  console.log('[AV] Loading site...');
+  document.getElementById('loaderMsg').textContent = 'Fetching your website...';
+  let s = null;
+
+  try {
+    if (LOCAL_ID) {
+      console.log('[AV] Loading from localStorage:', LOCAL_ID);
+      const arr = JSON.parse(localStorage.getItem('av_websites_local') || '[]');
+      s = arr.find(x => x.id === LOCAL_ID) || arr[0] || null;
+    } else if (SITE_ID) {
+      console.log('[AV] Loading from Supabase:', SITE_ID);
+      const { data, error } = await db.from('av_websites').select('*').eq('id', SITE_ID).single();
+      if (error) console.error('[AV] Supabase error:', error.message, error.code);
+      s = data || null;
+    }
+  } catch (e) {
+    console.error('[AV] loadSite exception:', e.message);
+  }
+
+  if (!s) {
+    // last resort: use first localStorage entry
+    try {
+      const arr = JSON.parse(localStorage.getItem('av_websites_local') || '[]');
+      if (arr.length) { s = arr[0]; console.warn('[AV] Fallback to first localStorage site'); }
+    } catch {}
+  }
+
+  console.log('[AV] Site loaded:', s ? JSON.stringify({ name: s.name, type: s.type, tier: s.website_tier }) : 'null');
   renderSite(s);
 }
 
+// ══════════════════════════════════════════════
+// RENDER SITE — decides basic vs premium
+// ══════════════════════════════════════════════
 function renderSite(s) {
   if (!s) {
-    document.getElementById('site').innerHTML = `<div style="text-align:center;padding:120px 40px;font-family:'DM Sans',sans-serif"><div style="font-size:64px;margin-bottom:20px">😕</div><h2 style="font-family:'Playfair Display',serif;font-size:32px;color:#0a1628;margin-bottom:12px">Website Not Found</h2><p style="color:#64748b;margin-bottom:28px">Go back and create a website first.</p><a href="dashboard.html" style="padding:14px 28px;background:#1a56ff;color:white;border-radius:10px;text-decoration:none;font-weight:700">← Back to Dashboard</a></div>`;
+    document.getElementById('site').innerHTML = `
+      <div style="text-align:center;padding:120px 20px;font-family:'DM Sans',sans-serif;">
+        <div style="font-size:64px;margin-bottom:18px;">😕</div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:28px;color:#0a1628;margin-bottom:10px;">Website Not Found</h2>
+        <p style="color:#64748b;margin-bottom:24px;font-size:15px;">Please go back to the dashboard and create a website first.</p>
+        <a href="dashboard.html" style="padding:13px 26px;background:#1a56ff;color:white;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;font-family:'Outfit',sans-serif;">← Back to Dashboard</a>
+      </div>`;
     return;
   }
 
-  window.currentSite = s;
-  window.businessEmail = s.email || '';
-  window.businessName  = s.name  || '';
+  window._currentSite  = s;
+  window._businessEmail = s.email || '';
+  window._businessName  = s.name  || '';
 
-  const t = themes[s.website_theme] || themes[s.design] || themes.Modern;
-  const root = document.documentElement;
-  Object.entries(t).forEach(([k,v]) => root.style.setProperty('--'+k.replace(/([A-Z])/g,'-$1').toLowerCase(), v));
-  // Also set direct CSS vars
-  root.style.setProperty('--primary', t.primary);
-  root.style.setProperty('--primary-shadow', t.primaryShadow);
-  root.style.setProperty('--primary-light', t.primaryLight);
-  root.style.setProperty('--hero-bg', t.heroBg);
-  root.style.setProperty('--hero-orb', t.heroOrb);
-  root.style.setProperty('--hero-orb2', t.heroOrb2);
-  root.style.setProperty('--hero-text', t.heroText);
-  root.style.setProperty('--hero-subtext', t.heroSubtext);
-  root.style.setProperty('--eyebrow-bg', t.eyebrowBg);
-  root.style.setProperty('--eyebrow-border', t.eyebrowBorder);
-  root.style.setProperty('--eyebrow-color', t.eyebrowColor);
-  root.style.setProperty('--trust-bg', t.trustBg);
-  root.style.setProperty('--trust-border', t.trustBorder);
-  root.style.setProperty('--trust-text', t.trustText);
-  root.style.setProperty('--trust-icon-bg', t.trustIconBg);
-  root.style.setProperty('--tag-bg', t.tagBg);
+  // ── TIER DETECTION (multiple fallbacks) ──
+  const tier = s.website_tier
+    || (s._isLocal && localStorage.getItem('av_last_tier'))
+    || 'basic';
+  window._tier = tier;
+  const isPremium = tier === 'premium';
 
-  const icon = typeIcons[s.type] || '🏢';
-  const rawSvc = s.services ? s.services.split(/[,\n]/).map(x=>x.trim()).filter(Boolean).slice(0,4) : (defaultSvc[s.type] || defaultSvc['Other']);
-  const svcHTML = rawSvc.map((sv,i)=>`<div class="svc-card"><div class="svc-icon-wrap">${svcIcons[i]||'✨'}</div><div class="svc-title">${sv}</div><div class="svc-desc">We deliver exceptional ${sv.toLowerCase()} with a focus on quality and customer satisfaction.</div></div>`).join('');
-  const whyHTML = [{icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence.'},{icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising quality.'},{icon:'💰',t:'Best Value',d:'Premium services at prices that work for you.'},{icon:'🤝',t:'Personal Touch',d:'We treat every customer like family.'}].map(w=>`<div class="why-card"><div class="why-card-icon">${w.icon}</div><div class="why-card-title">${w.t}</div><div class="why-card-text">${w.d}</div></div>`).join('');
-  const desc = s.services ? s.services.substring(0,130)+'...' : 'We are committed to providing exceptional quality and service. Your satisfaction is our highest priority.';
+  console.log('[AV] Rendering as:', isPremium ? 'PREMIUM ✨' : 'BASIC ⚡', '| tier:', tier);
+
+  // Update banner
+  const price = isPremium ? '₹499' : '₹299';
+  const pill  = document.getElementById('bannerPill');
+  const btn   = document.getElementById('activateBtn');
+  pill.textContent = isPremium ? '✨ Premium' : '⏳ Preview';
+  pill.className   = 'banner-pill ' + (isPremium ? 'premium' : 'basic');
+  btn.textContent  = `Activate — ${price}`;
+  btn.className    = 'btn-activate ' + (isPremium ? 'premium' : 'basic');
+  window._activationAmount = isPremium ? 49900 : 29900;
+
+  // Update pay modal
+  if (isPremium) {
+    document.getElementById('payEmoji').textContent  = '✨';
+    document.getElementById('payTitle').textContent  = 'Go Premium — ₹499';
+    document.getElementById('payAmount').textContent = '₹499';
+    document.getElementById('payIcon').textContent   = '✨';
+    document.getElementById('payBox').className      = 'pay-box prem';
+    document.getElementById('payBtn').className      = 'btn-pay prem';
+    document.getElementById('payBtn').textContent    = 'Pay ₹499 & Go Live →';
+    document.getElementById('payFeats').innerHTML    = '✅ Premium website live <strong>instantly</strong><br>✅ Real photos matching your description<br>✅ Gallery, animations & luxury design<br>✅ 100% secure via Razorpay';
+    document.getElementById('uploadPanel').style.display = 'block';
+  }
+
+  if (isPremium) {
+    renderPremium(s);
+  } else {
+    renderBasic(s);
+  }
+}
+
+// ══════════════════════════════════════════════
+// RENDER BASIC
+// ══════════════════════════════════════════════
+function renderBasic(s) {
+  console.log('[AV] Rendering Basic website...');
+
+  // Apply theme vars
+  const t = BASIC_THEMES[s.website_theme] || BASIC_THEMES[s.design] || BASIC_THEMES['dark-blue'];
+  const R = document.documentElement;
+  R.style.setProperty('--bp',           t.bp);
+  R.style.setProperty('--blight',       t.blight);
+  R.style.setProperty('--bheroBg',      t.bheroBg);
+  R.style.setProperty('--bheroOrb',     t.bheroOrb);
+  R.style.setProperty('--btrustBg',     t.btrustBg);
+  R.style.setProperty('--btrustBorder', t.btrustBorder);
+  R.style.setProperty('--btrustText',   t.btrustText);
+  R.style.setProperty('--btrustIconBg', t.btrustIconBg);
+  R.style.setProperty('--btagBg',       t.btagBg);
+
+  const icon  = TYPE_ICONS[s.type] || '🏢';
+  const svcs  = s.services ? s.services.split(/[,\n]/).map(x=>x.trim()).filter(Boolean).slice(0,4) : (DEFAULT_SVC[s.type]||DEFAULT_SVC['Other']).slice(0,4);
+  const desc  = s.services ? s.services.substring(0,150)+'...' : 'We are committed to providing exceptional quality and service. Your satisfaction is our highest priority.';
+  const icons = ['⚡','🎯','✅','🌟','💡','🔥'];
+
+  const svcCards = svcs.map((sv,i) => `
+    <div class="b-svc-card">
+      <div class="b-svc-icon">${icons[i]||'✨'}</div>
+      <div class="b-svc-title">${sv}</div>
+      <div class="b-svc-desc">We deliver exceptional ${sv.toLowerCase()} with a focus on quality and customer satisfaction.</div>
+    </div>`).join('');
+
+  const why = [{icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence.'},{icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising quality.'},{icon:'💰',t:'Best Value',d:'Premium services at prices that work for you.'},{icon:'🤝',t:'Personal Touch',d:'We treat every customer like family.'}];
+  const whyCards = why.map(w=>`<div class="b-why-card"><div class="b-why-icon">${w.icon}</div><div class="b-why-title">${w.t}</div><div class="b-why-text">${w.d}</div></div>`).join('');
+
+  const contactInfo = [
+    s.phone   ? `<div class="b-ci-item"><div class="b-ci-icon">📞</div><div><div class="b-ci-label">Phone</div><div class="b-ci-val">${e(s.phone)}</div></div></div>` : '',
+    s.email   ? `<div class="b-ci-item"><div class="b-ci-icon">✉️</div><div><div class="b-ci-label">Email</div><div class="b-ci-val">${e(s.email)}</div></div></div>` : '',
+    s.address ? `<div class="b-ci-item"><div class="b-ci-icon">📍</div><div><div class="b-ci-label">Address</div><div class="b-ci-val">${e(s.address)}</div></div></div>` : '',
+    (!s.phone && !s.email && !s.address) ? `<div class="b-ci-item"><div class="b-ci-icon">📍</div><div><div class="b-ci-label">Location</div><div class="b-ci-val">India</div></div></div>` : ''
+  ].join('');
 
   document.getElementById('site').innerHTML = `
-    <nav class="s-nav">
-      <div class="s-nav-logo">${s.name}</div>
-      <ul class="s-nav-links">
-        <li><a href="#" onclick="scrollSec('sec-about');return false;">About</a></li>
-        <li><a href="#" onclick="scrollSec('sec-services');return false;">Services</a></li>
-        <li><a href="#" onclick="scrollSec('sec-contact');return false;" class="s-nav-cta">Contact Us</a></li>
-      </ul>
-    </nav>
-    <div class="s-hero">
-      <div class="hero-content">
-        <div class="hero-eyebrow"><span class="eyebrow-dot"></span>${s.type}</div>
-        <h1 class="hero-h1">Welcome to<br><em>${s.name}</em></h1>
-        <p class="hero-p">${desc}</p>
-        <div class="hero-actions">
-          <button class="btn-hero-main" onclick="scrollSec('sec-contact')">Get In Touch →</button>
-          <button class="btn-hero-ghost" onclick="scrollSec('sec-services')">Our Services</button>
-        </div>
-        <div class="hero-trust"><span class="trust-stars">★★★★★</span><span>Trusted by <strong>500+</strong> happy customers</span></div>
-      </div>
-      <div class="hero-visual">
-        <div class="hero-card">
-          <span class="hero-card-icon">${icon}</span>
-          <div class="hero-card-name">${s.name}</div>
-          <div class="hero-card-type">${s.type} · ${s.design} Design</div>
-          <div class="hero-card-badges"><span class="hc-badge">✅ Verified</span><span class="hc-badge">⚡ Professional</span><span class="hc-badge">📱 Mobile Ready</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="trust-bar">
-      <div class="trust-item"><div class="trust-icon">🏆</div>Award Winning Quality</div>
-      <div class="trust-item"><div class="trust-icon">🔒</div>100% Trusted & Secure</div>
-      <div class="trust-item"><div class="trust-icon">⚡</div>Fast & Reliable Service</div>
-      <div class="trust-item"><div class="trust-icon">💬</div>24/7 Customer Support</div>
-    </div>
-    <div class="s-stats">
-      <div class="stat-box"><div class="stat-big">500+</div><div class="stat-small">Happy Customers</div></div>
-      <div class="stat-box"><div class="stat-big">10+</div><div class="stat-small">Years of Excellence</div></div>
-      <div class="stat-box"><div class="stat-big">100%</div><div class="stat-small">Satisfaction Rate</div></div>
-    </div>
-    <div class="s-about" id="sec-about">
-      <div>
-        <div class="section-eyebrow">✦ About Us</div>
-        <div class="section-title">The story behind <em>${s.name}</em></div>
-        <p class="section-body">We are a dedicated ${s.type.toLowerCase()} passionate about serving our community with the very best. Every product and service is crafted to meet the highest standards.</p>
-        <ul class="check-list">
-          <li><span class="cl-icon">✓</span>Trusted by hundreds of loyal customers</li>
-          <li><span class="cl-icon">✓</span>Premium quality in everything we do</li>
-          <li><span class="cl-icon">✓</span>Transparent and fair pricing always</li>
-          <li><span class="cl-icon">✓</span>Friendly, professional and caring team</li>
+    <div style="font-family:'DM Sans',sans-serif;">
+      <nav class="b-nav">
+        <div class="b-nav-logo">${e(s.name)}</div>
+        <ul class="b-nav-links">
+          <li><a href="#b-about">About</a></li>
+          <li><a href="#b-services">Services</a></li>
+          <li><a href="#b-contact" class="b-nav-cta">Contact</a></li>
         </ul>
-      </div>
-      <div class="about-visual">
-        <div class="about-main-card"><span class="amc-icon">${icon}</span><div class="amc-name">${s.name}</div><div class="amc-type">${s.type}${s.address?' · '+s.address:''}</div></div>
-        <div class="about-float"><div class="af-icon">⭐</div><div><div class="af-num">500+</div><div class="af-label">Happy Customers</div></div></div>
-      </div>
-    </div>
-    <div class="s-services" id="sec-services">
-      <div class="services-header">
-        <div class="section-eyebrow" style="justify-content:center">✦ What We Offer</div>
-        <div class="section-title" style="text-align:center">Our <em>Services</em></div>
-        <p style="font-size:16px;color:#64748b;line-height:1.7;margin-top:10px;text-align:center">Everything you need, delivered with care and expertise.</p>
-      </div>
-      <div class="services-grid">${svcHTML}</div>
-    </div>
-    <div class="s-why">
-      <div>
-        <div class="section-eyebrow">✦ Why Choose Us</div>
-        <div class="section-title">We go <em>above and beyond</em> for you</div>
-        <p class="section-body">Our commitment to excellence makes us the trusted choice for thousands of customers.</p>
-        <button class="btn-hero-main" style="margin-top:8px;font-family:'DM Sans',sans-serif" onclick="scrollSec('sec-contact')">Get In Touch →</button>
-      </div>
-      <div class="why-grid">${whyHTML}</div>
-    </div>
-    <div class="s-testimonial">
-      <div class="test-stars">★ ★ ★ ★ ★</div>
-      <div class="test-quote">"${s.name} has been absolutely incredible. The quality of service and attention to detail is unmatched!"</div>
-      <div class="test-author">— A Happy Customer, India</div>
-    </div>
-    <div class="s-contact" id="sec-contact">
-      <div>
-        <div class="section-eyebrow">✦ Contact Us</div>
-        <div class="section-title">Let's <em>talk</em> today</div>
-        <p class="section-body" style="margin-bottom:0">We'd love to hear from you.</p>
-        <div class="contact-info">
-          ${s.phone?`<div class="ci-item"><div class="ci-icon">📞</div><div><div class="ci-label">Phone</div><div class="ci-val">${s.phone}</div></div></div>`:''}
-          ${s.email?`<div class="ci-item"><div class="ci-icon">✉️</div><div><div class="ci-label">Email</div><div class="ci-val">${s.email}</div></div></div>`:''}
-          ${s.address?`<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Address</div><div class="ci-val">${s.address}</div></div></div>`:''}
-          ${!s.phone&&!s.email&&!s.address?`<div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Location</div><div class="ci-val">India</div></div></div>`:''}
+      </nav>
+
+      <div class="b-hero">
+        <div class="b-hero-content">
+          <div class="b-eyebrow"><span class="b-eyebrow-dot"></span>${e(s.type)}</div>
+          <h1>Welcome to<br><em>${e(s.name)}</em></h1>
+          <p class="b-hero-p">${e(desc)}</p>
+          <div class="b-hero-btns">
+            <button class="b-btn-main" onclick="sc('b-contact')">Get In Touch →</button>
+            <button class="b-btn-ghost" onclick="sc('b-services')">Our Services</button>
+          </div>
+        </div>
+        <div class="b-hero-card">
+          <span class="b-hero-card-icon">${icon}</span>
+          <div class="b-hero-card-name">${e(s.name)}</div>
+          <div class="b-hero-card-type">${e(s.type)}</div>
+          <div class="b-badges"><span class="b-badge">✅ Verified</span><span class="b-badge">⚡ Professional</span><span class="b-badge">📱 Mobile Ready</span></div>
         </div>
       </div>
-      <div class="contact-form-card">
-        <div class="cf-title">Send Us a Message</div>
-        <div class="cf-sub">We'll get back to you within 24 hours.</div>
-        <input class="cf-input" id="cf-name" placeholder="Your Full Name">
-        <input class="cf-input" id="cf-contact" placeholder="Your Phone Number or Email">
-        <textarea class="cf-input" id="cf-message" rows="4" placeholder="How can we help you?" style="resize:vertical"></textarea>
-        <button class="cf-submit" onclick="sendMessage()">Send Message →</button>
-        <div id="cf-status" style="margin-top:12px;font-size:13px;display:none;padding:10px 14px;border-radius:8px;"></div>
+
+      <div class="b-trust">
+        <div class="b-trust-item"><div class="b-trust-icon">🏆</div>Award Winning Quality</div>
+        <div class="b-trust-item"><div class="b-trust-icon">🔒</div>100% Trusted & Secure</div>
+        <div class="b-trust-item"><div class="b-trust-icon">⚡</div>Fast & Reliable</div>
+        <div class="b-trust-item"><div class="b-trust-icon">💬</div>24/7 Support</div>
       </div>
-    </div>
-    <div class="s-footer">
-      <div class="s-footer-logo">${s.name}</div>
-      <div class="s-footer-links">
-        <a href="#" onclick="scrollSec('sec-about');return false;">About</a>
-        <a href="#" onclick="scrollSec('sec-services');return false;">Services</a>
-        <a href="#" onclick="scrollSec('sec-contact');return false;">Contact</a>
+
+      <div class="b-stats">
+        <div class="b-stat"><div class="b-stat-num">500+</div><div class="b-stat-lbl">Happy Customers</div></div>
+        <div class="b-stat"><div class="b-stat-num">10+</div><div class="b-stat-lbl">Years Excellence</div></div>
+        <div class="b-stat"><div class="b-stat-num">100%</div><div class="b-stat-lbl">Satisfaction</div></div>
       </div>
-      <div class="s-footer-copy">© ${new Date().getFullYear()} ${s.name}. All rights reserved.</div>
+
+      <div class="b-section" id="b-about">
+        <div class="b-about-grid">
+          <div>
+            <div class="b-sec-eye">✦ About Us</div>
+            <div class="b-sec-title">The story behind <em>${e(s.name)}</em></div>
+            <p class="b-sec-body">We are a dedicated ${e((s.type||'business').toLowerCase())} passionate about serving our community with the very best quality and care.</p>
+            <ul class="b-checklist">
+              <li><span class="b-check-icon">✓</span>Trusted by hundreds of loyal customers</li>
+              <li><span class="b-check-icon">✓</span>Premium quality in everything we do</li>
+              <li><span class="b-check-icon">✓</span>Transparent and fair pricing always</li>
+              <li><span class="b-check-icon">✓</span>Friendly, professional and caring team</li>
+            </ul>
+          </div>
+          <div class="b-about-visual">
+            <span class="b-about-icon">${icon}</span>
+            <div class="b-about-name">${e(s.name)}</div>
+            <div class="b-about-type">${e(s.type)}${s.address?' · '+e(s.address):''}</div>
+            <div class="b-about-float"><div style="font-size:20px">⭐</div><div><div class="b-float-num">500+</div><div class="b-float-lbl">Customers</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="b-section alt" id="b-services">
+        <div style="text-align:center;margin-bottom:44px;">
+          <div class="b-sec-eye" style="margin:0 auto 12px;">✦ What We Offer</div>
+          <div class="b-sec-title" style="text-align:center;">Our <em>Services</em></div>
+        </div>
+        <div class="b-svc-grid">${svcCards}</div>
+      </div>
+
+      <div class="b-section">
+        <div class="b-about-grid">
+          <div>
+            <div class="b-sec-eye">✦ Why Choose Us</div>
+            <div class="b-sec-title">We go <em>above &amp; beyond</em></div>
+            <p class="b-sec-body">Our commitment to excellence makes us the trusted choice for thousands of satisfied customers across India.</p>
+            <button class="b-btn-main" style="margin-top:4px;font-family:'Outfit',sans-serif;" onclick="sc('b-contact')">Get In Touch →</button>
+          </div>
+          <div class="b-why-grid">${whyCards}</div>
+        </div>
+      </div>
+
+      <div class="b-testimonial">
+        <div class="b-test-stars">★ ★ ★ ★ ★</div>
+        <div class="b-test-quote">"${e(s.name)} has been absolutely incredible. The quality and attention to detail is simply unmatched!"</div>
+        <div class="b-test-author">— A Happy Customer, India</div>
+      </div>
+
+      <div class="b-section alt" id="b-contact">
+        <div class="b-contact-grid">
+          <div>
+            <div class="b-sec-eye">✦ Contact Us</div>
+            <div class="b-sec-title">Let's <em>talk</em> today</div>
+            <p class="b-sec-body">We'd love to hear from you. Reach out and we'll get back within 24 hours.</p>
+            <div class="b-contact-info">${contactInfo}</div>
+          </div>
+          <div class="b-form-card">
+            <div class="b-form-title">Send Us a Message</div>
+            <div class="b-form-sub">We'll respond within 24 hours.</div>
+            <input class="b-input" id="cf-name" placeholder="Your Full Name">
+            <input class="b-input" id="cf-contact" placeholder="Phone Number or Email">
+            <textarea class="b-input" id="cf-message" rows="4" placeholder="How can we help you?" style="resize:vertical;"></textarea>
+            <button class="b-submit" onclick="sendContactMessage()">Send Message →</button>
+            <div id="cf-status" class="cf-status-box"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(135deg,#0a1628,#1a0a00);border-top:2px solid rgba(201,162,39,.3);padding:36px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+        <div><h3 style="font-family:'Syne',sans-serif;font-size:20px;color:#f0d060;margin-bottom:5px;">✦ Upgrade to Premium</h3><p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.5;">Real photos · Cinematic hero · Gallery · Animations · Luxury design</p></div>
+        <button onclick="previewPremium()" style="padding:13px 26px;background:linear-gradient(135deg,#c9a227,#fb923c);color:#0d0800;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;">See Premium Preview →</button>
+      </div>
+
+      <footer class="b-footer">
+        <div class="b-footer-logo">${e(s.name)}</div>
+        <div class="b-footer-links">
+          <a href="#b-about">About</a><a href="#b-services">Services</a><a href="#b-contact">Contact</a>
+        </div>
+        <div class="b-footer-copy">© ${new Date().getFullYear()} ${e(s.name)}. All rights reserved.</div>
+      </footer>
     </div>`;
 
   document.title = s.name + ' — Preview';
+  console.log('[AV] Basic render complete ✅');
 }
 
-function scrollSec(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
-}
+// ══════════════════════════════════════════════
+// RENDER PREMIUM — skeleton first, images async
+// ══════════════════════════════════════════════
+async function renderPremium(s) {
+  console.log('[AV] Rendering Premium website...');
 
-function sendMessage() {
-  const name    = document.getElementById('cf-name').value.trim();
-  const contact = document.getElementById('cf-contact').value.trim();
-  const message = document.getElementById('cf-message').value.trim();
-  const status  = document.getElementById('cf-status');
-  if (!name||!contact||!message) {
-    status.style.display='block'; status.style.background='#fef2f2'; status.style.color='#dc2626'; status.style.border='1px solid #fecaca';
-    status.textContent='⚠️ Please fill in all fields.'; return;
+  // Apply premium CSS vars
+  const t = PREMIUM_THEMES[s.website_theme] || PREMIUM_THEMES[s.design] || PREMIUM_THEMES['dark-minimal'];
+  const R = document.documentElement;
+  R.style.setProperty('--pa',          t.pa);
+  R.style.setProperty('--pa-text',     t.paText);
+  R.style.setProperty('--pa-text-dark',t.paTextDark);
+  R.style.setProperty('--pa-glow',     t.paGlow);
+  R.style.setProperty('--ps-bg',       t.psBg);
+  R.style.setProperty('--pb-bg',       t.pbBg);
+  R.style.setProperty('--ps-hover',    t.psHover);
+  R.style.setProperty('--ps-border',   t.psBorder);
+  R.style.setProperty('--ps-text',     t.psText);
+  R.style.setProperty('--ps-text2',    t.psText2);
+  R.style.setProperty('--pf-bg',       t.pfBg);
+  document.body.style.background = t.psBg;
+
+  const icon    = TYPE_ICONS[s.type] || '🏢';
+  const emojis  = SVC_EMOJIS[s.type] || SVC_EMOJIS['Other'];
+  const svcs    = s.services ? s.services.split(/[,\n]/).map(x=>x.trim()).filter(Boolean) : (DEFAULT_SVC[s.type]||DEFAULT_SVC['Other']);
+  const fullDesc = s.services || 'Dedicated to delivering unparalleled quality and craftsmanship with meticulous attention to every detail.';
+  const shortDesc = fullDesc.substring(0, 200);
+  const heroDesc  = fullDesc.substring(0, 140);
+
+  // Ticker items
+  const tickItems = [s.name, s.type, 'Premium Quality', 'Finest Craftsmanship', `Est. ${new Date().getFullYear()}`, 'Excellence Always'];
+  const tickHtml  = [...tickItems,...tickItems].map(item=>`<span class="p-ticker-item">${item}</span><span class="p-ticker-item p-ticker-sep">✦</span>`).join('');
+
+  // Services HTML
+  const svcHtml = svcs.slice(0,6).map((sv,i)=>`
+    <div class="p-svc-card reveal" style="transition-delay:${i*.07}s">
+      <div class="p-svc-num">0${i+1}</div>
+      <span class="p-svc-emoji">${emojis[i]||emojis[0]}</span>
+      <div class="p-svc-title">${sv}</div>
+      <div class="p-svc-desc">Experience the finest ${sv.toLowerCase()} — curated with precision and uncompromising standards.</div>
+      <div class="p-svc-arrow">→</div>
+    </div>`).join('');
+
+  // Gallery labels
+  const galLabels = ['Our World','The Details','Our Craft','Premium Quality','The Experience'];
+
+  // Testimonials
+  const tests = [
+    { q:`"${s.name} delivered an extraordinary experience — quality and care beyond all expectations."`, name:'Priya Sharma', role:'Loyal Customer', av:'P' },
+    { q:`"Nothing compares to the sophistication of ${s.name}. Absolutely remarkable in every way."`,   name:'Rajesh Mehta',  role:'Regular Client',   av:'R' },
+    { q:`"The attention to detail is extraordinary. Every visit has been an absolute delight."`,          name:'Ananya Patel',  role:'Happy Customer',   av:'A' }
+  ];
+  const testHtml = tests.map((t2,i)=>`
+    <div class="p-test-card reveal" style="transition-delay:${i*.1}s">
+      <div class="p-test-stars">★★★★★</div>
+      <div class="p-test-text">${t2.q}</div>
+      <div class="p-test-author">
+        <div class="p-test-av">${t2.av}</div>
+        <div><div class="p-test-name">${t2.name}</div><div class="p-test-role">${t2.role}</div></div>
+      </div>
+    </div>`).join('');
+
+  // Contact info
+  const contInfo = [
+    s.phone   ? `<div class="p-contact-item reveal"><div class="p-contact-icon">📞</div><div><div class="p-contact-lbl">Phone</div><div class="p-contact-val">${e(s.phone)}</div></div></div>` : '',
+    s.email   ? `<div class="p-contact-item reveal" style="transition-delay:.1s"><div class="p-contact-icon">✉️</div><div><div class="p-contact-lbl">Email</div><div class="p-contact-val">${e(s.email)}</div></div></div>` : '',
+    s.address ? `<div class="p-contact-item reveal" style="transition-delay:.2s"><div class="p-contact-icon">📍</div><div><div class="p-contact-lbl">Address</div><div class="p-contact-val">${e(s.address)}</div></div></div>` : '',
+    (!s.phone&&!s.email&&!s.address) ? `<div class="p-contact-item"><div class="p-contact-icon">📍</div><div><div class="p-contact-lbl">Location</div><div class="p-contact-val">India</div></div></div>` : ''
+  ].join('');
+
+  // ── STEP 1: Inject skeleton HTML into DOM immediately ──
+  document.getElementById('site').innerHTML = `
+    <div class="p-site">
+      <!-- NAV -->
+      <nav class="p-nav" id="pNav">
+        <div class="p-nav-logo">${e(s.name)}</div>
+        <ul class="p-nav-links">
+          <li><a href="#p-about">About</a></li>
+          <li><a href="#p-services">Services</a></li>
+          <li><a href="#p-gallery">Gallery</a></li>
+          <li><a href="#p-contact" class="p-nav-cta">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- HERO -->
+      <div class="p-hero">
+        <div class="p-hero-bg loading img-skeleton" id="heroBg"></div>
+        <div class="p-hero-overlay"></div>
+        <div class="p-hero-content">
+          <div class="p-hero-badge"><span class="p-hero-badge-dot"></span>${e(s.type)} &nbsp;·&nbsp; Premium</div>
+          <h1><em>${e(s.name)}</em></h1>
+          <p class="p-hero-sub">${e(heroDesc)}</p>
+          <div class="p-hero-btns">
+            <button class="p-btn-primary" onclick="sc('p-services')">Explore</button>
+            <button class="p-btn-ghost" onclick="sc('p-about')">Our Story</button>
+          </div>
+        </div>
+        <div class="p-scroll-hint"><div class="p-scroll-line"></div>Scroll</div>
+      </div>
+
+      <!-- TICKER -->
+      <div class="p-ticker"><div class="p-ticker-track">${tickHtml}${tickHtml}</div></div>
+
+      <!-- STATS -->
+      <div class="p-stats">
+        <div class="p-stat"><div class="p-stat-num" data-target="500">0+</div><div class="p-stat-lbl">Happy Clients</div></div>
+        <div class="p-stat"><div class="p-stat-num" data-target="10">0+</div><div class="p-stat-lbl">Years Excellence</div></div>
+        <div class="p-stat"><div class="p-stat-num" data-target="100">0%</div><div class="p-stat-lbl">Satisfaction</div></div>
+        <div class="p-stat"><div class="p-stat-num">5★</div><div class="p-stat-lbl">Average Rating</div></div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="p-about" id="p-about">
+        <div class="p-about-img-wrap reveal-left">
+          <div class="p-about-img loading img-skeleton" id="aboutImg"></div>
+          <div class="p-about-img-overlay"></div>
+          <div class="p-about-float"><div class="p-about-float-num">500+</div><div class="p-about-float-lbl">Happy Clients</div></div>
+        </div>
+        <div class="p-about-content reveal-right">
+          <div class="p-about-ornament">01</div>
+          <div class="p-about-tag">Our Story</div>
+          <div class="p-about-title">The art &amp; craft behind <em>${e(s.name)}</em></div>
+          <p class="p-about-body">${e(shortDesc)}</p>
+          <ul class="p-about-checks">
+            <li><span class="p-check-box">✓</span>Uncompromising quality in every detail</li>
+            <li><span class="p-check-box">✓</span>Personalised service for each client</li>
+            <li><span class="p-check-box">✓</span>Trusted by hundreds of loyal customers</li>
+            <li><span class="p-check-box">✓</span>Years of expertise and dedication</li>
+          </ul>
+          <button class="p-about-cta" onclick="sc('p-contact')">Get In Touch →</button>
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="p-services" id="p-services">
+        <div class="p-sec-tag reveal">Our Offerings</div>
+        <div class="p-sec-title reveal">Curated <em>services</em><br>crafted for you</div>
+        <div class="p-svc-grid">${svcHtml}</div>
+      </div>
+
+      <!-- GALLERY -->
+      <div class="p-gallery" id="p-gallery">
+        <div class="p-sec-tag reveal">Visual Story</div>
+        <div class="p-sec-title reveal">A glimpse into<br>our <em>world</em></div>
+        <div class="p-gallery-grid">
+          ${[0,1,2,3,4].map(i=>`
+            <div class="p-gitem reveal-scale" id="gItem${i}" style="transition-delay:${i*.08}s">
+              <div class="p-gitem-img loading img-skeleton" id="gImg${i}"></div>
+              <div class="p-gitem-ph">${emojis[i%emojis.length]}</div>
+              <div class="p-gitem-overlay"></div>
+              <div class="p-gitem-label">${galLabels[i]}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- TESTIMONIALS -->
+      <div class="p-testimonials">
+        <div class="p-sec-tag reveal">Testimonials</div>
+        <div class="p-sec-title reveal">What our <em>clients</em> say</div>
+        <div class="p-test-grid">${testHtml}</div>
+      </div>
+
+      <!-- CTA -->
+      <div class="p-cta">
+        <div class="p-cta-inner">
+          <span class="p-cta-tag">✦ &nbsp; Ready to Begin? &nbsp; ✦</span>
+          <div class="p-cta-title">Experience the<br><em>${e(s.name)}</em> difference</div>
+          <p class="p-cta-sub">Join hundreds of satisfied customers who trust us for quality and excellence.</p>
+          <button class="p-cta-btn" onclick="sc('p-contact')">Get In Touch &nbsp; →</button>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="p-contact" id="p-contact">
+        <div>
+          <div class="p-sec-tag">Contact Us</div>
+          <div class="p-sec-title">Let's <em>connect</em></div>
+          <p style="font-size:13.5px;color:var(--ps-text2);line-height:1.8;font-family:'Outfit',sans-serif;font-weight:300;max-width:340px;margin-bottom:0;">We'd be delighted to hear from you.</p>
+          <div class="p-contact-list">${contInfo}</div>
+        </div>
+        <div class="p-contact-visual reveal-scale">
+          <div class="p-cv-icon">${icon}</div>
+          <div class="p-cv-name">${e(s.name)}</div>
+          <div class="p-cv-type">${e(s.type)}</div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="p-footer">
+        <div class="p-footer-top">
+          <div>
+            <div class="p-footer-brand">${e(s.name)}</div>
+            <div class="p-footer-tagline">Premium ${e(s.type)} dedicated to delivering extraordinary experiences with every interaction.</div>
+          </div>
+          <div>
+            <div class="p-footer-col-title">Navigate</div>
+            <ul class="p-footer-links">
+              <li><a href="#p-about">About</a></li><li><a href="#p-services">Services</a></li><li><a href="#p-gallery">Gallery</a></li><li><a href="#p-contact">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <div class="p-footer-col-title">Contact</div>
+            <ul class="p-footer-links">
+              ${s.phone?`<li><a href="#">📞 ${e(s.phone)}</a></li>`:''}
+              ${s.email?`<li><a href="#">✉️ ${e(s.email)}</a></li>`:''}
+              ${s.address?`<li><a href="#">📍 ${e(s.address)}</a></li>`:''}
+            </ul>
+          </div>
+        </div>
+        <div class="p-footer-bottom">
+          <div class="p-footer-copy">© ${new Date().getFullYear()} ${e(s.name)}. All Rights Reserved.</div>
+          <div class="p-footer-copy">Built with <strong style="color:var(--pa)">AutoVision</strong> ✨</div>
+        </div>
+      </footer>
+    </div>`;
+
+  document.title = s.name + ' — Premium Preview';
+  console.log('[AV] Premium skeleton rendered ✅');
+
+  // ── STEP 2: Init scroll effects ──
+  initPremiumFx();
+
+  // ── STEP 3: Fetch images AFTER DOM is ready ──
+  console.log('[AV] Fetching images...');
+  let imgs;
+  try {
+    imgs = await resolveImages(s);
+  } catch (err) {
+    console.error('[AV] resolveImages error:', err.message);
+    imgs = { hero: null, about: null, gallery: [null,null,null,null,null] };
   }
-  const btn = document.querySelector('.cf-submit');
-  btn.textContent='Sending...'; btn.disabled=true;
+
+  // ── STEP 4: Inject images ──
+  console.log('[AV] Injecting images...');
+
+  function setBgImg(elId, url) {
+    const el = document.getElementById(elId);
+    if (!el) { console.warn('[AV] Element missing:', elId); return; }
+    el.classList.remove('loading','img-skeleton');
+    if (!url) { console.warn('[AV] No URL for:', elId); return; }
+    const tmp = new Image();
+    tmp.onload = () => {
+      el.style.cssText += `;background-image:url('${url}');background-size:cover;background-position:center;`;
+      el.classList.add('img-fade-in');
+      console.log('[AV] ✅ Image injected:', elId);
+    };
+    tmp.onerror = () => console.warn('[AV] ❌ Image load failed:', elId, url.substring(0,80));
+    tmp.src = url;
+  }
+
+  setBgImg('heroBg',  imgs.hero);
+  setBgImg('aboutImg', imgs.about);
+  (imgs.gallery || []).forEach((url, i) => {
+    setBgImg(`gImg${i}`, url);
+    // Hide placeholder emoji once image loads
+    if (url) {
+      const ph = document.querySelector(`#gItem${i} .p-gitem-ph`);
+      if (ph) { const tmp2 = new Image(); tmp2.onload = () => { ph.style.display='none'; }; tmp2.src = url; }
+    }
+  });
+
+  console.log('[AV] Images injected ✅');
+}
+
+// ══════════════════════════════════════════════
+// PREMIUM SCROLL FX
+// ══════════════════════════════════════════════
+function initPremiumFx() {
+  // Sticky nav
+  const nav = document.getElementById('pNav');
+  if (nav) {
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 70);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => obs.observe(el));
+
+  // Stats counter
+  const cObs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      document.querySelectorAll('.p-stat-num[data-target]').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        const suffix = el.textContent.replace(/\d/g,'');
+        let cur = 0;
+        const step = Math.ceil(target / 60);
+        const iv = setInterval(() => {
+          cur = Math.min(cur + step, target);
+          el.textContent = cur + suffix;
+          if (cur >= target) clearInterval(iv);
+        }, 20);
+      });
+      cObs.disconnect();
+    });
+  }, { threshold: 0.4 });
+  const statsEl = document.querySelector('.p-stats');
+  if (statsEl) cObs.observe(statsEl);
+}
+
+// ══════════════════════════════════════════════
+// CONTACT FORM
+// ══════════════════════════════════════════════
+function sendContactMessage() {
+  const name    = (document.getElementById('cf-name')?.value || '').trim();
+  const contact = (document.getElementById('cf-contact')?.value || '').trim();
+  const message = (document.getElementById('cf-message')?.value || '').trim();
+  const status  = document.getElementById('cf-status');
+
+  const show = (msg, ok) => {
+    status.style.cssText = `display:block;background:${ok?'#f0fdf4':'#fef2f2'};color:${ok?'#16a34a':'#dc2626'};border:1px solid ${ok?'#bbf7d0':'#fecaca'};padding:9px 13px;border-radius:8px;font-size:13px;margin-top:10px;`;
+    status.textContent = msg;
+  };
+
+  if (!name || !contact || !message) { show('⚠️ Please fill in all fields.', false); return; }
+  const btn = document.querySelector('.b-submit');
+  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+
   emailjs.send('service_6q18vqn','template_8bq71z3',{
-    to_email: window.businessEmail||'kasmaniadnan812@gmail.com',
-    business_name: window.businessName,
-    from_name: name, name: name,
-    from_contact: contact,
-    message: message,
-    reply_to: contact,
+    to_email: window._businessEmail || 'kasmaniadnan812@gmail.com',
+    business_name: window._businessName,
+    from_name: name, name, from_contact: contact,
+    message, reply_to: contact,
     time: new Date().toLocaleString('en-IN')
-  }).then(()=>{
-    status.style.display='block'; status.style.background='#f0fdf4'; status.style.color='#16a34a'; status.style.border='1px solid #bbf7d0';
-    status.textContent='✅ Message sent! The business will contact you soon.';
-    document.getElementById('cf-name').value=''; document.getElementById('cf-contact').value=''; document.getElementById('cf-message').value='';
-    btn.textContent='Send Message →'; btn.disabled=false;
-  }).catch(()=>{
-    status.style.display='block'; status.style.background='#f0fdf4'; status.style.color='#16a34a'; status.style.border='1px solid #bbf7d0';
-    status.textContent='✅ Message received! We will contact you within 24 hours.';
-    btn.textContent='Send Message →'; btn.disabled=false;
+  }).then(() => {
+    show('✅ Message sent! The business will contact you soon.', true);
+    ['cf-name','cf-contact','cf-message'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  }).catch(() => {
+    show('✅ Message received! We will contact you within 24 hours.', true);
+  }).finally(() => {
+    if (btn) { btn.textContent = 'Send Message →'; btn.disabled = false; }
   });
 }
 
-function openPayment() { document.getElementById('payModal').style.display='flex'; }
+// ══════════════════════════════════════════════
+// PAYMENT
+// ══════════════════════════════════════════════
+function openPayModal()  { document.getElementById('payModal').classList.add('open'); }
+function closePayModal() { document.getElementById('payModal').classList.remove('open'); }
+
+document.getElementById('payModal').addEventListener('click', function(ev) {
+  if (ev.target === this) closePayModal();
+});
 
 async function processPayment() {
   const user = JSON.parse(localStorage.getItem('av_user') || '{}');
-  const s = window.currentSite;
+  const s    = window._currentSite;
+  const isPrem = window._tier === 'premium';
+
   new Razorpay({
-    key: 'rzp_live_SaJ684rRC2TUwj',
-    amount: 29900, currency: 'INR',
-    name: 'AutoVision', description: 'Website Activation — ₹299',
+    key: RZP_KEY,
+    amount: window._activationAmount || 29900,
+    currency: 'INR',
+    name: 'AutoVision',
+    description: `Website Activation — ${isPrem ? '₹499' : '₹299'}`,
     handler: async function(res) {
-      document.getElementById('payModal').style.display='none';
-      if (s && s.id) {
-        await db.from('av_websites').update({status:'active'}).eq('id', s.id);
-        await db.from('av_payments').insert([{ user_email: s.user_email, website_id: s.id, amount:299, payment_id: res.razorpay_payment_id, type:'activation', status:'paid' }]);
+      closePayModal();
+      if (s && s.id && !s._isLocal) {
+        await db.from('av_websites').update({ status: 'active' }).eq('id', s.id);
+        await db.from('av_payments').insert([{
+          user_email: s.user_email, website_id: s.id,
+          amount: isPrem ? 499 : 299,
+          payment_id: res.razorpay_payment_id,
+          type: 'activation', status: 'paid'
+        }]);
       }
       alert('🎉 Payment Successful!\nYour website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
       window.location.href = 'dashboard.html';
     },
     prefill: { email: user.email || '' },
-    theme: { color: '#1a56ff' }
+    theme:   { color: isPrem ? '#c9a227' : '#1a56ff' }
   }).open();
 }
 
-// Load on page start
+// ══════════════════════════════════════════════
+// UTILITIES
+// ══════════════════════════════════════════════
+function e(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(str));
+  return d.innerHTML;
+}
+
+function sc(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function previewPremium() {
+  if (window._currentSite) {
+    window._currentSite.website_tier = 'premium';
+    window._tier = 'premium';
+    renderSite(window._currentSite);
+  }
+}
+
+// ══════════════════════════════════════════════
+// START
+// ══════════════════════════════════════════════
 loadSite();
 </script>
 </body>
