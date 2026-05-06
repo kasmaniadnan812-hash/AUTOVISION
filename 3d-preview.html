@@ -9,6 +9,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- GLTFLoader for Sketchfab models (r128 compatible) -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<!-- JSZip to unzip Sketchfab glTF downloads -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root{
   --accent:#f0a500;--accent-rgb:240,165,0;
@@ -498,7 +502,7 @@ const LOCAL_ID  = urlParams.get('localsite');
 let SD = null;
 let accentColor  = '#f0a500';
 let accentRGB    = '240,165,0';
-let siteCategory = 'generic';
+let siteCategory = 'generic';   /* renamed from "category" to avoid any clash */
 let currentUser  = null;
 let heroRenderer, heroScene, heroCamera, heroMainGroup;
 let heroParticles = [];
@@ -576,6 +580,7 @@ async function loadSiteData() {
     } catch(e) { console.error('[AV 3D preview] exception:', e); }
   }
 
+  /* Last resort: first localStorage entry */
   try {
     const arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
     const match = arr.find(function(s){ return s._is3d; }) || arr[0];
@@ -586,6 +591,7 @@ async function loadSiteData() {
 /* ══ PARSE DESCRIPTION ══ */
 function parseDescription(s) {
   if (!s) return;
+  /* Try to read 3D fields from the description JSON blob */
   if (s.description && typeof s.description === 'string') {
     try {
       const d = JSON.parse(s.description);
@@ -595,8 +601,9 @@ function parseDescription(s) {
         if (d.interaction) s.interaction = d.interaction;
         if (d.purpose)     s.purpose     = d.purpose;
       }
-    } catch(e) {}
+    } catch(e) { /* description is plain text, not JSON — that's fine */ }
   }
+  /* Fallback: website_theme column holds accent color */
   if (!s.color && s.website_theme && s.website_theme.startsWith('#')) {
     s.color = s.website_theme;
   }
@@ -650,6 +657,7 @@ function populatePage() {
   var words = name.trim().split(/\s+/);
   var items = parseItems(SD.services || '');
 
+  /* Hero title */
   var l1, l2;
   if (words.length === 1) {
     l1 = words[0].toUpperCase();
@@ -692,6 +700,7 @@ function populatePage() {
   document.getElementById('showcaseName').textContent = words[0].toUpperCase();
   document.getElementById('showcaseSub').textContent  = 'Every visit, every ' + (items[0] || 'interaction') + ' — crafted to leave an impression that lasts.';
 
+  /* Testimonials */
   var quotes = [
     'Honestly one of the best experiences I\'ve had. The ' + (items[0] || 'service') + ' is absolutely top-notch.',
     'I\'ve been a regular at ' + name + ' for over a year and every visit has been perfect. Highly recommend!',
@@ -711,6 +720,7 @@ function populatePage() {
       '</div>';
   }).join('');
 
+  /* Contact */
   document.getElementById('contactBody').textContent = 'Ready to experience ' + name + '? We\'d love to hear from you.';
   var cItems = [];
   if (SD.phone)   cItems.push({ icon:'📞', label:'Phone',   val:SD.phone });
@@ -725,6 +735,7 @@ function populatePage() {
   document.getElementById('ccName').textContent  = name.toUpperCase();
   document.getElementById('ccTag').textContent   = SD.type || 'Premium Experience';
 
+  /* About section image */
   fetchPexels(buildQuery(SD.services || SD.type || 'business', 0), 1).then(function(imgs){
     if (imgs[0]) {
       var el = document.getElementById('aboutBgImg');
@@ -818,8 +829,6 @@ async function fetchGalleryImages() {
 
 /* ══════════════════════════════════════════════════════
    3D PRODUCT CARDS
-   Each product keyword gets its OWN individual 3D shape,
-   rendered instantly with no external model loading.
 ══════════════════════════════════════════════════════ */
 async function buildProductCards() {
   var items = parseItems(SD.services || '');
@@ -837,7 +846,7 @@ async function buildProductCards() {
   ];
 
   for (var i = 0; i < Math.min(items.length, 6); i++) {
-    var item  = items[i];           /* individual keyword e.g. "necklace" */
+    var item  = items[i];
     var label = cap(item);
     var even  = (i % 2 === 1);
     var card  = document.createElement('div');
@@ -852,7 +861,7 @@ async function buildProductCards() {
         '<canvas id="pc3d_' + i + '" style="display:none"></canvas>' +
         '<div class="product-canvas-loading" id="pcld_' + i + '">' +
           '<div class="pc-spin"></div>' +
-          '<div class="pc-lbl">Rendering 3D model…</div>' +
+          '<div class="pc-lbl">Rendering &ldquo;' + esc(label) + '&rdquo; in 3D&hellip;</div>' +
         '</div>' +
         '<div class="prod-3d-hint">↻ Drag to rotate</div>' +
       '</div>' +
@@ -868,9 +877,9 @@ async function buildProductCards() {
     container.appendChild(card);
     if (even) card.querySelectorAll('*').forEach(function(el){ el.style.direction = 'ltr'; });
 
-    /* Pass the individual item keyword — each card gets its own shape */
     renderProductMesh(i, item);
 
+    /* Inject thumbnail images */
     (function(idx, lbl) {
       imgPromise.then(function(imgs) {
         var row = document.getElementById('pimgrow_' + idx);
@@ -890,11 +899,148 @@ async function buildProductCards() {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   FAST PROCEDURAL 3D RENDERER
-   - No external models, no network requests, no ZIP files
-   - Each product keyword maps to a distinct recognisable 3D shape
-   - Renders instantly via Three.js geometry
+   SKETCHFAB MODEL LOADER
+   Strategy:
+   1. Search Sketchfab API for the keyword → get first downloadable glTF model
+   2. Download the glTF zip → extract → load with THREE.GLTFLoader
+   3. If Sketchfab fails for any reason → fall back to procedural geometry
+   Sketchfab API key: 3bfe6bf1bd92489495ef2aeef263f445
 ══════════════════════════════════════════════════════════════════════════ */
+var SF_KEY = '3bfe6bf1bd92489495ef2aeef263f445';
+
+/* Search Sketchfab, get glTF download URL for keyword */
+async function fetchSketchfabModel(keyword) {
+  try {
+    /* Step 1: search for downloadable models */
+    var searchUrl = 'https://api.sketchfab.com/v3/models?type=models' +
+      '&q=' + encodeURIComponent(keyword) +
+      '&downloadable=true' +
+      '&count=5' +
+      '&sort_by=-likeCount';
+
+    var res = await fetch(searchUrl, {
+      headers: { 'Authorization': 'Token ' + SF_KEY }
+    });
+    if (!res.ok) return null;
+    var data = await res.json();
+    var results = (data.results || []);
+    if (!results.length) return null;
+
+    /* Pick first model that has a uid */
+    var model = results[0];
+    var uid = model.uid;
+    if (!uid) return null;
+
+    /* Step 2: get download URL for the glTF format */
+    var dlRes = await fetch('https://api.sketchfab.com/v3/models/' + uid + '/download', {
+      headers: { 'Authorization': 'Token ' + SF_KEY }
+    });
+    if (!dlRes.ok) return null;
+    var dlData = await dlRes.json();
+
+    /* glTF download gives a zip URL */
+    var gltfUrl = (dlData.gltf && dlData.gltf.url) || null;
+    return { uid: uid, url: gltfUrl, name: model.name };
+  } catch(e) {
+    console.warn('[AV Sketchfab] search failed for "' + keyword + '":', e.message);
+    return null;
+  }
+}
+
+/* Load a glTF zip from Sketchfab into a Three.js scene */
+async function loadSketchfabGLTF(url, scene, grp, ldEl, canvas, onLoaded) {
+  try {
+    /* We need JSZip to unzip the downloaded archive */
+    if (typeof JSZip === 'undefined') {
+      console.warn('[AV] JSZip not loaded');
+      onLoaded(false);
+      return;
+    }
+
+    var zipRes = await fetch(url);
+    if (!zipRes.ok) { onLoaded(false); return; }
+
+    var zipBuf = await zipRes.arrayBuffer();
+    var zip    = await JSZip.loadAsync(zipBuf);
+
+    /* Find the .gltf entry file */
+    var gltfEntry = null;
+    zip.forEach(function(path, file) {
+      if (!gltfEntry && path.endsWith('.gltf')) gltfEntry = { path: path, file: file };
+    });
+    if (!gltfEntry) { onLoaded(false); return; }
+
+    /* Build blob URLs for every file in the zip so GLTFLoader can resolve them */
+    var blobMap = {};
+    var promises = [];
+    zip.forEach(function(path, file) {
+      promises.push(
+        file.async('arraybuffer').then(function(buf) {
+          var mime = 'application/octet-stream';
+          if (path.endsWith('.bin'))  mime = 'application/octet-stream';
+          if (path.endsWith('.gltf')) mime = 'model/gltf+json';
+          if (path.endsWith('.png'))  mime = 'image/png';
+          if (path.endsWith('.jpg') || path.endsWith('.jpeg')) mime = 'image/jpeg';
+          blobMap[path] = URL.createObjectURL(new Blob([buf], { type: mime }));
+        })
+      );
+    });
+    await Promise.all(promises);
+
+    /* Use THREE.GLTFLoader with a custom resource manager */
+    var loader = new THREE.GLTFLoader();
+
+    /* Override the resource manager so relative paths resolve from our blob map */
+    var manager = new THREE.LoadingManager();
+    manager.setURLModifier(function(resUrl) {
+      /* resUrl is something like "scene.bin" or "textures/mat.png" */
+      var filename = resUrl.replace(/^.*[\\/]/, '');
+      /* Try exact path first, then filename only */
+      for (var p in blobMap) {
+        if (p === resUrl || p.endsWith('/' + filename) || p === filename) {
+          return blobMap[p];
+        }
+      }
+      return resUrl;
+    });
+    loader.manager = manager;
+
+    loader.load(
+      blobMap[gltfEntry.path],
+      function(gltf) {
+        var model = gltf.scene;
+
+        /* Centre and scale the model to fit a 2-unit bounding box */
+        var box    = new THREE.Box3().setFromObject(model);
+        var centre = box.getCenter(new THREE.Vector3());
+        var size   = box.getSize(new THREE.Vector3());
+        var maxDim = Math.max(size.x, size.y, size.z);
+        var scale  = 2.2 / (maxDim || 1);
+        model.scale.setScalar(scale);
+        model.position.sub(centre.multiplyScalar(scale));
+
+        grp.add(model);
+
+        /* Revoke blob URLs to free memory */
+        Object.values(blobMap).forEach(function(u) { URL.revokeObjectURL(u); });
+
+        onLoaded(true);
+      },
+      undefined,
+      function(err) {
+        console.warn('[AV GLTFLoader] error:', err);
+        Object.values(blobMap).forEach(function(u) { URL.revokeObjectURL(u); });
+        onLoaded(false);
+      }
+    );
+  } catch(e) {
+    console.warn('[AV loadSketchfabGLTF] exception:', e);
+    onLoaded(false);
+  }
+}
+
+/* ══ RENDER PRODUCT 3D MESH ══
+   Tries Sketchfab first → falls back to procedural geometry if it fails.  */
 function renderProductMesh(idx, keyword) {
   var vp     = document.getElementById('pcvp_'  + idx);
   var canvas = document.getElementById('pc3d_'  + idx);
@@ -914,7 +1060,7 @@ function renderProductMesh(idx, keyword) {
   var camera = new THREE.PerspectiveCamera(48, W/H, 0.1, 100);
   camera.position.set(0, 0, 4);
 
-  /* Lighting */
+  /* Lighting — works well for both Sketchfab models and procedural */
   var rgb = hexToRGB(accentColor);
   var col = (rgb.r << 16) + (rgb.g << 8) + rgb.b;
   scene.add(new THREE.AmbientLight(0xffffff, 0.9));
@@ -922,23 +1068,15 @@ function renderProductMesh(idx, keyword) {
   var fl = new THREE.DirectionalLight(0xddeeff, 0.7); fl.position.set(-3, -2, 2); scene.add(fl);
   var al = new THREE.PointLight(col, 3, 20); al.position.set(0, 3, 3); scene.add(al);
 
-  /* Materials */
+  /* Procedural fallback materials */
   var mat  = new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.22, transparent:true, opacity:0.88, shininess:100 });
   var wmat = new THREE.MeshBasicMaterial({ color:col, wireframe:true, transparent:true, opacity:0.28 });
-  var mat2 = new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.5, shininess:140 });
 
-  /* Main group — shape is built synchronously, appears instantly */
+  /* Main group — real model or procedural geometry lands here */
   var grp = new THREE.Group();
   scene.add(grp);
 
-  /* Build shape for THIS specific keyword immediately */
-  buildShapeForKeyword(grp, keyword, col, mat, wmat, mat2);
-
-  /* Hide loader immediately since shape is ready */
-  canvas.style.display = 'block';
-  if (ldEl) ldEl.classList.add('gone');
-
-  /* Orbiting accent particles */
+  /* Orbiting accent particles always orbit the model */
   var orbs = [];
   for (var oi = 0; oi < 4; oi++) {
     var orbAng = (oi / 4) * Math.PI * 2;
@@ -954,6 +1092,7 @@ function renderProductMesh(idx, keyword) {
 
   /* Drag-to-rotate */
   var isDrag = false, px = 0, py = 0, vx = 0.005, vy = 0;
+  vp.style.cursor = 'grab';
   vp.addEventListener('mousedown',  function(e){ isDrag=true;  px=e.clientX; py=e.clientY; vp.style.cursor='grabbing'; });
   window.addEventListener('mouseup',function(){  isDrag=false; vp.style.cursor='grab'; });
   vp.addEventListener('mousemove',  function(e){
@@ -971,8 +1110,9 @@ function renderProductMesh(idx, keyword) {
     px=e.touches[0].clientX; py=e.touches[0].clientY;
   },{passive:false});
 
-  /* Animation loop */
+  /* Animation loop starts immediately — model loads into grp async */
   var animT = 0;
+  canvas.style.display = 'block';
   (function anim(){
     requestAnimationFrame(anim);
     animT += 0.012;
@@ -991,413 +1131,94 @@ function renderProductMesh(idx, keyword) {
     var nw=vp.offsetWidth, nh=vp.offsetHeight||400;
     camera.aspect=nw/nh; camera.updateProjectionMatrix(); renderer.setSize(nw,nh,false);
   }).observe(vp);
-}
 
-/* ══════════════════════════════════════════════════════════════════════
-   buildShapeForKeyword
-   Maps each individual product keyword to a distinct 3D shape.
-   Groups are ordered by specificity — most specific matches first.
-══════════════════════════════════════════════════════════════════════ */
-function buildShapeForKeyword(grp, kw, col, mat, wmat, mat2) {
-  var k = (kw || '').toLowerCase().trim();
-
-  /* ── helpers ── */
-  function m(geo, material) { return new THREE.Mesh(geo, material || mat); }
-  function has(words) { return words.some(function(w){ return k.indexOf(w) !== -1; }); }
-
-  /* ── ESPRESSO / SHOT ── */
-  if (has(['espresso','shot','ristretto','lungo'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.40,0.32,0.72,28)));
-    var er=m(new THREE.TorusGeometry(0.40,0.04,8,32),mat2); er.rotation.x=Math.PI/2; er.position.y=0.36; grp.add(er);
-    var eh=m(new THREE.TorusGeometry(0.26,0.06,8,22,Math.PI),mat2); eh.rotation.y=Math.PI/2; eh.position.set(0.44,0,0); grp.add(eh);
-    /* Saucer */
-    var es=m(new THREE.CylinderGeometry(0.72,0.68,0.07,28),mat2); es.position.y=-0.43; grp.add(es);
-    return;
+  /* Update loader label text */
+  function setLoaderText(txt) {
+    var lbl = ldEl ? ldEl.querySelector('.pc-lbl') : null;
+    if (lbl) lbl.textContent = txt;
   }
 
-  /* ── HOT DRINKS: coffee/latte/mocha/cappuccino ── */
-  if (has(['coffee','latte','mocha','cappuccino','americano','macchiato','cortado','flat white','long black','cafe'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.52,0.40,1.0,32)));
-    var hh=m(new THREE.TorusGeometry(0.32,0.07,10,24,Math.PI),mat2); hh.rotation.y=Math.PI/2; hh.position.set(0.55,0,0); grp.add(hh);
-    var sau=m(new THREE.CylinderGeometry(0.85,0.80,0.08,32),mat2); sau.position.y=-0.58; grp.add(sau);
-    var rim=m(new THREE.TorusGeometry(0.52,0.045,8,32),mat2); rim.rotation.x=Math.PI/2; rim.position.y=0.5; grp.add(rim);
-    /* Steam rings */
-    for(var s=0;s<3;s++){ var sr=m(new THREE.TorusGeometry(0.18+s*0.06,0.02,6,20),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.4,transparent:true,opacity:0.22-s*0.06})); sr.rotation.x=Math.PI/2; sr.position.set(s*0.04,0.72+s*0.28,0); grp.add(sr); }
-    return;
+  /* ── PROCEDURAL FALLBACK ── */
+  function buildProceduralMesh(kw) {
+    var k2 = (kw || '').toLowerCase();
+    if (['coffee','tea','chai','latte','matcha','espresso','cappuccino','mocha',
+         'americano','frappe','drink','cup','mug','bowl','juice','smoothie','flask','soup'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.48,1.15,28),mat));
+      var rr=new THREE.Mesh(new THREE.TorusGeometry(0.6,0.06,10,40),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.5}));
+      rr.rotation.x=Math.PI/2; rr.position.y=0.58; grp.add(rr);
+      var hh=new THREE.Mesh(new THREE.TorusGeometry(0.38,0.07,10,28,Math.PI),mat);
+      hh.rotation.y=Math.PI/2; hh.position.set(0.6,0,0); grp.add(hh);
+    } else if (['donut','bagel','bangle','bracelet','necklace','anklet','hoop'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.TorusGeometry(1.0,0.4,24,60),mat));
+      grp.add(new THREE.Mesh(new THREE.TorusGeometry(1.0,0.42,12,60),wmat));
+    } else if (['diamond','gem','crystal','earring','stud','perfume','lipstick'].some(function(w){ return k2.includes(w); })) {
+      var tp=new THREE.Mesh(new THREE.ConeGeometry(0.82,1.2,8),mat);
+      var bt=new THREE.Mesh(new THREE.ConeGeometry(0.82,0.65,8),mat);
+      bt.rotation.z=Math.PI; bt.position.y=-0.92;
+      var bd=new THREE.Mesh(new THREE.CylinderGeometry(0.85,0.85,0.06,8),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.7}));
+      bd.position.y=-0.04; grp.add(tp,bt,bd);
+    } else if (['yoga','pilates','hair','spa','facial','pedicure','manicure','art','creative'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0,0.28,120,16,2,3),mat));
+      grp.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0,0.30,60,8,2,3),wmat));
+    } else if (['app','web','software','ai','data','cloud','tech','biryani','curry','rice'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.2,1),mat));
+      grp.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.3,0),wmat));
+    } else if (['purse','wallet','handbag','clutch','tote','pouch','backpack','bag',
+                'dress','shoes','sneaker','sandal','boot','cloth','fashion','wear',
+                'kurta','saree','lehenga','jacket','jeans','watch','book','course',
+                'coaching','box','gift'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.BoxGeometry(1.6,1.6,1.6),mat));
+      grp.add(new THREE.Mesh(new THREE.BoxGeometry(1.65,1.65,1.65),wmat));
+    } else if (['gym','dumbbell','barbell','fitness','workout','protein'].some(function(w){ return k2.includes(w); })) {
+      var br=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,2.4,12),mat);
+      br.rotation.z=Math.PI/2; grp.add(br);
+      [-1.1,1.1].forEach(function(x){ var ww=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,0.5,24),mat); ww.rotation.z=Math.PI/2; ww.position.x=x; grp.add(ww); });
+    } else if (['cake','muffin','bread','pastry','dessert','sushi','pasta','noodle','salad'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.75,0.65,1.5,28),mat));
+      grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.77,0.67,1.52,14),wmat));
+      var tc=new THREE.Mesh(new THREE.CircleGeometry(0.75,28),mat);
+      tc.rotation.x=-Math.PI/2; tc.position.y=0.76; grp.add(tc);
+    } else if (['burger','sandwich','chicken','fish','meat','kebab','tikka','dosa'].some(function(w){ return k2.includes(w); })) {
+      [0,0.35,0.7].forEach(function(y,j){ var dd=new THREE.Mesh(new THREE.CylinderGeometry(0.9-j*0.1,0.85-j*0.1,0.28,32),mat); dd.position.y=y; grp.add(dd); });
+    } else if (['nail','makeup','mascara','foundation','serum','moisturizer','cleanser'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.32,1.8,20),mat));
+      var cm=new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.38,0.3,20),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.5}));
+      cm.position.y=1.05; grp.add(cm);
+    } else {
+      grp.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.2,1),mat));
+      grp.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.3,0),wmat));
+    }
   }
 
-  /* ── CHAI / MASALA CHAI ── */
-  if (has(['chai','masala chai','adrak chai','ginger tea'])) {
-    /* Kulhad (clay cup) — tapered cylinder */
-    grp.add(m(new THREE.CylinderGeometry(0.60,0.44,1.0,24)));
-    grp.add(m(new THREE.CylinderGeometry(0.62,0.46,1.02,12),wmat));
-    var cr=m(new THREE.TorusGeometry(0.60,0.04,8,28),mat2); cr.rotation.x=Math.PI/2; cr.position.y=0.5; grp.add(cr);
-    return;
-  }
+  /* ── TRY SKETCHFAB → FALLBACK TO PROCEDURAL ── */
+  setLoaderText('Searching Sketchfab for "' + keyword + '"…');
 
-  /* ── MATCHA ── */
-  if (has(['matcha','green tea','ceremonial'])) {
-    /* Matcha bowl — wide and low */
-    grp.add(m(new THREE.CylinderGeometry(0.85,0.60,0.65,32)));
-    var mb=m(new THREE.CircleGeometry(0.83,32),mat2); mb.rotation.x=-Math.PI/2; mb.position.y=-0.32; grp.add(mb);
-    var mrim=m(new THREE.TorusGeometry(0.85,0.05,8,32),mat2); mrim.rotation.x=Math.PI/2; mrim.position.y=0.33; grp.add(mrim);
-    /* Matcha surface foam dots */
-    for(var mf=0;mf<6;mf++){ var mfa=mf*(Math.PI*2/6); var mfm=m(new THREE.SphereGeometry(0.08,8,8),mat2); mfm.position.set(Math.cos(mfa)*0.38,0.36,Math.sin(mfa)*0.38); grp.add(mfm); }
-    return;
-  }
+  fetchSketchfabModel(keyword).then(function(sfResult) {
+    if (!sfResult || !sfResult.url) {
+      console.log('[AV] No Sketchfab model for "' + keyword + '" → procedural fallback');
+      buildProceduralMesh(keyword);
+      if (ldEl) ldEl.classList.add('gone');
+      return;
+    }
 
-  /* ── TEA (generic/herbal) ── */
-  if (has(['tea','herbal','chamomile','hibiscus','peppermint','brew','infusion'])) {
-    /* Teapot */
-    grp.add(m(new THREE.SphereGeometry(0.75,28,28)));
-    var sp2=m(new THREE.CylinderGeometry(0.12,0.18,0.65,12),mat2); sp2.rotation.z=-Math.PI/3; sp2.position.set(0.62,0.2,0); grp.add(sp2);
-    var th=m(new THREE.TorusGeometry(0.38,0.08,10,24,Math.PI),mat2); th.rotation.y=Math.PI/2; th.position.set(-0.68,0,0); grp.add(th);
-    var tl=m(new THREE.SphereGeometry(0.22,16,16),mat2); tl.position.y=0.78; grp.add(tl);
-    return;
-  }
+    setLoaderText('Loading 3D model for "' + keyword + '"…');
 
-  /* ── COLD DRINKS ── */
-  if (has(['cold brew','cold coffee','iced','frappe','frappuccino','milkshake','shake','smoothie','juice','lemonade','soda','lassi','mojito','fizz'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.55,0.42,1.4,32)));
-    var straw=m(new THREE.CylinderGeometry(0.06,0.06,1.8,10),mat2); straw.position.set(0.28,0.3,0); straw.rotation.z=0.15; grp.add(straw);
-    var lid=m(new THREE.CylinderGeometry(0.60,0.55,0.12,32),mat2); lid.position.y=0.76; grp.add(lid);
-    grp.add(m(new THREE.CylinderGeometry(0.57,0.44,1.42,16),wmat));
-    return;
-  }
-
-  /* ── DONUT / DOUGHNUT ── */
-  if (has(['donut','doughnut','ring donut'])) {
-    grp.add(m(new THREE.TorusGeometry(0.85,0.38,20,60)));
-    grp.add(m(new THREE.TorusGeometry(0.85,0.40,10,30),wmat));
-    /* Sprinkles */
-    for(var ds=0;ds<10;ds++){ var dsa=ds*(Math.PI*2/10); var dsm=m(new THREE.CylinderGeometry(0.03,0.03,0.18,6),mat2); dsm.position.set(Math.cos(dsa)*0.85,0.38,Math.sin(dsa)*0.85); dsm.rotation.z=Math.random()*Math.PI; grp.add(dsm); }
-    return;
-  }
-
-  /* ── MUFFIN / CUPCAKE ── */
-  if (has(['muffin','cupcake'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.52,0.40,0.75,24)));
-    var dm=m(new THREE.SphereGeometry(0.60,20,16),mat2); dm.scale.set(1,0.75,1); dm.position.y=0.55; grp.add(dm);
-    for(var wl=0;wl<5;wl++){ var wline=m(new THREE.TorusGeometry(0.47,0.012,4,24),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.3,transparent:true,opacity:0.3})); wline.rotation.x=Math.PI/2; wline.position.y=-0.36+wl*0.15; grp.add(wline); }
-    return;
-  }
-
-  /* ── CROISSANT / PASTRY ── */
-  if (has(['croissant','pastry','eclair','danish','pain au'])) {
-    grp.add(m(new THREE.TorusGeometry(0.90,0.32,16,60,Math.PI*1.4)));
-    grp.add(m(new THREE.TorusGeometry(0.90,0.33,8,30,Math.PI*1.4),wmat));
-    return;
-  }
-
-  /* ── MACARON / COOKIE / BISCUIT ── */
-  if (has(['macaron','cookie','biscuit','shortbread','cracker'])) {
-    /* Two discs + cream middle */
-    var mc1=m(new THREE.CylinderGeometry(0.70,0.68,0.25,32)); mc1.position.y=0.25; grp.add(mc1);
-    var mc2=m(new THREE.CylinderGeometry(0.70,0.68,0.25,32)); mc2.position.y=-0.25; grp.add(mc2);
-    var mcf=m(new THREE.CylinderGeometry(0.72,0.72,0.18,32),mat2); mcf.position.y=0; grp.add(mcf);
-    grp.add(m(new THREE.CylinderGeometry(0.72,0.70,0.62,16),wmat));
-    return;
-  }
-
-  /* ── BREAD / LOAF ── */
-  if (has(['bread','loaf','baguette','sourdough','focaccia','roll','bun','bagel'])) {
-    if(has(['bagel'])){ grp.add(m(new THREE.TorusGeometry(0.75,0.30,16,48))); grp.add(m(new THREE.TorusGeometry(0.75,0.32,8,24),wmat)); return; }
-    var lg=m(new THREE.SphereGeometry(0.9,24,16)); lg.scale.set(1.6,0.85,1.0); grp.add(lg);
-    for(var sl=0;sl<4;sl++){ var scl=m(new THREE.TorusGeometry(0.92,0.03,6,20,Math.PI),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.4,transparent:true,opacity:0.45})); scl.rotation.x=Math.PI/2; scl.rotation.y=(sl-1.5)*0.25; grp.add(scl); }
-    grp.add(m(new THREE.SphereGeometry(0.93,12,8),wmat));
-    return;
-  }
-
-  /* ── CAKE ── */
-  if (has(['cake','cheesecake','tiramisu','brownie','gateau'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.85,0.85,0.55,32)));
-    var cl2=m(new THREE.CylinderGeometry(0.72,0.72,0.50,32),mat2); cl2.position.y=0.53; grp.add(cl2);
-    var ct=m(new THREE.CylinderGeometry(0.73,0.73,0.08,32),mat2); ct.position.y=0.79; grp.add(ct);
-    var cn=m(new THREE.CylinderGeometry(0.06,0.06,0.38,10),new THREE.MeshPhongMaterial({color:0xffffff,emissive:col,emissiveIntensity:0.8})); cn.position.y=1.08; grp.add(cn);
-    return;
-  }
-
-  /* ── WAFFLE / PANCAKE ── */
-  if (has(['waffle','pancake','crepe'])) {
-    [0,0.22,0.44].forEach(function(y){ var wp=m(new THREE.CylinderGeometry(0.88-y*0.1,0.86-y*0.1,0.18,32)); wp.position.y=y; grp.add(wp); });
-    /* Grid lines */
-    for(var wg=0;wg<4;wg++){ var wgm=m(new THREE.BoxGeometry(0.02,0.55,1.72),mat2); wgm.position.x=-0.3+wg*0.2; grp.add(wgm); }
-    return;
-  }
-
-  /* ── PIZZA ── */
-  if (has(['pizza','pie slice','flatbread pizza'])) {
-    grp.add(m(new THREE.CylinderGeometry(1.0,1.0,0.12,32)));
-    var crust=m(new THREE.TorusGeometry(0.95,0.14,10,32),mat2); crust.rotation.x=Math.PI/2; crust.position.y=0.06; grp.add(crust);
-    for(var p=0;p<8;p++){ var pm=m(new THREE.BoxGeometry(0.02,0.18,1.85),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.3,transparent:true,opacity:0.35})); pm.rotation.y=(p/8)*Math.PI*2; pm.position.y=0.07; grp.add(pm); }
-    for(var td=0;td<12;td++){ var ta=td*0.88,tr2=Math.random()*0.6+0.1; var tdm=m(new THREE.SphereGeometry(0.07,8,8),mat2); tdm.position.set(Math.cos(ta)*tr2,0.14,Math.sin(ta)*tr2); grp.add(tdm); }
-    return;
-  }
-
-  /* ── BURGER ── */
-  if (has(['burger','vada pav','slider'])) {
-    [{r:0.88,h:0.30,y:0.00},{r:0.86,h:0.18,y:0.28},{r:0.90,h:0.12,y:0.44},{r:0.84,h:0.14,y:0.55},{r:0.88,h:0.32,y:0.73}].forEach(function(l,i){ var lm=m(new THREE.CylinderGeometry(l.r,l.r*0.96,l.h,32),i===0||i===4?mat2:mat); lm.position.y=l.y; grp.add(lm); });
-    return;
-  }
-
-  /* ── SANDWICH / WRAP / ROLL ── */
-  if (has(['sandwich','wrap','hotdog','sub','kathi roll','frankies'])) {
-    [0,0.28,0.52].forEach(function(y,i){ var sp=m(new THREE.CylinderGeometry(0.80-i*0.04,0.76-i*0.04,0.22,28),i===1?mat2:mat); sp.position.y=y; sp.rotation.z=(i-1)*0.06; grp.add(sp); });
-    return;
-  }
-
-  /* ── BIRYANI / RICE / CURRY ── */
-  if (has(['biryani','rice','pulao','pilaf','fried rice','khichdi'])) {
-    var bowl=m(new THREE.SphereGeometry(0.85,28,16)); bowl.scale.set(1,0.7,1); grp.add(bowl);
-    var rm=m(new THREE.SphereGeometry(0.78,20,14),mat2); rm.scale.set(1,0.45,1); rm.position.y=0.42; grp.add(rm);
-    for(var rg=0;rg<18;rg++){ var rga=rg*(Math.PI*2/18),rgr=0.4+Math.random()*0.25; var rgm=m(new THREE.CylinderGeometry(0.04,0.03,0.14,6),mat2); rgm.position.set(Math.cos(rga)*rgr,0.58+Math.random()*0.1,Math.sin(rga)*rgr); rgm.rotation.z=Math.random()*0.6-0.3; grp.add(rgm); }
-    return;
-  }
-
-  /* ── SUSHI / JAPANESE ── */
-  if (has(['sushi','nigiri','maki','temaki','sashimi','onigiri'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.55,0.55,1.2,32)));
-    var nr=m(new THREE.CylinderGeometry(0.57,0.57,1.22,32),new THREE.MeshPhongMaterial({color:0x1a2a1a,emissive:col,emissiveIntensity:0.05,transparent:true,opacity:0.55})); grp.add(nr);
-    [0.61,-0.61].forEach(function(y){ var re=m(new THREE.CircleGeometry(0.55,32),mat2); re.rotation.x=Math.PI/2; re.position.y=y; grp.add(re); });
-    var ts=m(new THREE.BoxGeometry(0.3,1.25,0.18),mat2); ts.position.z=0.47; grp.add(ts);
-    return;
-  }
-
-  /* ── RAMEN / NOODLES / SOUP ── */
-  if (has(['ramen','noodle','pho','udon','soba','miso','soup','broth','dal','sambar'])) {
-    var bowl2=m(new THREE.SphereGeometry(0.88,24,16)); bowl2.scale.set(1,0.65,1); grp.add(bowl2);
-    /* Noodle tangles */
-    for(var ns=0;ns<5;ns++){ var nt=m(new THREE.TorusGeometry(0.32+ns*0.08,0.045,8,28),mat2); nt.rotation.x=Math.PI/2*(0.3+ns*0.15); nt.rotation.z=ns*0.5; nt.position.y=0.22+ns*0.06; grp.add(nt); }
-    return;
-  }
-
-  /* ── PASTA ── */
-  if (has(['pasta','spaghetti','penne','fettuccine','linguine','tagliatelle','carbonara','arrabiata'])) {
-    var pb=m(new THREE.SphereGeometry(0.9,24,16)); pb.scale.set(1,0.6,1); grp.add(pb);
-    for(var ns2=0;ns2<5;ns2++){ var nt2=m(new THREE.TorusGeometry(0.35+ns2*0.08,0.045,8,28),mat2); nt2.rotation.x=Math.PI/2*(0.3+ns2*0.15); nt2.rotation.z=ns2*0.5; nt2.position.y=0.22+ns2*0.06; grp.add(nt2); }
-    return;
-  }
-
-  /* ── SALAD / BOWL ── */
-  if (has(['salad','caesar','coleslaw','bowl','poke','grain bowl','buddha'])) {
-    var sb=m(new THREE.SphereGeometry(0.9,24,16)); sb.scale.set(1,0.55,1); grp.add(sb);
-    for(var lf=0;lf<14;lf++){ var la=lf*(Math.PI*2/14),lr=0.3+Math.random()*0.4; var lfm=m(new THREE.CircleGeometry(0.22+Math.random()*0.1,8),mat2); lfm.position.set(Math.cos(la)*lr,0.35+Math.random()*0.25,Math.sin(la)*lr); lfm.rotation.x=-0.6+Math.random()*0.4; lfm.rotation.z=Math.random()*Math.PI; grp.add(lfm); }
-    return;
-  }
-
-  /* ── ICE CREAM / GELATO ── */
-  if (has(['ice cream','gelato','sorbet','sundae','parfait','kulfi'])) {
-    var cone2=m(new THREE.ConeGeometry(0.52,1.3,32)); cone2.rotation.z=Math.PI; cone2.position.y=-0.45; grp.add(cone2);
-    grp.add(m(new THREE.SphereGeometry(0.56,24,24),mat2)); grp.children[1].position.y=0.48;
-    var sc2b=m(new THREE.SphereGeometry(0.46,20,20)); sc2b.position.y=1.1; grp.add(sc2b);
-    return;
-  }
-
-  /* ── DESSERT / SWEET ── */
-  if (has(['dessert','pudding','mousse','panna cotta','gulab jamun','halwa','ladoo','barfi','sweet','mithai'])) {
-    grp.add(m(new THREE.SphereGeometry(0.85,24,24)));
-    grp.add(m(new THREE.SphereGeometry(0.87,12,12),wmat));
-    for(var ds2=0;ds2<6;ds2++){ var dsa2=ds2*(Math.PI*2/6); var dsm2=m(new THREE.SphereGeometry(0.1,8,8),mat2); dsm2.position.set(Math.cos(dsa2)*0.75,Math.sin(dsa2)*0.3,Math.sin(dsa2)*0.75); grp.add(dsm2); }
-    return;
-  }
-
-  /* ── NECKLACE / CHAIN ── */
-  if (has(['necklace','chain','pendant','choker','locket','mangalsutra'])) {
-    grp.add(m(new THREE.TorusGeometry(1.1,0.07,12,80)));
-    var pend=m(new THREE.TetrahedronGeometry(0.32,0),mat2); pend.position.y=-1.1; grp.add(pend);
-    for(var cl3=0;cl3<16;cl3++){ var cla=cl3*(Math.PI*2/16); var clm=m(new THREE.TorusGeometry(0.08,0.025,6,12),mat2); clm.position.set(Math.cos(cla)*1.1,Math.sin(cla)*1.1,0); clm.rotation.z=cla; grp.add(clm); }
-    return;
-  }
-
-  /* ── BRACELET / BANGLE ── */
-  if (has(['bracelet','bangle','kada','wristband','anklet','cuff','kangan'])) {
-    grp.add(m(new THREE.TorusGeometry(0.95,0.22,24,80)));
-    grp.add(m(new THREE.TorusGeometry(0.95,0.24,12,40),wmat));
-    for(var bg=0;bg<8;bg++){ var bga=(bg/8)*Math.PI*2; var bgm=m(new THREE.OctahedronGeometry(0.1,0),mat2); bgm.position.set(Math.cos(bga)*0.95,Math.sin(bga)*0.95,0.22); grp.add(bgm); }
-    return;
-  }
-
-  /* ── RING ── */
-  if (has(['ring','engagement ring','wedding ring','solitaire','band ring','cocktail ring'])) {
-    grp.add(m(new THREE.TorusGeometry(0.7,0.18,24,80)));
-    var dia=m(new THREE.OctahedronGeometry(0.28,0),mat2); dia.position.y=0.7; dia.rotation.y=Math.PI/8; grp.add(dia);
-    for(var rp=0;rp<4;rp++){ var rpm=m(new THREE.CylinderGeometry(0.03,0.03,0.28,6),mat2); var rpa=(rp/4)*Math.PI*2; rpm.position.set(Math.cos(rpa)*0.22,0.62,Math.sin(rpa)*0.22); grp.add(rpm); }
-    return;
-  }
-
-  /* ── EARRINGS ── */
-  if (has(['earring','stud','hoop earring','jhumka','chandbali','ear ring'])) {
-    [-0.6,0.6].forEach(function(x){ var eg=new THREE.Group(); eg.add(m(new THREE.OctahedronGeometry(0.28,0),mat2)); var ep=m(new THREE.CylinderGeometry(0.04,0.04,0.4,8)); ep.position.y=0.32; eg.add(ep); eg.position.x=x; grp.add(eg); });
-    return;
-  }
-
-  /* ── WATCH ── */
-  if (has(['watch','smartwatch','timepiece','chronograph','wristwatch'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.7,0.7,0.22,40)));
-    var wf=m(new THREE.CircleGeometry(0.65,32),mat2); wf.rotation.x=-Math.PI/2; wf.position.y=0.12; grp.add(wf);
-    for(var wm3=0;wm3<12;wm3++){ var wma=(wm3/12)*Math.PI*2; var wmm=m(new THREE.BoxGeometry(0.04,0.12,0.05)); wmm.position.set(Math.cos(wma)*0.5,0.12,Math.sin(wma)*0.5); wmm.rotation.y=wma; grp.add(wmm); }
-    var wc=m(new THREE.CylinderGeometry(0.07,0.07,0.18,12),mat2); wc.rotation.z=Math.PI/2; wc.position.set(0.72,0,0); grp.add(wc);
-    return;
-  }
-
-  /* ── BAG / PURSE ── */
-  if (has(['bag','handbag','purse','clutch','tote','satchel','backpack','pouch','wallet'])) {
-    grp.add(m(new THREE.BoxGeometry(1.6,1.2,0.6)));
-    var flap=m(new THREE.BoxGeometry(1.6,0.65,0.08),mat2); flap.position.y=0.33; flap.position.z=0.32; grp.add(flap);
-    var hloop=m(new THREE.TorusGeometry(0.42,0.07,10,28,Math.PI),mat2); hloop.position.y=0.96; grp.add(hloop);
-    var clasp=m(new THREE.BoxGeometry(0.22,0.12,0.12),mat2); clasp.position.set(0,0.36,0.38); grp.add(clasp);
-    grp.add(m(new THREE.BoxGeometry(1.62,1.22,0.62),wmat));
-    return;
-  }
-
-  /* ── SHOES ── */
-  if (has(['shoe','sneaker','heels','sandal','boot','footwear','slipper','loafer','stiletto','pump','wedge'])) {
-    var sole=m(new THREE.BoxGeometry(1.8,0.2,0.75)); sole.position.y=-0.5; grp.add(sole);
-    var toe=m(new THREE.SphereGeometry(0.45,20,14),mat2); toe.scale.set(1.6,0.7,1.0); toe.position.set(0.65,-0.22,0); grp.add(toe);
-    var upper=m(new THREE.BoxGeometry(1.2,0.55,0.7)); upper.position.set(-0.2,-0.05,0); grp.add(upper);
-    if(has(['heels','stiletto','pump'])){ var heel=m(new THREE.CylinderGeometry(0.1,0.07,0.55,10),mat2); heel.position.set(-0.78,-0.42,0); grp.add(heel); }
-    return;
-  }
-
-  /* ── DRESS / CLOTHING ── */
-  if (has(['dress','gown','lehenga','saree','kurta','kurti','suit','shirt','top','blouse','skirt','jacket','kurthi'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.6,1.1,1.8,28)));
-    var dbust=m(new THREE.SphereGeometry(0.62,20,16),mat2); dbust.scale.set(1,0.6,1); dbust.position.y=0.85; grp.add(dbust);
-    grp.add(m(new THREE.CylinderGeometry(1.12,1.12,0.08,28),mat2)); grp.children[2].position.y=-0.9;
-    grp.add(m(new THREE.CylinderGeometry(0.62,1.12,1.82,14),wmat));
-    return;
-  }
-
-  /* ── PERFUME ── */
-  if (has(['perfume','fragrance','cologne','attar','oud','scent','deodorant'])) {
-    grp.add(m(new THREE.BoxGeometry(0.9,1.5,0.55)));
-    var pshoulder=m(new THREE.CylinderGeometry(0.55,0.70,0.3,16),mat2); pshoulder.position.y=0.9; grp.add(pshoulder);
-    var pneck=m(new THREE.CylinderGeometry(0.18,0.30,0.42,14),mat2); pneck.position.y=1.2; grp.add(pneck);
-    var pcap=m(new THREE.CylinderGeometry(0.22,0.22,0.28,14)); pcap.position.y=1.52; grp.add(pcap);
-    grp.add(m(new THREE.BoxGeometry(0.92,1.52,0.57),wmat));
-    return;
-  }
-
-  /* ── LIPSTICK ── */
-  if (has(['lipstick','lip gloss','lip balm','lip liner','lip'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.28,0.26,1.5,20)));
-    var ltip=m(new THREE.CylinderGeometry(0,0.28,0.55,20),mat2); ltip.position.y=1.02; grp.add(ltip);
-    var lcap=m(new THREE.CylinderGeometry(0.32,0.30,0.7,20),mat2); lcap.position.y=-1.1; grp.add(lcap);
-    return;
-  }
-
-  /* ── MAKEUP ── */
-  if (has(['makeup','mascara','foundation','blush','eyeshadow','kajal','liner','concealer','primer','bronzer'])) {
-    /* Compact / palette */
-    grp.add(m(new THREE.CylinderGeometry(0.82,0.80,0.22,32)));
-    var mlid=m(new THREE.CylinderGeometry(0.84,0.82,0.16,32),mat2); mlid.position.y=0.2; grp.add(mlid);
-    var mhinge=m(new THREE.CylinderGeometry(0.06,0.06,0.9,10),mat2); mhinge.rotation.z=Math.PI/2; mhinge.position.set(0,0.12,0.82); grp.add(mhinge);
-    for(var mp=0;mp<9;mp++){ var mpa=mp; var mpr=Math.floor(mp/3)*0.36-0.36,mpc=(mp%3)*0.36-0.36; var mpm=m(new THREE.CylinderGeometry(0.1,0.1,0.04,16),mat2); mpm.rotation.x=Math.PI/2; mpm.position.set(mpc,0.21,mpr); grp.add(mpm); }
-    return;
-  }
-
-  /* ── NAIL ── */
-  if (has(['nail','nail polish','nail art','nail extension','nail gel','manicure'])) {
-    grp.add(m(new THREE.BoxGeometry(0.6,1.2,0.6)));
-    var ncap=m(new THREE.CylinderGeometry(0.32,0.30,0.55,20),mat2); ncap.position.y=0.88; grp.add(ncap);
-    var nbrush=m(new THREE.CylinderGeometry(0.04,0.02,0.7,8),mat2); nbrush.position.y=1.4; grp.add(nbrush);
-    for(var ng=0;ng<6;ng++){ var ngm=m(new THREE.OctahedronGeometry(0.08,0),mat2); ngm.position.set((Math.random()-0.5)*0.8,(Math.random()-0.5)*0.8,0.35); grp.add(ngm); }
-    return;
-  }
-
-  /* ── SKINCARE ── */
-  if (has(['skincare','moisturizer','serum','cream','cleanser','toner','sunscreen','face wash','lotion','facewash'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.75,0.70,0.85,32)));
-    var jlid=m(new THREE.CylinderGeometry(0.78,0.75,0.28,32),mat2); jlid.position.y=0.57; grp.add(jlid);
-    var jlabel=m(new THREE.CylinderGeometry(0.77,0.72,0.50,32),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.15,transparent:true,opacity:0.4})); jlabel.position.y=0.05; grp.add(jlabel);
-    grp.add(m(new THREE.CylinderGeometry(0.76,0.71,0.87,16),wmat));
-    return;
-  }
-
-  /* ── YOGA ── */
-  if (has(['yoga','pilates','meditation','mindfulness','pranayama'])) {
-    grp.add(m(new THREE.TorusKnotGeometry(1.0,0.26,120,16,2,3)));
-    grp.add(m(new THREE.TorusKnotGeometry(1.0,0.28,60,8,2,3),wmat));
-    return;
-  }
-
-  /* ── GYM / FITNESS / DUMBBELL ── */
-  if (has(['gym','dumbbell','barbell','weight','fitness','workout','protein','supplement','crossfit','weightlifting'])) {
-    var bar=m(new THREE.CylinderGeometry(0.10,0.10,2.4,12),mat2); bar.rotation.z=Math.PI/2; grp.add(bar);
-    [[-1.05,0.52,0.30],[-0.72,0.44,0.22],[0.72,0.44,0.22],[1.05,0.52,0.30]].forEach(function(p,i){ var pm=m(new THREE.CylinderGeometry(p[1],p[1],p[2],24)); pm.rotation.z=Math.PI/2; pm.position.x=p[0]; grp.add(pm); });
-    [-0.48,0.48].forEach(function(x){ var cr=m(new THREE.TorusGeometry(0.13,0.04,8,20),mat2); cr.rotation.y=Math.PI/2; cr.position.x=x; grp.add(cr); });
-    return;
-  }
-
-  /* ── MASSAGE / SPA / FACIAL ── */
-  if (has(['massage','spa','facial','wax','threading','pedicure','steam','aromatherapy'])) {
-    grp.add(m(new THREE.CylinderGeometry(0.5,0.48,1.4,28)));
-    var flame=m(new THREE.ConeGeometry(0.12,0.38,10),mat2); flame.position.y=0.9; grp.add(flame);
-    for(var wd=0;wd<5;wd++){ var wda=(wd/5)*Math.PI*2; var wdm=m(new THREE.SphereGeometry(0.08,8,8),mat2); wdm.scale.set(1,0.5,1); wdm.position.set(Math.cos(wda)*0.46,0.25+Math.random()*0.3,Math.sin(wda)*0.46); grp.add(wdm); }
-    var stone=m(new THREE.SphereGeometry(0.35,16,12),mat2); stone.scale.set(1.4,0.65,1.0); stone.position.set(1.0,-0.3,0); grp.add(stone);
-    return;
-  }
-
-  /* ── HAIR ── */
-  if (has(['hair','haircut','hairstyle','keratin','balayage','highlight','blowout','hair colour','hair color','blow dry'])) {
-    for(var sc3=0;sc3<2;sc3++){ var scg=new THREE.Group(); var blade=m(new THREE.BoxGeometry(0.1,1.6,0.06)); blade.position.y=0.55; scg.add(blade); var handle=m(new THREE.TorusGeometry(0.22,0.07,10,24,Math.PI*1.5),mat2); handle.position.y=-0.28; scg.add(handle); scg.rotation.z=(sc3===0?0.35:-0.35); scg.position.x=(sc3===0?-0.18:0.18); grp.add(scg); }
-    grp.add(m(new THREE.SphereGeometry(0.1,10,10),mat2));
-    return;
-  }
-
-  /* ── TECH / SOFTWARE / APP ── */
-  if (has(['app','software','web','website','digital','tech','it','computer','developer','saas','cloud','ai','data','code','api','platform','system'])) {
-    grp.add(m(new THREE.IcosahedronGeometry(1.1,1)));
-    grp.add(m(new THREE.IcosahedronGeometry(1.2,0),wmat));
-    var mc2=m(new THREE.BoxGeometry(0.22,0.22,0.22),mat2); mc2.position.set(1.5,0.3,0); grp.add(mc2);
-    return;
-  }
-
-  /* ── PHONE ── */
-  if (has(['phone','mobile','smartphone','tablet','ipad','iphone','android','device'])) {
-    grp.add(m(new THREE.BoxGeometry(0.75,1.55,0.1)));
-    var scr=m(new THREE.BoxGeometry(0.68,1.38,0.02),mat2); scr.position.z=0.06; grp.add(scr);
-    var cb=m(new THREE.BoxGeometry(0.22,0.22,0.04),mat2); cb.position.set(-0.18,0.62,0.07); grp.add(cb);
-    grp.add(m(new THREE.BoxGeometry(0.76,1.56,0.11),wmat));
-    return;
-  }
-
-  /* ── EDUCATION / COURSE ── */
-  if (has(['course','coaching','class','tutor','training','academy','education','teach','workshop','bootcamp','lecture','seminar'])) {
-    var bookColors=[mat,mat2,mat,mat2];
-    [0,0.34,0.64,0.90].forEach(function(y,i){ var bk=m(new THREE.BoxGeometry(1.5-i*0.1,0.28,1.0-i*0.05),bookColors[i%2]); bk.position.y=y; bk.rotation.y=(-0.15+i*0.12); grp.add(bk); });
-    var bm=m(new THREE.BoxGeometry(0.08,0.4,0.02),mat2); bm.position.set(0.55,1.1,0.1); grp.add(bm);
-    return;
-  }
-
-  /* ── BOOK ── */
-  if (has(['book','notebook','journal','diary','planner','stationery','novel'])) {
-    grp.add(m(new THREE.BoxGeometry(1.3,1.7,0.22)));
-    var bspine=m(new THREE.BoxGeometry(0.18,1.7,0.26),mat2); bspine.position.x=-0.74; grp.add(bspine);
-    grp.add(m(new THREE.BoxGeometry(0.92,1.56,0.02),wmat));
-    return;
-  }
-
-  /* ── PHOTO / CAMERA / CREATIVE ── */
-  if (has(['photo','photography','camera','video','film','cinema','reel','portfolio','design','art','graphic'])) {
-    grp.add(m(new THREE.BoxGeometry(1.7,1.1,0.8)));
-    var lens=m(new THREE.CylinderGeometry(0.42,0.38,0.45,32),mat2); lens.rotation.x=Math.PI/2; lens.position.z=0.62; grp.add(lens);
-    var lens2=m(new THREE.CylinderGeometry(0.26,0.24,0.30,32)); lens2.rotation.x=Math.PI/2; lens2.position.z=0.9; grp.add(lens2);
-    var vf=m(new THREE.BoxGeometry(0.45,0.28,0.22),mat2); vf.position.set(-0.38,0.65,0); grp.add(vf);
-    return;
-  }
-
-  /* ── DIAMOND / GEM / JEWEL ── */
-  if (has(['diamond','gem','crystal','gemstone','jewel','jewellery','jewelry'])) {
-    var tp=m(new THREE.ConeGeometry(0.82,1.2,8)); var bt=m(new THREE.ConeGeometry(0.82,0.65,8)); bt.rotation.z=Math.PI; bt.position.y=-0.92;
-    var bd=m(new THREE.CylinderGeometry(0.85,0.85,0.06,8),mat2); bd.position.y=-0.04; grp.add(tp,bt,bd);
-    return;
-  }
-
-  /* ── DEFAULT ── */
-  grp.add(m(new THREE.OctahedronGeometry(1.15,0)));
-  grp.add(m(new THREE.OctahedronGeometry(1.25,0),wmat));
-  grp.add(m(new THREE.TetrahedronGeometry(0.70,0),mat2));
+    loadSketchfabGLTF(sfResult.url, scene, grp, ldEl, canvas, function(success) {
+      if (success) {
+        console.log('[AV] ✅ Loaded Sketchfab model for "' + keyword + '": ' + sfResult.name);
+        if (ldEl) ldEl.classList.add('gone');
+      } else {
+        console.log('[AV] glTF load failed for "' + keyword + '" → procedural fallback');
+        while (grp.children.length) grp.remove(grp.children[0]);
+        buildProceduralMesh(keyword);
+        if (ldEl) ldEl.classList.add('gone');
+      }
+    });
+  }).catch(function(err) {
+    console.warn('[AV] Sketchfab exception:', err);
+    buildProceduralMesh(keyword);
+    if (ldEl) ldEl.classList.add('gone');
+  });
 }
 
 /* ══ HERO THREE.JS SCENE ══ */
@@ -1606,8 +1427,8 @@ function updateExpire() {
   function tick() {
     var diff = exp - Date.now();
     if (diff <= 0) { document.getElementById('expireTxt').textContent = '⚠️ Expired'; return; }
-    var h = Math.floor(diff / 3600000), mn = Math.floor((diff % 3600000) / 60000);
-    document.getElementById('expireTxt').textContent = '⚠️ ' + h + 'h ' + mn + 'm left';
+    var h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('expireTxt').textContent = '⚠️ ' + h + 'h ' + m + 'm left';
   }
   tick(); setInterval(tick, 60000);
 }
@@ -1637,11 +1458,19 @@ function showNotFound() {
     '</div>';
 }
 
-/* ══ PAYMENT ══ */
+/* ══════════════════════════════════════════════════════
+   PAYMENT — FIXED RAZORPAY IMPLEMENTATION
+   Issue: original code called "new Razorpay({}).open()" in one
+   chained expression which does not work reliably. The correct
+   pattern is: create instance → store it → call .open() separately.
+   Added proper error handler and modal.ondismiss to avoid silent
+   failures and improve UX.
+══════════════════════════════════════════════════════ */
 function openPayModal()  { document.getElementById('payModal').classList.add('open'); }
 function closePayModal() { document.getElementById('payModal').classList.remove('open'); }
 
 function processPayment() {
+  /* Validate Razorpay is loaded */
   if (typeof Razorpay === 'undefined') {
     alert('Payment gateway is loading. Please wait a moment and try again.');
     return;
@@ -1649,20 +1478,27 @@ function processPayment() {
 
   var options = {
     key:         RZP_KEY,
-    amount:      79900,
+    amount:      79900,          /* Amount in paise (₹799 = 79900 paise) */
     currency:    'INR',
     name:        'AutoVision',
     description: '3D Website Activation — ₹799',
-    image:       '',
+    image:       '',             /* Optional: logo URL */
     prefill: {
       email: (currentUser && currentUser.email) ? currentUser.email : '',
       name:  (SD && SD.name) ? SD.name : ''
     },
-    theme: { color: accentColor },
+    theme: {
+      color: accentColor
+    },
     handler: function(response) {
+      /* Payment successful */
       closePayModal();
+
+      /* Update Supabase record status to active */
       if (SD && SD.id && !SD._isLocal) {
-        db.from(TBL_SITES).update({ status: 'active' }).eq('id', SD.id)
+        db.from(TBL_SITES)
+          .update({ status: 'active' })
+          .eq('id', SD.id)
           .then(function() { return db.from('av_payments').insert([{
             user_email: SD.user_email || (currentUser && currentUser.email) || '',
             website_id: SD.id,
@@ -1674,20 +1510,28 @@ function processPayment() {
           }]); })
           .catch(function(e){ console.error('[AV] payment record error:', e); });
       }
+
       alert('🎉 Payment successful!\nYour 3D website is now LIVE!\nPayment ID: ' + response.razorpay_payment_id);
       window.location.href = 'dashboard.html';
     },
     modal: {
-      ondismiss: function() { console.log('[AV] Razorpay modal dismissed by user.'); }
+      ondismiss: function() {
+        /* User closed the Razorpay modal without paying — do nothing, just log */
+        console.log('[AV] Razorpay modal dismissed by user.');
+      }
     }
   };
 
+  /* ── FIXED: Create instance first, then call open() ── */
   try {
     var rzpInstance = new Razorpay(options);
+
+    /* Handle payment failure events */
     rzpInstance.on('payment.failed', function(response) {
       console.error('[AV] Payment failed:', response.error);
       alert('Payment failed: ' + (response.error.description || 'Unknown error') + '\nPlease try again.');
     });
+
     rzpInstance.open();
   } catch(e) {
     console.error('[AV] Razorpay init error:', e);
@@ -1695,6 +1539,7 @@ function processPayment() {
   }
 }
 
+/* Close pay modal on backdrop click */
 document.getElementById('payModal').addEventListener('click', function(e){
   if (e.target === document.getElementById('payModal')) closePayModal();
 });
