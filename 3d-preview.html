@@ -9,6 +9,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- GLTFLoader for Sketchfab models (r128 compatible) -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<!-- JSZip to unzip Sketchfab glTF downloads -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root{
   --accent:#f0a500;--accent-rgb:240,165,0;
@@ -894,9 +898,149 @@ async function buildProductCards() {
   setTimeout(initReveal, 400);
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   SKETCHFAB MODEL LOADER
+   Strategy:
+   1. Search Sketchfab API for the keyword → get first downloadable glTF model
+   2. Download the glTF zip → extract → load with THREE.GLTFLoader
+   3. If Sketchfab fails for any reason → fall back to procedural geometry
+   Sketchfab API key: 3bfe6bf1bd92489495ef2aeef263f445
+══════════════════════════════════════════════════════════════════════════ */
+var SF_KEY = '3bfe6bf1bd92489495ef2aeef263f445';
+
+/* Search Sketchfab, get glTF download URL for keyword */
+async function fetchSketchfabModel(keyword) {
+  try {
+    /* Step 1: search for downloadable models */
+    var searchUrl = 'https://api.sketchfab.com/v3/models?type=models' +
+      '&q=' + encodeURIComponent(keyword) +
+      '&downloadable=true' +
+      '&count=5' +
+      '&sort_by=-likeCount';
+
+    var res = await fetch(searchUrl, {
+      headers: { 'Authorization': 'Token ' + SF_KEY }
+    });
+    if (!res.ok) return null;
+    var data = await res.json();
+    var results = (data.results || []);
+    if (!results.length) return null;
+
+    /* Pick first model that has a uid */
+    var model = results[0];
+    var uid = model.uid;
+    if (!uid) return null;
+
+    /* Step 2: get download URL for the glTF format */
+    var dlRes = await fetch('https://api.sketchfab.com/v3/models/' + uid + '/download', {
+      headers: { 'Authorization': 'Token ' + SF_KEY }
+    });
+    if (!dlRes.ok) return null;
+    var dlData = await dlRes.json();
+
+    /* glTF download gives a zip URL */
+    var gltfUrl = (dlData.gltf && dlData.gltf.url) || null;
+    return { uid: uid, url: gltfUrl, name: model.name };
+  } catch(e) {
+    console.warn('[AV Sketchfab] search failed for "' + keyword + '":', e.message);
+    return null;
+  }
+}
+
+/* Load a glTF zip from Sketchfab into a Three.js scene */
+async function loadSketchfabGLTF(url, scene, grp, ldEl, canvas, onLoaded) {
+  try {
+    /* We need JSZip to unzip the downloaded archive */
+    if (typeof JSZip === 'undefined') {
+      console.warn('[AV] JSZip not loaded');
+      onLoaded(false);
+      return;
+    }
+
+    var zipRes = await fetch(url);
+    if (!zipRes.ok) { onLoaded(false); return; }
+
+    var zipBuf = await zipRes.arrayBuffer();
+    var zip    = await JSZip.loadAsync(zipBuf);
+
+    /* Find the .gltf entry file */
+    var gltfEntry = null;
+    zip.forEach(function(path, file) {
+      if (!gltfEntry && path.endsWith('.gltf')) gltfEntry = { path: path, file: file };
+    });
+    if (!gltfEntry) { onLoaded(false); return; }
+
+    /* Build blob URLs for every file in the zip so GLTFLoader can resolve them */
+    var blobMap = {};
+    var promises = [];
+    zip.forEach(function(path, file) {
+      promises.push(
+        file.async('arraybuffer').then(function(buf) {
+          var mime = 'application/octet-stream';
+          if (path.endsWith('.bin'))  mime = 'application/octet-stream';
+          if (path.endsWith('.gltf')) mime = 'model/gltf+json';
+          if (path.endsWith('.png'))  mime = 'image/png';
+          if (path.endsWith('.jpg') || path.endsWith('.jpeg')) mime = 'image/jpeg';
+          blobMap[path] = URL.createObjectURL(new Blob([buf], { type: mime }));
+        })
+      );
+    });
+    await Promise.all(promises);
+
+    /* Use THREE.GLTFLoader with a custom resource manager */
+    var loader = new THREE.GLTFLoader();
+
+    /* Override the resource manager so relative paths resolve from our blob map */
+    var manager = new THREE.LoadingManager();
+    manager.setURLModifier(function(resUrl) {
+      /* resUrl is something like "scene.bin" or "textures/mat.png" */
+      var filename = resUrl.replace(/^.*[\\/]/, '');
+      /* Try exact path first, then filename only */
+      for (var p in blobMap) {
+        if (p === resUrl || p.endsWith('/' + filename) || p === filename) {
+          return blobMap[p];
+        }
+      }
+      return resUrl;
+    });
+    loader.manager = manager;
+
+    loader.load(
+      blobMap[gltfEntry.path],
+      function(gltf) {
+        var model = gltf.scene;
+
+        /* Centre and scale the model to fit a 2-unit bounding box */
+        var box    = new THREE.Box3().setFromObject(model);
+        var centre = box.getCenter(new THREE.Vector3());
+        var size   = box.getSize(new THREE.Vector3());
+        var maxDim = Math.max(size.x, size.y, size.z);
+        var scale  = 2.2 / (maxDim || 1);
+        model.scale.setScalar(scale);
+        model.position.sub(centre.multiplyScalar(scale));
+
+        grp.add(model);
+
+        /* Revoke blob URLs to free memory */
+        Object.values(blobMap).forEach(function(u) { URL.revokeObjectURL(u); });
+
+        onLoaded(true);
+      },
+      undefined,
+      function(err) {
+        console.warn('[AV GLTFLoader] error:', err);
+        Object.values(blobMap).forEach(function(u) { URL.revokeObjectURL(u); });
+        onLoaded(false);
+      }
+    );
+  } catch(e) {
+    console.warn('[AV loadSketchfabGLTF] exception:', e);
+    onLoaded(false);
+  }
+}
+
 /* ══ RENDER PRODUCT 3D MESH ══
-   FIX: renamed local "g" (group) to "grp" to avoid conflict with
-   the destructured { r, g, b } from hexToRGB in the same scope.   */
+   Tries Sketchfab first → falls back to procedural geometry if it fails.  */
 function renderProductMesh(idx, keyword) {
   var vp     = document.getElementById('pcvp_'  + idx);
   var canvas = document.getElementById('pc3d_'  + idx);
@@ -910,145 +1054,171 @@ function renderProductMesh(idx, keyword) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(W, H, false);
   renderer.setClearColor(0, 0);
+  renderer.outputEncoding = THREE.sRGBEncoding;
 
   var scene  = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(48, W/H, 0.1, 100);
   camera.position.set(0, 0, 4);
 
-  /* Lighting */
+  /* Lighting — works well for both Sketchfab models and procedural */
   var rgb = hexToRGB(accentColor);
   var col = (rgb.r << 16) + (rgb.g << 8) + rgb.b;
-  scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-  var kl = new THREE.PointLight(col, 4, 20); kl.position.set(3, 3, 3); scene.add(kl);
-  var fl = new THREE.PointLight(0x6688ff, 2, 16); fl.position.set(-3, -2, 2); scene.add(fl);
-  var rl = new THREE.PointLight(col, 1.5, 14); rl.position.set(0, -3, -2); scene.add(rl);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+  var kl = new THREE.DirectionalLight(0xffffff, 1.2); kl.position.set(3, 5, 3); scene.add(kl);
+  var fl = new THREE.DirectionalLight(0xddeeff, 0.7); fl.position.set(-3, -2, 2); scene.add(fl);
+  var al = new THREE.PointLight(col, 3, 20); al.position.set(0, 3, 3); scene.add(al);
 
-  /* Materials */
+  /* Procedural fallback materials */
   var mat  = new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.22, transparent:true, opacity:0.88, shininess:100 });
   var wmat = new THREE.MeshBasicMaterial({ color:col, wireframe:true, transparent:true, opacity:0.28 });
 
-  /* ── RENAMED: group variable is now "grp" instead of "g" ── */
+  /* Main group — real model or procedural geometry lands here */
   var grp = new THREE.Group();
   scene.add(grp);
 
-  var k = (keyword || '').toLowerCase();
-
-  if (['coffee','tea','chai','latte','matcha','espresso','cappuccino','mocha','americano','frappe','soup','drink','cup','mug','bowl'].some(function(kw){ return k.includes(kw); })) {
-    grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.48, 1.15, 28), mat));
-    var rim = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.06, 10, 40), new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.5 }));
-    rim.rotation.x = Math.PI/2; rim.position.y = 0.58; grp.add(rim);
-    var handle = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.07, 10, 28, Math.PI), mat);
-    handle.rotation.y = Math.PI/2; handle.position.set(0.6, 0, 0); grp.add(handle);
-
-  } else if (['donut','bagel','taco','pizza','ring','torus','bangle','bracelet','necklace'].some(function(kw){ return k.includes(kw); })) {
-    grp.add(new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.4, 24, 60), mat));
-    grp.add(new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.42, 12, 60), wmat));
-
-  } else if (['jewel','ring','diamond','gem','nail','perfume','makeup','lipstick','crystal'].some(function(kw){ return k.includes(kw); })) {
-    var top = new THREE.Mesh(new THREE.ConeGeometry(0.82, 1.2, 8), mat);
-    var bot = new THREE.Mesh(new THREE.ConeGeometry(0.82, 0.65, 8), mat);
-    bot.rotation.z = Math.PI; bot.position.y = -0.92;
-    var band = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.06, 8), new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.7 }));
-    band.position.y = -0.04; grp.add(top, bot, band);
-
-  } else if (['yoga','pilates','design','art','animation','hair','skin','facial','creative','torusknot','star'].some(function(kw){ return k.includes(kw); })) {
-    grp.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0, 0.28, 120, 16, 2, 3), mat));
-    grp.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0, 0.30, 60, 8, 2, 3), wmat));
-
-  } else if (['app','web','software','ai','data','cloud','tech','biryani','curry','rice','icosahedron'].some(function(kw){ return k.includes(kw); })) {
-    grp.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.2, 1), mat));
-    grp.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.3, 0), wmat));
-
-  } else if (['dress','shoes','bag','cloth','fashion','watch','book','course','exam','coaching','box'].some(function(kw){ return k.includes(kw); })) {
-    grp.add(new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.6), mat));
-    grp.add(new THREE.Mesh(new THREE.BoxGeometry(1.65, 1.65, 1.65), wmat));
-
-  } else if (['gym','dumbbell','training','workout','massage','fitness','bottle'].some(function(kw){ return k.includes(kw); })) {
-    var bar = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.4, 12), mat);
-    bar.rotation.z = Math.PI/2; grp.add(bar);
-    [-1.1, 1.1].forEach(function(x) {
-      var w = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.5, 24), mat);
-      w.rotation.z = Math.PI/2; w.position.x = x; grp.add(w);
-    });
-
-  } else if (['cake','muffin','bread','pastry','croissant','dessert','sushi','pasta','noodle','salad','cylinder'].some(function(kw){ return k.includes(kw); })) {
-    grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.65, 1.5, 28), mat));
-    grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.77, 0.67, 1.52, 14), wmat));
-    var topCap = new THREE.Mesh(new THREE.CircleGeometry(0.75, 28), mat);
-    topCap.rotation.x = -Math.PI/2; topCap.position.y = 0.76; grp.add(topCap);
-
-  } else if (['burger','sandwich','snack','wrap','chicken','fish','meat'].some(function(kw){ return k.includes(kw); })) {
-    [0, 0.35, 0.7].forEach(function(y, j) {
-      var d = new THREE.Mesh(new THREE.CylinderGeometry(0.9 - j*0.1, 0.85 - j*0.1, 0.28, 32), mat);
-      d.position.y = y; grp.add(d);
-    });
-
-  } else {
-    /* Default: octahedron */
-    grp.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 1), mat));
-    grp.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.3, 0), wmat));
-  }
-
-  /* Orbiting particles */
+  /* Orbiting accent particles always orbit the model */
   var orbs = [];
   for (var oi = 0; oi < 4; oi++) {
-    var ang = (oi / 4) * Math.PI * 2;
-    var sp  = new THREE.Mesh(
+    var orbAng = (oi / 4) * Math.PI * 2;
+    var sp = new THREE.Mesh(
       new THREE.SphereGeometry(0.1, 8, 8),
       new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.6, transparent:true, opacity:0.9 })
     );
-    sp.position.set(Math.cos(ang) * 1.9, 0.1 * Math.sin(ang * 2), Math.sin(ang) * 1.9);
-    sp.userData = { ang: ang, speed: 0.018 + oi * 0.004 };
+    sp.position.set(Math.cos(orbAng)*1.9, 0.1*Math.sin(orbAng*2), Math.sin(orbAng)*1.9);
+    sp.userData = { ang: orbAng, speed: 0.018 + oi*0.004 };
     orbs.push(sp);
-    grp.add(sp);
+    scene.add(sp);
   }
 
-  /* Show canvas, hide loader */
-  canvas.style.display = 'block';
-  if (ldEl) ldEl.classList.add('gone');
-
-  /* Drag to rotate */
+  /* Drag-to-rotate */
   var isDrag = false, px = 0, py = 0, vx = 0.005, vy = 0;
   vp.style.cursor = 'grab';
-  vp.addEventListener('mousedown', function(e){ isDrag = true; px = e.clientX; py = e.clientY; vp.style.cursor = 'grabbing'; });
-  window.addEventListener('mouseup', function(){ isDrag = false; vp.style.cursor = 'grab'; });
-  vp.addEventListener('mousemove', function(e){
+  vp.addEventListener('mousedown',  function(e){ isDrag=true;  px=e.clientX; py=e.clientY; vp.style.cursor='grabbing'; });
+  window.addEventListener('mouseup',function(){  isDrag=false; vp.style.cursor='grab'; });
+  vp.addEventListener('mousemove',  function(e){
     if (!isDrag) return;
-    vx = (e.clientX - px) * 0.009; vy = (e.clientY - py) * 0.009;
-    grp.rotation.y += vx;
-    grp.rotation.x = Math.max(-0.8, Math.min(0.8, grp.rotation.x + vy));
-    px = e.clientX; py = e.clientY;
+    vx=(e.clientX-px)*0.009; vy=(e.clientY-py)*0.009;
+    grp.rotation.y+=vx; grp.rotation.x=Math.max(-0.8,Math.min(0.8,grp.rotation.x+vy));
+    px=e.clientX; py=e.clientY;
   });
-  vp.addEventListener('touchstart', function(e){ isDrag = true; px = e.touches[0].clientX; py = e.touches[0].clientY; }, { passive:true });
-  vp.addEventListener('touchend',   function(){ isDrag = false; });
+  vp.addEventListener('touchstart', function(e){ isDrag=true;  px=e.touches[0].clientX; py=e.touches[0].clientY; },{passive:true});
+  vp.addEventListener('touchend',   function(){  isDrag=false; });
   vp.addEventListener('touchmove',  function(e){
     if (!isDrag) return;
-    vx = (e.touches[0].clientX - px) * 0.008; vy = (e.touches[0].clientY - py) * 0.008;
-    grp.rotation.y += vx;
-    grp.rotation.x = Math.max(-0.8, Math.min(0.8, grp.rotation.x + vy));
-    px = e.touches[0].clientX; py = e.touches[0].clientY;
-  }, { passive:false });
+    vx=(e.touches[0].clientX-px)*0.008; vy=(e.touches[0].clientY-py)*0.008;
+    grp.rotation.y+=vx; grp.rotation.x=Math.max(-0.8,Math.min(0.8,grp.rotation.x+vy));
+    px=e.touches[0].clientX; py=e.touches[0].clientY;
+  },{passive:false});
 
-  var t = 0;
-  (function anim() {
+  /* Animation loop starts immediately — model loads into grp async */
+  var animT = 0;
+  canvas.style.display = 'block';
+  (function anim(){
     requestAnimationFrame(anim);
-    t += 0.012;
-    if (!isDrag) { vx *= 0.92; vy *= 0.92; grp.rotation.y += 0.006 + vx; grp.rotation.x += vy; }
-    grp.position.y = Math.sin(t * 0.8) * 0.07;
-    grp.scale.setScalar(1 + Math.sin(t * 1.6) * 0.012);
+    animT += 0.012;
+    if (!isDrag){ vx*=0.92; vy*=0.92; grp.rotation.y+=0.006+vx; grp.rotation.x+=vy; }
+    grp.position.y = Math.sin(animT*0.8)*0.07;
     orbs.forEach(function(o){
       o.userData.ang += o.userData.speed;
-      o.position.x = Math.cos(o.userData.ang) * 1.9;
-      o.position.z = Math.sin(o.userData.ang) * 1.9;
-      o.position.y = Math.sin(o.userData.ang * 1.5) * 0.2;
+      o.position.x = Math.cos(o.userData.ang)*1.9;
+      o.position.z = Math.sin(o.userData.ang)*1.9;
+      o.position.y = Math.sin(o.userData.ang*1.5)*0.2;
     });
     renderer.render(scene, camera);
   })();
 
   new ResizeObserver(function(){
-    var nw = vp.offsetWidth, nh = vp.offsetHeight || 400;
-    camera.aspect = nw/nh; camera.updateProjectionMatrix(); renderer.setSize(nw, nh, false);
+    var nw=vp.offsetWidth, nh=vp.offsetHeight||400;
+    camera.aspect=nw/nh; camera.updateProjectionMatrix(); renderer.setSize(nw,nh,false);
   }).observe(vp);
+
+  /* Update loader label text */
+  function setLoaderText(txt) {
+    var lbl = ldEl ? ldEl.querySelector('.pc-lbl') : null;
+    if (lbl) lbl.textContent = txt;
+  }
+
+  /* ── PROCEDURAL FALLBACK ── */
+  function buildProceduralMesh(kw) {
+    var k2 = (kw || '').toLowerCase();
+    if (['coffee','tea','chai','latte','matcha','espresso','cappuccino','mocha',
+         'americano','frappe','drink','cup','mug','bowl','juice','smoothie','flask','soup'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.48,1.15,28),mat));
+      var rr=new THREE.Mesh(new THREE.TorusGeometry(0.6,0.06,10,40),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.5}));
+      rr.rotation.x=Math.PI/2; rr.position.y=0.58; grp.add(rr);
+      var hh=new THREE.Mesh(new THREE.TorusGeometry(0.38,0.07,10,28,Math.PI),mat);
+      hh.rotation.y=Math.PI/2; hh.position.set(0.6,0,0); grp.add(hh);
+    } else if (['donut','bagel','bangle','bracelet','necklace','anklet','hoop'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.TorusGeometry(1.0,0.4,24,60),mat));
+      grp.add(new THREE.Mesh(new THREE.TorusGeometry(1.0,0.42,12,60),wmat));
+    } else if (['diamond','gem','crystal','earring','stud','perfume','lipstick'].some(function(w){ return k2.includes(w); })) {
+      var tp=new THREE.Mesh(new THREE.ConeGeometry(0.82,1.2,8),mat);
+      var bt=new THREE.Mesh(new THREE.ConeGeometry(0.82,0.65,8),mat);
+      bt.rotation.z=Math.PI; bt.position.y=-0.92;
+      var bd=new THREE.Mesh(new THREE.CylinderGeometry(0.85,0.85,0.06,8),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.7}));
+      bd.position.y=-0.04; grp.add(tp,bt,bd);
+    } else if (['yoga','pilates','hair','spa','facial','pedicure','manicure','art','creative'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0,0.28,120,16,2,3),mat));
+      grp.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0,0.30,60,8,2,3),wmat));
+    } else if (['app','web','software','ai','data','cloud','tech','biryani','curry','rice'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.2,1),mat));
+      grp.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.3,0),wmat));
+    } else if (['purse','wallet','handbag','clutch','tote','pouch','backpack','bag',
+                'dress','shoes','sneaker','sandal','boot','cloth','fashion','wear',
+                'kurta','saree','lehenga','jacket','jeans','watch','book','course',
+                'coaching','box','gift'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.BoxGeometry(1.6,1.6,1.6),mat));
+      grp.add(new THREE.Mesh(new THREE.BoxGeometry(1.65,1.65,1.65),wmat));
+    } else if (['gym','dumbbell','barbell','fitness','workout','protein'].some(function(w){ return k2.includes(w); })) {
+      var br=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,2.4,12),mat);
+      br.rotation.z=Math.PI/2; grp.add(br);
+      [-1.1,1.1].forEach(function(x){ var ww=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,0.5,24),mat); ww.rotation.z=Math.PI/2; ww.position.x=x; grp.add(ww); });
+    } else if (['cake','muffin','bread','pastry','dessert','sushi','pasta','noodle','salad'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.75,0.65,1.5,28),mat));
+      grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.77,0.67,1.52,14),wmat));
+      var tc=new THREE.Mesh(new THREE.CircleGeometry(0.75,28),mat);
+      tc.rotation.x=-Math.PI/2; tc.position.y=0.76; grp.add(tc);
+    } else if (['burger','sandwich','chicken','fish','meat','kebab','tikka','dosa'].some(function(w){ return k2.includes(w); })) {
+      [0,0.35,0.7].forEach(function(y,j){ var dd=new THREE.Mesh(new THREE.CylinderGeometry(0.9-j*0.1,0.85-j*0.1,0.28,32),mat); dd.position.y=y; grp.add(dd); });
+    } else if (['nail','makeup','mascara','foundation','serum','moisturizer','cleanser'].some(function(w){ return k2.includes(w); })) {
+      grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.32,1.8,20),mat));
+      var cm=new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.38,0.3,20),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.5}));
+      cm.position.y=1.05; grp.add(cm);
+    } else {
+      grp.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.2,1),mat));
+      grp.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.3,0),wmat));
+    }
+  }
+
+  /* ── TRY SKETCHFAB → FALLBACK TO PROCEDURAL ── */
+  setLoaderText('Searching Sketchfab for "' + keyword + '"…');
+
+  fetchSketchfabModel(keyword).then(function(sfResult) {
+    if (!sfResult || !sfResult.url) {
+      console.log('[AV] No Sketchfab model for "' + keyword + '" → procedural fallback');
+      buildProceduralMesh(keyword);
+      if (ldEl) ldEl.classList.add('gone');
+      return;
+    }
+
+    setLoaderText('Loading 3D model for "' + keyword + '"…');
+
+    loadSketchfabGLTF(sfResult.url, scene, grp, ldEl, canvas, function(success) {
+      if (success) {
+        console.log('[AV] ✅ Loaded Sketchfab model for "' + keyword + '": ' + sfResult.name);
+        if (ldEl) ldEl.classList.add('gone');
+      } else {
+        console.log('[AV] glTF load failed for "' + keyword + '" → procedural fallback');
+        while (grp.children.length) grp.remove(grp.children[0]);
+        buildProceduralMesh(keyword);
+        if (ldEl) ldEl.classList.add('gone');
+      }
+    });
+  }).catch(function(err) {
+    console.warn('[AV] Sketchfab exception:', err);
+    buildProceduralMesh(keyword);
+    if (ldEl) ldEl.classList.add('gone');
+  });
 }
 
 /* ══ HERO THREE.JS SCENE ══ */
