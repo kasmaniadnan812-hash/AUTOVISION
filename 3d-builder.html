@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoVision — 3D Website Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080c14; --bg2:#0d1320; --bg3:#111827;
+  --surface:#141d2e; --surface2:#1a2540; --surface3:#1f2d48;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+  --accent:#4f8eff; --accent2:#7b5ea7; --accent3:#00d4aa;
+  --gold:#f0a500; --gold2:#ffcd60; --gold-glow:rgba(240,165,0,0.18);
+  --red:#f87171; --orange:#fb923c;
+  --text:#f0f4ff; --text2:#8899bb; --text3:#5a6f8e;
+  --grad:linear-gradient(135deg,#4f8eff 0%,#7b5ea7 100%);
+  --grad-gold:linear-gradient(135deg,#b37800 0%,#f0a500 50%,#ffd060 100%);
+  --glow:0 0 30px rgba(79,142,255,0.18);
+  --gold-shadow:0 6px 28px rgba(240,165,0,0.35);
+  --shadow:0 20px 60px rgba(0,0,0,0.5);
+  --input-bg:#111827;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+
+/* ── TOP HEADER ── */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,12,20,0.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+.top-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;}
+.top-badge{font-size:11px;font-weight:800;letter-spacing:.5px;padding:4px 12px;border-radius:100px;background:linear-gradient(135deg,rgba(240,165,0,.15),rgba(255,205,96,.08));border:1px solid rgba(240,165,0,.35);color:var(--gold);}
+.back-btn{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--text2);text-decoration:none;padding:7px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:9px;transition:all .2s;cursor:pointer;}
+.back-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface2);}
+.top-bar-left{display:flex;align-items:center;gap:12px;}
+
+/* ── PROGRESS BAR ── */
+.progress-strip{
+  position:sticky;top:58px;z-index:99;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:14px 28px;
+}
+.progress-steps{display:flex;align-items:center;gap:0;max-width:680px;margin:0 auto;}
+.ps-item{display:flex;align-items:center;gap:0;flex:1;}
+.ps-dot{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;
+  border:2px solid var(--border2);
+  background:var(--surface);color:var(--text3);
+  transition:all .3s;flex-shrink:0;position:relative;z-index:1;
+}
+.ps-dot.active{background:var(--grad-gold);border-color:#f0a500;color:#1a0e00;box-shadow:0 0 16px rgba(240,165,0,.4);}
+.ps-dot.done{background:rgba(240,165,0,.15);border-color:var(--gold);color:var(--gold);}
+.ps-label{font-size:10.5px;font-weight:700;color:var(--text3);white-space:nowrap;margin-left:7px;transition:color .3s;}
+.ps-item.active .ps-label{color:var(--gold);}
+.ps-item.done .ps-label{color:var(--text3);}
+.ps-line{flex:1;height:2px;background:var(--border);margin:0 6px;transition:background .3s;border-radius:1px;}
+.ps-line.done{background:var(--gold);}
+
+/* ── MAIN CONTENT ── */
+.main{max-width:720px;margin:0 auto;padding:36px 20px 80px;}
+
+/* ── STEP CARD ── */
+.step-card{display:none;animation:fadeUp .3s ease;}
+.step-card.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+.step-header{margin-bottom:28px;}
+.step-eyebrow{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+.step-eyebrow::before{content:'';display:inline-block;width:18px;height:2px;background:var(--gold);border-radius:1px;}
+.step-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px;margin-bottom:6px;}
+.step-sub{font-size:14px;color:var(--text2);line-height:1.6;}
+
+.form-section{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;margin-bottom:16px;}
+.form-section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.form-section-title .sec-icon{font-size:16px;}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{margin-bottom:14px;}
+.form-group:last-child{margin-bottom:0;}
+label,.field-label{display:block;font-size:11px;font-weight:700;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;}
+input,select,textarea{
+  width:100%;background:var(--input-bg);
+  border:1px solid var(--border2);color:var(--text);
+  padding:12px 15px;font-family:'Outfit',sans-serif;
+  font-size:14px;border-radius:11px;outline:none;transition:all .2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);background:var(--surface2);box-shadow:0 0 0 3px rgba(240,165,0,.1);}
+input::placeholder,textarea::placeholder{color:var(--text3);}
+select option{background:var(--bg3);}
+textarea{resize:vertical;min-height:90px;}
+
+/* ── 3D STYLE OPTIONS ── */
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.style-opt{
+  border:2px solid var(--border2);border-radius:16px;
+  padding:20px 16px;cursor:pointer;transition:all .25s;
+  background:var(--input-bg);text-align:center;position:relative;overflow:hidden;
+}
+.style-opt:hover{border-color:rgba(240,165,0,.4);background:rgba(240,165,0,.04);}
+.style-opt.selected{border-color:var(--gold);background:rgba(240,165,0,.06);box-shadow:0 0 0 3px rgba(240,165,0,.12);}
+.style-preview{height:80px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+
+.prev-minimal{background:#050a0f;}
+.prev-minimal .wire-box{
+  width:50px;height:50px;border:2px solid rgba(79,142,255,.7);
+  transform:perspective(200px) rotateX(25deg) rotateY(25deg);
+  animation:wireRotate 4s linear infinite;
+  box-shadow:inset 0 0 20px rgba(79,142,255,.1),0 0 20px rgba(79,142,255,.15);
+  position:relative;
+}
+.prev-minimal .wire-box::before,.prev-minimal .wire-box::after{
+  content:'';position:absolute;border:1px solid rgba(79,142,255,.3);
+}
+.prev-minimal .wire-box::before{inset:8px;}
+.prev-minimal .wire-box::after{inset:16px;}
+@keyframes wireRotate{to{transform:perspective(200px) rotateX(385deg) rotateY(385deg);}}
+
+.prev-glass{background:linear-gradient(135deg,#0a0a1a,#1a0a2e);}
+.glass-card{
+  width:65px;height:50px;border-radius:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(4px);
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+  transform:perspective(200px) rotateX(10deg) rotateY(-12deg);
+  animation:glassFloat 3s ease-in-out infinite alternate;
+}
+@keyframes glassFloat{from{transform:perspective(200px) rotateX(10deg) rotateY(-12deg);}to{transform:perspective(200px) rotateX(15deg) rotateY(-8deg) translateY(-4px);}}
+
+.prev-futuristic{background:#000a14;overflow:hidden;}
+.neon-grid{
+  position:absolute;inset:0;
+  background:linear-gradient(rgba(0,200,255,.15) 1px,transparent 1px),
+             linear-gradient(90deg,rgba(0,200,255,.15) 1px,transparent 1px);
+  background-size:12px 12px;
+  animation:gridScroll 2s linear infinite;
+}
+@keyframes gridScroll{to{background-position:0 12px,12px 0;}}
+.neon-hex{
+  width:40px;height:40px;position:relative;z-index:1;
+  border:2px solid #00e5ff;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:rgba(0,229,255,.07);
+  box-shadow:0 0 20px rgba(0,229,255,.5),inset 0 0 10px rgba(0,229,255,.1);
+  animation:hexPulse 1.5s ease-in-out infinite alternate;
+}
+@keyframes hexPulse{from{box-shadow:0 0 10px rgba(0,229,255,.3);}to{box-shadow:0 0 30px rgba(0,229,255,.8);}}
+
+.prev-gaming{background:#050005;}
+.particle-burst{position:relative;width:60px;height:60px;display:flex;align-items:center;justify-content:center;}
+.pb-core{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ff0055,#ff6600);box-shadow:0 0 20px rgba(255,80,0,.8);animation:corePulse .8s ease-in-out infinite alternate;}
+@keyframes corePulse{from{transform:scale(1);box-shadow:0 0 15px rgba(255,80,0,.6);}to{transform:scale(1.2);box-shadow:0 0 35px rgba(255,80,0,.9);}}
+.pb-ring{position:absolute;inset:0;border:2px solid rgba(255,100,0,.4);border-radius:50%;animation:ringExpand 1.2s ease-out infinite;}
+.pb-ring:nth-child(2){animation-delay:.4s;border-color:rgba(255,0,85,.3);}
+.pb-ring:nth-child(3){animation-delay:.8s;border-color:rgba(255,165,0,.2);}
+@keyframes ringExpand{0%{transform:scale(.3);opacity:1;}100%{transform:scale(2.5);opacity:0;}}
+
+.style-name{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:3px;}
+.style-desc{font-size:11.5px;color:var(--text3);line-height:1.4;}
+.style-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:100px;}
+.tag-fast{background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.25);color:#00d4aa;}
+.tag-smooth{background:rgba(79,142,255,.12);border:1px solid rgba(79,142,255,.25);color:var(--accent);}
+.tag-intense{background:rgba(240,165,0,.12);border:1px solid rgba(240,165,0,.25);color:var(--gold);}
+.tag-extreme{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.25);color:var(--red);}
+
+/* ── COLOR PICKER STEP ── */
+.color-presets{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.color-dot{
+  width:42px;height:42px;border-radius:50%;cursor:pointer;
+  border:3px solid transparent;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.color-dot.selected{border-color:white;box-shadow:0 0 0 2px rgba(255,255,255,.3),0 4px 16px rgba(0,0,0,.5);}
+.color-dot.selected::after{content:'✓';font-size:14px;font-weight:900;color:white;text-shadow:0 1px 4px rgba(0,0,0,.7);}
+.color-custom-row{display:flex;align-items:center;gap:12px;margin-top:4px;}
+.color-custom-row label{margin:0;font-size:12px;color:var(--text2);white-space:nowrap;text-transform:none;letter-spacing:0;}
+input[type="color"]{width:50px;height:38px;padding:3px 4px;border-radius:8px;cursor:pointer;border:1px solid var(--border2);}
+.color-preview-box{
+  margin-top:18px;padding:20px;border-radius:14px;
+  background:var(--bg2);border:1px solid var(--border);
+  display:flex;align-items:center;gap:16px;
+}
+.cpb-swatch{width:48px;height:48px;border-radius:12px;transition:background .3s;flex-shrink:0;}
+.cpb-text{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);transition:color .3s;}
+.cpb-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.cpb-btn{
+  margin-left:auto;padding:9px 18px;border-radius:9px;border:none;cursor:pointer;
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;
+  transition:all .2s;
+}
+
+/* ── INTERACTION LEVEL ── */
+.interaction-opts{display:flex;flex-direction:column;gap:12px;}
+.interaction-opt{
+  display:flex;align-items:center;gap:16px;padding:18px 20px;
+  background:var(--input-bg);border:2px solid var(--border2);
+  border-radius:14px;cursor:pointer;transition:all .25s;
+}
+.interaction-opt:hover{border-color:rgba(240,165,0,.3);background:rgba(240,165,0,.03);}
+.interaction-opt.selected{border-color:var(--gold);background:rgba(240,165,0,.06);box-shadow:0 0 0 3px rgba(240,165,0,.1);}
+.io-icon{font-size:28px;flex-shrink:0;}
+.io-body{flex:1;}
+.io-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--text);margin-bottom:3px;}
+.io-desc{font-size:12.5px;color:var(--text2);line-height:1.4;}
+.io-perf{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:100px;margin-left:auto;flex-shrink:0;}
+.perf-all{background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.25);color:#00d4aa;}
+.perf-most{background:rgba(79,142,255,.12);border:1px solid rgba(79,142,255,.25);color:var(--accent);}
+.perf-high{background:rgba(240,165,0,.12);border:1px solid rgba(240,165,0,.25);color:var(--gold);}
+.io-bars{display:flex;gap:3px;align-items:flex-end;height:20px;margin-left:8px;flex-shrink:0;}
+.io-bar{width:5px;border-radius:2px;background:var(--border2);transition:background .3s;}
+.interaction-opt.selected .io-bar{background:var(--gold);}
+.interaction-opt:not(.selected) .io-bar.filled{background:rgba(240,165,0,.3);}
+
+/* ── REVIEW STEP ── */
+.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.review-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;}
+.review-card-label{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.review-card-value{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);line-height:1.4;}
+.review-card-sub{font-size:12px;color:var(--text2);margin-top:3px;}
+.review-color-dot{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle;margin-right:6px;}
+
+.review-biz-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;}
+.rbc-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px;}
+.rbc-type{font-size:13px;color:var(--text2);margin-bottom:12px;}
+.rbc-services{font-size:13px;color:var(--text2);line-height:1.6;padding:12px;background:var(--bg2);border-radius:10px;border:1px solid var(--border);}
+.rbc-contacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.rbc-contact-chip{font-size:11.5px;color:var(--text2);padding:5px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;gap:5px;}
+
+.generate-note{text-align:center;padding:16px;background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.15);border-radius:12px;font-size:13px;color:var(--text2);margin-top:12px;}
+.generate-note strong{color:#00d4aa;}
+
+/* ── NAVIGATION BUTTONS ── */
+.step-nav{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.btn-back{padding:13px 24px;background:var(--surface);border:1px solid var(--border2);color:var(--text2);font-size:14px;font-weight:700;border-radius:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;}
+.btn-back:hover{background:var(--surface2);color:var(--text);}
+.btn-next{flex:1;padding:14px 28px;background:var(--grad-gold);color:#1a0e00;font-size:15px;font-weight:800;border-radius:12px;border:none;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:.2px;box-shadow:var(--gold-shadow);transition:all .25s;min-width:180px;}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(240,165,0,.5);}
+.btn-next:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-generate{
+  width:100%;padding:17px;
+  background:var(--grad-gold);color:#1a0e00;
+  font-size:17px;font-weight:800;
+  border-radius:14px;border:none;cursor:pointer;
+  font-family:'Syne',sans-serif;letter-spacing:.3px;
+  box-shadow:var(--gold-shadow);
+  transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:20px;
+}
+.btn-generate:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(240,165,0,.55);}
+.btn-generate .arrow{transition:transform .2s;}
+.btn-generate:hover .arrow{transform:translateX(4px);}
+
+/* ── ALERT ── */
+.alert{padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:14px;line-height:1.5;border:1px solid;}
+.alert-error{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.2);color:var(--red);display:none;}
+.alert-info{background:rgba(79,142,255,.08);border-color:rgba(79,142,255,.2);color:var(--accent);display:none;}
+
+/* ── LOADING ── */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(8,12,20,.97);z-index:1000;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+.loading-overlay.open{display:flex;}
+.lo-spinner{width:56px;height:56px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:22px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.lo-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--text);margin-bottom:8px;}
+.lo-msg{font-size:14px;color:var(--text2);margin-bottom:24px;}
+.lo-bar{width:320px;max-width:80vw;height:3px;background:var(--border);border-radius:100px;overflow:hidden;margin-bottom:10px;}
+.lo-fill{height:100%;background:var(--grad-gold);border-radius:100px;transition:width .6s ease;width:0%;}
+.lo-pct{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text3);}
+.lo-save-status{font-size:11px;color:var(--text3);margin-top:12px;font-family:'JetBrains Mono',monospace;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  .top-bar{padding:0 14px;}
+  .top-badge{display:none;}
+  .progress-strip{padding:12px 14px;overflow-x:auto;}
+  .ps-label{display:none;}
+  .main{padding:20px 14px 80px;}
+  .step-title{font-size:22px;}
+  .form-grid{grid-template-columns:1fr;}
+  .style-grid{grid-template-columns:1fr;}
+  .review-grid{grid-template-columns:1fr;}
+  .step-nav{flex-direction:column-reverse;}
+  .btn-back,.btn-next{width:100%;}
+}
+@media(max-width:400px){
+  .ps-dot{width:26px;height:26px;font-size:10px;}
+  .ps-line{margin:0 3px;}
+  .style-preview{height:64px;}
+  .interaction-opt{flex-wrap:wrap;gap:10px;}
+  .io-bars{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <a href="index.html" class="top-logo">AutoVision</a>
+    <span class="top-badge">✦ 3D Builder</span>
+  </div>
+  <a href="dashboard.html" class="back-btn">← Dashboard</a>
+</div>
+
+<!-- PROGRESS STEPS -->
+<div class="progress-strip">
+  <div class="progress-steps" id="progressSteps">
+    <div class="ps-item active" id="psItem1">
+      <div class="ps-dot active" id="psDot1">1</div>
+      <div class="ps-label">Business</div>
+      <div class="ps-line" id="psLine1"></div>
+    </div>
+    <div class="ps-item" id="psItem2">
+      <div class="ps-dot" id="psDot2">2</div>
+      <div class="ps-label">3D Style</div>
+      <div class="ps-line" id="psLine2"></div>
+    </div>
+    <div class="ps-item" id="psItem3">
+      <div class="ps-dot" id="psDot3">3</div>
+      <div class="ps-label">Color</div>
+      <div class="ps-line" id="psLine3"></div>
+    </div>
+    <div class="ps-item" id="psItem4">
+      <div class="ps-dot" id="psDot4">4</div>
+      <div class="ps-label">Interaction</div>
+      <div class="ps-line" id="psLine4"></div>
+    </div>
+    <div class="ps-item" id="psItem5">
+      <div class="ps-dot" id="psDot5">5</div>
+      <div class="ps-label">Review</div>
+      <div style="flex:1;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ═══════ STEP 1: BUSINESS INFO ═══════ -->
+  <div class="step-card active" id="step1">
+    <div class="step-header">
+      <div class="step-eyebrow">Step 1 of 5</div>
+      <div class="step-title">Tell us about your business</div>
+      <div class="step-sub">This information powers your 3D website — the more detail you add, the smarter the animations.</div>
+    </div>
+    <div class="alert alert-error" id="errStep1"></div>
+    <div class="form-section">
+      <div class="form-section-title"><span class="sec-icon">🏢</span> Business Details</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Business Name *</label><input id="bizName" type="text" placeholder="e.g. Kasmani Cafe" maxlength="60"></div>
+        <div class="form-group"><label>Business Type *</label>
+          <select id="bizType">
+            <option value="">Select type…</option>
+            <option value="Restaurant / Cafe">Restaurant / Cafe</option>
+            <option value="Shop / Retail">Shop / Retail</option>
+            <option value="Service Business">Service Business</option>
+            <option value="Healthcare / Clinic">Healthcare / Clinic</option>
+            <option value="Education / Coaching">Education / Coaching</option>
+            <option value="Portfolio / Freelance">Portfolio / Freelance</option>
+            <option value="Fashion / Boutique">Fashion / Boutique</option>
+            <option value="Beauty / Salon">Beauty / Salon</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Services / Products *</label>
+        <textarea id="bizServices" placeholder="e.g. coffee, tea, matcha, cold brew, pastries, sandwiches&#10;&#10;Tip: List your main items — this drives the 3D animations!" rows="4" maxlength="600"></textarea>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title"><span class="sec-icon">📞</span> Contact Information</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Phone Number</label><input id="bizPhone" type="tel" placeholder="+91 99999 99999"></div>
+        <div class="form-group"><label>Business Email</label><input id="bizEmail" type="email" placeholder="business@email.com"></div>
+      </div>
+      <div class="form-group"><label>Address</label><input id="bizAddress" type="text" placeholder="Your business address" maxlength="200"></div>
+    </div>
+    <div class="step-nav">
+      <button class="btn-next" onclick="goStep(2)">Continue → 3D Style</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 2: 3D STYLE ═══════ -->
+  <div class="step-card" id="step2">
+    <div class="step-header">
+      <div class="step-eyebrow">Step 2 of 5</div>
+      <div class="step-title">Choose your 3D style</div>
+      <div class="step-sub">Pick the visual personality for your 3D website experience.</div>
+    </div>
+    <div class="alert alert-error" id="errStep2"></div>
+    <div class="form-section">
+      <div class="form-section-title"><span class="sec-icon">🎨</span> Visual Style</div>
+      <div class="style-grid">
+        <div class="style-opt" id="styleMinimal" onclick="selectStyle('minimal')">
+          <span class="style-tag tag-fast">⚡ Fast</span>
+          <div class="style-preview prev-minimal"><div class="wire-box"></div></div>
+          <div class="style-name">Minimal 3D</div>
+          <div class="style-desc">Clean wireframe geometry. Precise, fast, works everywhere.</div>
+        </div>
+        <div class="style-opt" id="styleGlass" onclick="selectStyle('glassmorphism')">
+          <span class="style-tag tag-smooth">💎 Smooth</span>
+          <div class="style-preview prev-glass"><div class="glass-card"></div></div>
+          <div class="style-name">Glassmorphism</div>
+          <div class="style-desc">Frosted glass panels, soft glows, luxury feel.</div>
+        </div>
+        <div class="style-opt" id="styleFuturistic" onclick="selectStyle('futuristic')">
+          <span class="style-tag tag-intense">🔥 Intense</span>
+          <div class="style-preview prev-futuristic">
+            <div class="neon-grid"></div>
+            <div class="neon-hex"></div>
+          </div>
+          <div class="style-name">Futuristic</div>
+          <div class="style-desc">Neon grid, cyberpunk energy, glowing edges.</div>
+        </div>
+        <div class="style-opt" id="styleGaming" onclick="selectStyle('gaming')">
+          <span class="style-tag tag-extreme">💥 Extreme</span>
+          <div class="style-preview prev-gaming">
+            <div class="particle-burst">
+              <div class="pb-ring"></div><div class="pb-ring"></div><div class="pb-ring"></div>
+              <div class="pb-core"></div>
+            </div>
+          </div>
+          <div class="style-name">Gaming / Bold</div>
+          <div class="style-desc">Particle explosions, maximum impact, intense effects.</div>
+        </div>
+      </div>
+    </div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goStep(1)">← Back</button>
+      <button class="btn-next" onclick="goStep(3)">Continue → Color Theme</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 3: COLOR THEME ═══════ -->
+  <div class="step-card" id="step3">
+    <div class="step-header">
+      <div class="step-eyebrow">Step 3 of 5</div>
+      <div class="step-title">Pick your color theme</div>
+      <div class="step-sub">This accent color flows through all buttons, headings, and 3D objects on your site.</div>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title"><span class="sec-icon">🎨</span> Color Presets</div>
+      <div class="color-presets" id="colorPresets">
+        <div class="color-dot selected" style="background:#f0a500" data-color="#f0a500" onclick="selectColor('#f0a500',this)" title="Amber Gold"></div>
+        <div class="color-dot" style="background:#4f8eff" data-color="#4f8eff" onclick="selectColor('#4f8eff',this)" title="Electric Blue"></div>
+        <div class="color-dot" style="background:#00d4aa" data-color="#00d4aa" onclick="selectColor('#00d4aa',this)" title="Emerald"></div>
+        <div class="color-dot" style="background:#e040fb" data-color="#e040fb" onclick="selectColor('#e040fb',this)" title="Vivid Purple"></div>
+        <div class="color-dot" style="background:#ff4081" data-color="#ff4081" onclick="selectColor('#ff4081',this)" title="Hot Pink"></div>
+        <div class="color-dot" style="background:#ff6d00" data-color="#ff6d00" onclick="selectColor('#ff6d00',this)" title="Deep Orange"></div>
+        <div class="color-dot" style="background:#00e5ff" data-color="#00e5ff" onclick="selectColor('#00e5ff',this)" title="Cyan"></div>
+        <div class="color-dot" style="background:#69f0ae" data-color="#69f0ae" onclick="selectColor('#69f0ae',this)" title="Mint Green"></div>
+      </div>
+      <div class="color-custom-row">
+        <label>Or pick a custom color:</label>
+        <input type="color" id="colorPicker" value="#f0a500" oninput="selectColor(this.value, null)">
+        <span style="font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;" id="colorHexDisplay">#f0a500</span>
+      </div>
+      <div class="color-preview-box">
+        <div class="cpb-swatch" id="cpbSwatch" style="background:#f0a500;box-shadow:0 4px 20px rgba(240,165,0,.4)"></div>
+        <div>
+          <div class="cpb-text" id="cpbText">Amber Gold</div>
+          <div class="cpb-sub" id="cpbHex">#f0a500 — your accent color</div>
+        </div>
+        <button class="cpb-btn" id="cpbBtn" style="background:#f0a500;color:#1a0e00;font-weight:800;" onclick="return false;">✓ Selected</button>
+      </div>
+    </div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goStep(2)">← Back</button>
+      <button class="btn-next" onclick="goStep(4)">Continue → Interaction</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 4: INTERACTION LEVEL ═══════ -->
+  <div class="step-card" id="step4">
+    <div class="step-header">
+      <div class="step-eyebrow">Step 4 of 5</div>
+      <div class="step-title">Choose interaction level</div>
+      <div class="step-sub">Higher interaction = more immersive, but needs a more powerful device. We auto-detect and fall back gracefully.</div>
+    </div>
+    <div class="alert alert-error" id="errStep4"></div>
+    <div class="form-section">
+      <div class="form-section-title"><span class="sec-icon">⚡</span> Performance &amp; Effects</div>
+      <div class="interaction-opts">
+        <div class="interaction-opt" id="intLow" onclick="selectInteraction('low')">
+          <div class="io-icon">🐢</div>
+          <div class="io-body">
+            <div class="io-name">Low — Fast &amp; Universal</div>
+            <div class="io-desc">CSS 3D transforms only. No Three.js. Blazing fast on every device including old phones.</div>
+          </div>
+          <span class="io-perf perf-all">All devices</span>
+          <div class="io-bars">
+            <div class="io-bar filled" style="height:8px"></div>
+            <div class="io-bar" style="height:14px"></div>
+            <div class="io-bar" style="height:20px"></div>
+          </div>
+        </div>
+        <div class="interaction-opt selected" id="intMedium" onclick="selectInteraction('medium')">
+          <div class="io-icon">⚡</div>
+          <div class="io-body">
+            <div class="io-name">Medium — Balanced</div>
+            <div class="io-desc">Three.js hero section + simplified particles. Great balance of wow-factor and performance.</div>
+          </div>
+          <span class="io-perf perf-most">Most devices</span>
+          <div class="io-bars">
+            <div class="io-bar filled" style="height:8px"></div>
+            <div class="io-bar filled" style="height:14px"></div>
+            <div class="io-bar" style="height:20px"></div>
+          </div>
+        </div>
+        <div class="interaction-opt" id="intHigh" onclick="selectInteraction('high')">
+          <div class="io-icon">🚀</div>
+          <div class="io-body">
+            <div class="io-name">High — Full 3D Everywhere</div>
+            <div class="io-desc">Full Three.js throughout — multiple scenes, mouse-tracking, scroll burst, particle field. Best on modern devices.</div>
+          </div>
+          <span class="io-perf perf-high">Modern devices</span>
+          <div class="io-bars">
+            <div class="io-bar filled" style="height:8px"></div>
+            <div class="io-bar filled" style="height:14px"></div>
+            <div class="io-bar filled" style="height:20px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goStep(3)">← Back</button>
+      <button class="btn-next" onclick="goStep(5)">Continue → Review</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 5: REVIEW & GENERATE ═══════ -->
+  <div class="step-card" id="step5">
+    <div class="step-header">
+      <div class="step-eyebrow">Step 5 of 5</div>
+      <div class="step-title">Review &amp; generate</div>
+      <div class="step-sub">Everything looks good? Hit generate — it's completely free to preview.</div>
+    </div>
+    <div class="alert alert-error" id="errStep5"></div>
+    <div class="review-biz-card" id="reviewBizCard">
+      <div class="rbc-name" id="rvwName">—</div>
+      <div class="rbc-type" id="rvwType">—</div>
+      <div class="rbc-services" id="rvwServices">—</div>
+      <div class="rbc-contacts" id="rvwContacts"></div>
+    </div>
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="review-card-label">3D Style</div>
+        <div class="review-card-value" id="rvwStyle">—</div>
+        <div class="review-card-sub" id="rvwStyleSub">—</div>
+      </div>
+      <div class="review-card">
+        <div class="review-card-label">Accent Color</div>
+        <div class="review-card-value" id="rvwColor">—</div>
+        <div class="review-card-sub" id="rvwColorHex">—</div>
+      </div>
+      <div class="review-card">
+        <div class="review-card-label">Interaction</div>
+        <div class="review-card-value" id="rvwInteraction">—</div>
+        <div class="review-card-sub" id="rvwInteractionSub">—</div>
+      </div>
+      <div class="review-card">
+        <div class="review-card-label">Website Tier</div>
+        <div class="review-card-value">🧊 3D Website</div>
+        <div class="review-card-sub">Activate for ₹799</div>
+      </div>
+    </div>
+    <button class="btn-generate" onclick="generateSite()">
+      <span>Generate Free</span>
+      <span class="arrow">→</span>
+    </button>
+    <div class="generate-note">
+      🔒 <strong>No payment needed now</strong> · Preview first · Pay ₹799 to go live
+    </div>
+    <div class="step-nav" style="margin-top:16px;">
+      <button class="btn-back" onclick="goStep(4)">← Back</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="lo-spinner"></div>
+  <div class="lo-title">Building Your 3D Website</div>
+  <div class="lo-msg" id="loMsg">Initialising 3D engine…</div>
+  <div class="lo-bar"><div class="lo-fill" id="loFill"></div></div>
+  <div class="lo-pct" id="loPct">0%</div>
+  <div class="lo-save-status" id="loSaveStatus"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SUPABASE — exact same pattern as dashboard.html
+═══════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── CONFIG — same values used in dashboard.html & preview.html ──────────────
+const SUPA_URL = 'https://twneeawhdzgnavudanud.supabase.co';
+const SUPA_KEY = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+const BASE_URL = 'https://autovision-psi.vercel.app';
+const TBL_SITES = 'av_websites';
+const LS_KEY    = 'av_websites_local';
+
+// ── Supabase client — identical to dashboard.html ────────────────────────────
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ── AUTH CHECK — same pattern as dashboard.html ──────────────────────────────
+let currentUser = null;
+(function checkAuth() {
+  try {
+    const u = JSON.parse(localStorage.getItem('av_user') || '{}');
+    if (!u.email || !u.expiresAt || Date.now() > u.expiresAt) {
+      localStorage.removeItem('av_user');
+      window.location.href = 'login.html';
+      return;
+    }
+    currentUser = u;
+  } catch {
+    window.location.href = 'login.html';
+  }
+})();
+
+// ── localStorage helper — same as dashboard.html ─────────────────────────────
+function lsSave(record) {
+  try {
+    const arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+    arr.unshift(record);
+    localStorage.setItem(LS_KEY, JSON.stringify(arr));
+    return true;
+  } catch { return false; }
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentStep   = 1;
+let selectedStyle = null;
+let selectedColor = '#f0a500';
+let selectedLevel = 'medium';
+
+// ── COLOR NAMES MAP ───────────────────────────────────────────────────────────
+const COLOR_NAMES = {
+  '#f0a500':'Amber Gold','#4f8eff':'Electric Blue','#00d4aa':'Emerald',
+  '#e040fb':'Vivid Purple','#ff4081':'Hot Pink','#ff6d00':'Deep Orange',
+  '#00e5ff':'Cyan','#69f0ae':'Mint Green'
+};
+
+const STYLE_META = {
+  minimal:       { label:'Minimal 3D',     sub:'Wireframe · Fast · Universal' },
+  glassmorphism: { label:'Glassmorphism',  sub:'Frosted glass · Smooth · Luxe' },
+  futuristic:    { label:'Futuristic',     sub:'Neon grid · Cyberpunk · Intense' },
+  gaming:        { label:'Gaming / Bold',  sub:'Particle burst · Extreme · High-impact' }
+};
+
+const LEVEL_META = {
+  low:    { label:'Low — Fast',        sub:'CSS 3D only · All devices' },
+  medium: { label:'Medium — Balanced', sub:'Three.js hero · Most devices' },
+  high:   { label:'High — Full 3D',    sub:'Full Three.js · Modern devices' }
+};
+
+// ── PURPOSE DERIVATION ────────────────────────────────────────────────────────
+function derivePurpose(type, services) {
+  const t = (type + ' ' + services).toLowerCase();
+  if (/coffee|tea|cafe|latte|matcha|brew|drink|beverage|chai|cappuccino|espresso/.test(t)) return 'cafe';
+  if (/food|pizza|burger|restaurant|dining|cuisine|cook|chef|meal|eat|menu|dish/.test(t))  return 'food';
+  if (/gym|fitness|yoga|health|wellness|spa|medical|doctor|clinic|therapy|nutrition/.test(t)) return 'health';
+  if (/fashion|cloth|wear|boutique|style|dress|shop|store|retail|shoes|accessories/.test(t)) return 'retail';
+  if (/tech|software|app|digital|code|web|it|computer|developer|startup|saas/.test(t))     return 'tech';
+  if (/design|art|creative|photo|video|studio|brand|graphic|animation|portfolio/.test(t))  return 'creative';
+  if (/school|education|tutor|coaching|learn|teach|course|training|academy|classes/.test(t)) return 'education';
+  return 'generic';
+}
+
+// ── STEP NAVIGATION ───────────────────────────────────────────────────────────
+function goStep(n) {
+  if (!validateStep(currentStep)) return;
+  renderProgress(n);
+  document.getElementById('step' + currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step' + n).classList.add('active');
+  if (n === 5) populateReview();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep(s) {
+  hideErr('errStep' + s);
+  if (s === 1) {
+    const name = document.getElementById('bizName').value.trim();
+    const type = document.getElementById('bizType').value;
+    const svcs = document.getElementById('bizServices').value.trim();
+    if (!name || name.length < 2) { showErr('errStep1','⚠️ Please enter your business name (at least 2 characters).'); return false; }
+    if (!type) { showErr('errStep1','⚠️ Please select your business type.'); return false; }
+    if (!svcs) { showErr('errStep1','⚠️ Please describe your services or products — this powers the 3D animations!'); return false; }
+    const email = document.getElementById('bizEmail').value.trim();
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { showErr('errStep1','⚠️ Please enter a valid email address.'); return false; }
+  }
+  if (s === 2 && !selectedStyle) { showErr('errStep2','⚠️ Please select a 3D style before continuing.'); return false; }
+  if (s === 4 && !selectedLevel) { showErr('errStep4','⚠️ Please select an interaction level.'); return false; }
+  return true;
+}
+
+function renderProgress(nextStep) {
+  for (let i = 1; i <= 5; i++) {
+    const dot  = document.getElementById('psDot'  + i);
+    const item = document.getElementById('psItem' + i);
+    const line = document.getElementById('psLine' + i);
+    dot.classList.remove('active','done');
+    item.classList.remove('active','done');
+    if (i < nextStep) {
+      dot.classList.add('done'); dot.textContent = '✓'; item.classList.add('done');
+      if (line) line.classList.add('done');
+    } else if (i === nextStep) {
+      dot.classList.add('active'); dot.textContent = i; item.classList.add('active');
+      if (line) line.classList.remove('done');
+    } else {
+      dot.textContent = i;
+      if (line) line.classList.remove('done');
+    }
+  }
+}
+
+// ── STYLE SELECTION ───────────────────────────────────────────────────────────
+function selectStyle(s) {
+  selectedStyle = s;
+  ['styleMinimal','styleGlass','styleFuturistic','styleGaming'].forEach(id =>
+    document.getElementById(id).classList.remove('selected'));
+  const map = { minimal:'styleMinimal', glassmorphism:'styleGlass', futuristic:'styleFuturistic', gaming:'styleGaming' };
+  document.getElementById(map[s]).classList.add('selected');
+}
+
+// ── COLOR SELECTION ───────────────────────────────────────────────────────────
+function selectColor(hex, dotEl) {
+  selectedColor = hex;
+  document.getElementById('colorPicker').value = hex;
+  document.getElementById('colorHexDisplay').textContent = hex;
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+  if (dotEl) dotEl.classList.add('selected');
+  const name = COLOR_NAMES[hex] || 'Custom Color';
+  document.getElementById('cpbSwatch').style.background = hex;
+  document.getElementById('cpbSwatch').style.boxShadow = `0 4px 20px ${hex}55`;
+  document.getElementById('cpbText').textContent = name;
+  document.getElementById('cpbHex').textContent = hex + ' — your accent color';
+  document.getElementById('cpbBtn').style.background = hex;
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  document.getElementById('cpbBtn').style.color = (0.299*r+0.587*g+0.114*b)/255 > 0.6 ? '#1a0e00' : '#ffffff';
+}
+
+// ── INTERACTION SELECTION ─────────────────────────────────────────────────────
+function selectInteraction(level) {
+  selectedLevel = level;
+  ['intLow','intMedium','intHigh'].forEach(id => document.getElementById(id).classList.remove('selected'));
+  const map = { low:'intLow', medium:'intMedium', high:'intHigh' };
+  document.getElementById(map[level]).classList.add('selected');
+  document.querySelectorAll('.interaction-opt').forEach(opt =>
+    opt.querySelectorAll('.io-bar').forEach(b => b.classList.remove('filled')));
+  const n = level === 'low' ? 1 : level === 'medium' ? 2 : 3;
+  document.getElementById(map[level]).querySelectorAll('.io-bar').forEach((b,i) => { if(i<n) b.classList.add('filled'); });
+}
+
+// ── REVIEW POPULATE ───────────────────────────────────────────────────────────
+function populateReview() {
+  const name     = document.getElementById('bizName').value.trim();
+  const type     = document.getElementById('bizType').value;
+  const services = document.getElementById('bizServices').value.trim();
+  const phone    = document.getElementById('bizPhone').value.trim();
+  const email    = document.getElementById('bizEmail').value.trim();
+  const address  = document.getElementById('bizAddress').value.trim();
+
+  document.getElementById('rvwName').textContent     = name;
+  document.getElementById('rvwType').textContent     = type;
+  document.getElementById('rvwServices').textContent = services;
+
+  const contacts = document.getElementById('rvwContacts');
+  contacts.innerHTML = '';
+  if (phone)   contacts.innerHTML += `<span class="rbc-contact-chip">📞 ${esc(phone)}</span>`;
+  if (email)   contacts.innerHTML += `<span class="rbc-contact-chip">✉️ ${esc(email)}</span>`;
+  if (address) contacts.innerHTML += `<span class="rbc-contact-chip">📍 ${esc(address)}</span>`;
+  if (!phone && !email && !address) contacts.innerHTML = '<span style="font-size:12px;color:var(--text3);">No contact info added</span>';
+
+  const sm = STYLE_META[selectedStyle] || { label:'—', sub:'—' };
+  document.getElementById('rvwStyle').textContent    = sm.label;
+  document.getElementById('rvwStyleSub').textContent = sm.sub;
+
+  const colorName = COLOR_NAMES[selectedColor] || 'Custom';
+  document.getElementById('rvwColor').innerHTML = `<span class="review-color-dot" style="background:${selectedColor}"></span>${colorName}`;
+  document.getElementById('rvwColorHex').textContent = selectedColor;
+
+  const lm = LEVEL_META[selectedLevel] || { label:'—', sub:'—' };
+  document.getElementById('rvwInteraction').textContent    = lm.label;
+  document.getElementById('rvwInteractionSub').textContent = lm.sub;
+}
+
+// ── GENERATE — saves to BOTH Supabase AND localStorage ───────────────────────
+// Pattern: try Supabase first, fall back to localStorage (same as dashboard.html)
+async function generateSite() {
+  hideErr('errStep5');
+
+  const name     = document.getElementById('bizName').value.trim();
+  const type     = document.getElementById('bizType').value;
+  const services = document.getElementById('bizServices').value.trim();
+  const phone    = document.getElementById('bizPhone').value.trim();
+  const emailVal = document.getElementById('bizEmail').value.trim();
+  const address  = document.getElementById('bizAddress').value.trim();
+
+  if (!name || !type || !services || !selectedStyle) {
+    showErr('errStep5','⚠️ Some required fields are missing. Please go back and check.');
+    return;
+  }
+
+  const purpose = derivePurpose(type, services);
+
+  // Show loading overlay
+  const overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('open');
+
+  const msgs = [
+    'Initialising 3D engine…',
+    'Loading Three.js scene…',
+    'Mapping category animations…',
+    'Generating scroll effects…',
+    'Saving your website…',
+    'Finalising 3D website…'
+  ];
+  let step = 0;
+  const iv = setInterval(() => {
+    step = Math.min(step + 1, 4);
+    const pct = Math.round((step / 5) * 85);
+    document.getElementById('loFill').style.width = pct + '%';
+    document.getElementById('loPct').textContent  = pct + '%';
+    document.getElementById('loMsg').textContent  = msgs[step];
+  }, 600);
+
+  await new Promise(r => setTimeout(r, 3000));
+  clearInterval(iv);
+
+  // ── BUILD RECORD — columns match av_websites table ────────────────────────
+  // same column names used in dashboard.html insertions
+  const record = {
+    user_email:    currentUser.email,
+    name,
+    type,
+    services,                        // "service" text field
+    phone:         phone    || null,
+    email:         emailVal || null,
+    address:       address  || null,
+    design:        selectedStyle,    // "design" column — stores 3D style
+    website_theme: selectedColor,    // store accent color in website_theme
+    website_tier:  '3d',
+    status:        'preview',
+    expires_at:    new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
+    // Extra 3D-specific metadata stored as JSON-safe strings
+    // (reuse existing text columns — no schema changes needed)
+    description:   JSON.stringify({
+      style3d:     selectedStyle,
+      color:       selectedColor,
+      interaction: selectedLevel,
+      purpose
+    })
+  };
+
+  document.getElementById('loMsg').textContent = 'Saving to cloud…';
+  document.getElementById('loSaveStatus').textContent = '☁️ Connecting to Supabase…';
+
+  let savedRecord  = null;
+  let usedFallback = false;
+  let savedId      = null;
+
+  // ── SUPABASE INSERT — exact same try/catch pattern as dashboard.html ───────
+  try {
+    const { data, error, status } = await db
+      .from(TBL_SITES)
+      .insert([record])
+      .select()
+      .single();
+
+    console.log('[AV 3D] Supabase status:', status);
+
+    if (error) {
+      console.error('[AV 3D] INSERT ERROR:', error.code, error.message);
+      throw error;
+    }
+    if (!data || !data.id) throw new Error('No row returned');
+
+    console.log('[AV 3D] ✅ Saved to Supabase, id:', data.id);
+    savedRecord = data;
+    savedId     = data.id;
+    document.getElementById('loSaveStatus').textContent = '✅ Saved to cloud successfully';
+
+  } catch (insertErr) {
+    // ── FALLBACK: localStorage — same as dashboard.html ───────────────────
+    console.warn('[AV 3D] Supabase failed → localStorage fallback:', insertErr?.message);
+    document.getElementById('loSaveStatus').textContent = '📦 Saving locally (cloud unavailable)…';
+
+    const localId = 'local_3d_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    const localRecord = {
+      ...record,
+      id:         localId,
+      created_at: new Date().toISOString(),
+      _isLocal:   true,
+      _is3d:      true,
+      // restore 3D fields from description for preview.html
+      style3d:    selectedStyle,
+      color:      selectedColor,
+      interaction:selectedLevel,
+      purpose
+    };
+
+    if (lsSave(localRecord)) {
+      savedRecord  = localRecord;
+      savedId      = localId;
+      usedFallback = true;
+      document.getElementById('loSaveStatus').textContent = '📦 Saved locally';
+    } else {
+      overlay.classList.remove('open');
+      showErr('errStep5', `⚠️ Could not save. Error: ${insertErr?.message || 'unknown'}`);
+      return;
+    }
+  }
+
+  // ── Also save to localStorage as mirror (so 3d-preview.html can read it) ──
+  // This is a convenience copy — Supabase is the source of truth
+  const mirrorRecord = {
+    ...record,
+    id:          savedId,
+    created_at:  savedRecord.created_at || new Date().toISOString(),
+    _isLocal:    usedFallback,
+    _is3d:       true,
+    style3d:     selectedStyle,
+    color:       selectedColor,
+    interaction: selectedLevel,
+    purpose
+  };
+  if (!usedFallback) lsSave(mirrorRecord); // save mirror only if Supabase succeeded
+
+  document.getElementById('loFill').style.width = '100%';
+  document.getElementById('loPct').textContent  = '100%';
+  document.getElementById('loMsg').textContent  = 'Redirecting to your 3D preview…';
+  await new Promise(r => setTimeout(r, 600));
+
+  overlay.classList.remove('open');
+
+  // ── Redirect to 3d-preview.html — same URL pattern as dashboard.html ──────
+  if (usedFallback) {
+    window.location.href = '3d-preview.html?localsite=' + savedId;
+  } else {
+    window.location.href = '3d-preview.html?site=' + savedId;
+  }
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function esc(s) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(s || ''));
+  return d.innerHTML;
+}
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg; el.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function hideErr(id) {
+  const el = document.getElementById(id);
+  if (el) { el.style.display = 'none'; el.textContent = ''; }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+// Default interaction bars for medium (selected by default)
+document.getElementById('intMedium').querySelectorAll('.io-bar').forEach((b,i) => {
+  if (i < 2) b.classList.add('filled');
+});
+</script>
+</body>
+</html>
