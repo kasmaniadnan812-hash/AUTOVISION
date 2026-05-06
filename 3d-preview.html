@@ -123,7 +123,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-web
 .feat-text .ft{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
 .feat-text .fd{font-size:12px;color:var(--text3);line-height:1.5}
 
-/* ── PRODUCTS SECTION — each product gets full-width card ── */
+/* ── PRODUCTS SECTION ── */
 .products-sec{padding:80px 0;max-width:1400px;margin:0 auto}
 .products-hd{text-align:center;padding:0 24px;margin-bottom:64px}
 .product-card{display:grid;grid-template-columns:1fr 1fr;min-height:540px;margin-bottom:4px;overflow:hidden;position:relative}
@@ -151,7 +151,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-web
 .prod-thumb:hover{transform:scale(1.06);border-color:rgba(var(--accent-rgb),.4)}
 .prod-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 14px;border-radius:100px;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.25);color:var(--accent)}
 
-/* ── GALLERY (images) ── */
+/* ── GALLERY ── */
 .gallery-sec{padding:100px 60px;max-width:1400px;margin:0 auto}
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:280px 280px;gap:10px;margin-top:56px}
 .g-item{position:relative;overflow:hidden;cursor:pointer;border-radius:4px;background:var(--surface)}
@@ -180,7 +180,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-web
 .testi-name{font-size:13px;font-weight:700;color:var(--text)}
 .testi-role{font-size:11px;color:var(--text3);margin-top:2px}
 
-/* ── SHOWCASE (fullscreen 3D bg) ── */
+/* ── SHOWCASE ── */
 .showcase-sec{position:relative;overflow:hidden;padding:160px 40px;text-align:center;min-height:600px;display:flex;align-items:center;justify-content:center}
 #showcaseCanvas{position:absolute;inset:0;z-index:0;width:100%!important;height:100%!important}
 .showcase-ct{position:relative;z-index:1;max-width:820px;margin:0 auto}
@@ -376,7 +376,7 @@ body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
   </div>
 </section>
 
-<!-- PRODUCTS / SERVICES — each gets own 3D section -->
+<!-- PRODUCTS / SERVICES -->
 <section id="productsSection">
   <div class="products-sec">
     <div class="products-hd reveal">
@@ -474,54 +474,56 @@ body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCRIPTS
-═══════════════════════════════════════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-/* ══════════════════════════════════════════════════════
-   CONFIG — exact same values as dashboard.html
-══════════════════════════════════════════════════════ */
-const SUPA_URL  = 'https://twneeawhdzgnavudanud.supabase.co';
-const SUPA_KEY  = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
-const RZP_KEY   = 'rzp_live_SaJ684rRC2TUwj';
-const BASE_URL  = 'https://autovision-psi.vercel.app';
-const TBL_SITES = 'av_websites';
-const LS_KEY    = 'av_websites_local';
-const PEXELS_KEY= 'YdYkG3y4W1Hw2miLpLTiQoxWoOeknnmSDra6ahTKCfIAdpWD5w5hpO2w';
+/* ══ CONFIG ══ */
+const SUPA_URL   = 'https://twneeawhdzgnavudanud.supabase.co';
+const SUPA_KEY   = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+const RZP_KEY    = 'rzp_live_SaJ684rRC2TUwj';
+const BASE_URL   = 'https://autovision-psi.vercel.app';
+const TBL_SITES  = 'av_websites';
+const LS_KEY     = 'av_websites_local';
+const PEXELS_KEY = 'YdYkG3y4W1Hw2miLpLTiQoxWoOeknnmSDra6ahTKCfIAdpWD5w5hpO2w';
 
-/* Supabase client — same as dashboard.html */
+/* ══ SUPABASE ══ */
 const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-const params   = new URLSearchParams(window.location.search);
-const SITE_ID  = params.get('site');
-const LOCAL_ID = params.get('localsite');
+const urlParams = new URLSearchParams(window.location.search);
+const SITE_ID   = urlParams.get('site');
+const LOCAL_ID  = urlParams.get('localsite');
 
 /* ══ GLOBALS ══ */
-let SD = null, accentColor = '#f0a500', accentRGB = '240,165,0';
-let category = 'generic', currentUser = null;
+let SD = null;
+let accentColor  = '#f0a500';
+let accentRGB    = '240,165,0';
+let siteCategory = 'generic';   /* renamed from "category" to avoid any clash */
+let currentUser  = null;
 let heroRenderer, heroScene, heroCamera, heroMainGroup;
-let heroParticles = [], heroTime = 0, mouseX = 0, mouseY = 0;
+let heroParticles = [];
+let heroTime  = 0;
+let mouseX    = 0;
+let mouseY    = 0;
 const pxCache = {};
 
-/* ══ AUTH — same as dashboard.html ══ */
+/* ══ AUTH ══ */
 try { currentUser = JSON.parse(localStorage.getItem('av_user') || '{}'); } catch {}
 
 /* ══ CATEGORY KEYWORDS ══ */
 const CAT_KW = {
-  cafe:    ['coffee','tea','cafe','latte','matcha','brew','chai','cappuccino','espresso','mocha','frappe'],
-  food:    ['food','pizza','burger','restaurant','dining','cuisine','chef','meal','menu','dish','biryani','sushi','pasta','sandwich','snack','dessert','cake','bakery'],
-  health:  ['gym','fitness','yoga','health','wellness','spa','medical','doctor','clinic','therapy','nutrition','massage'],
-  retail:  ['fashion','cloth','wear','boutique','style','dress','shop','store','retail','shoes','accessories','jewel','watch'],
-  tech:    ['tech','software','app','digital','code','web','it','computer','developer','startup','saas','ai','data'],
-  creative:['design','art','creative','photo','video','studio','brand','graphic','animation','portfolio'],
+  cafe:     ['coffee','tea','cafe','latte','matcha','brew','chai','cappuccino','espresso','mocha','frappe'],
+  food:     ['food','pizza','burger','restaurant','dining','cuisine','chef','meal','menu','dish','biryani','sushi','pasta','sandwich','snack','dessert','cake','bakery'],
+  health:   ['gym','fitness','yoga','health','wellness','spa','medical','doctor','clinic','therapy','nutrition','massage'],
+  retail:   ['fashion','cloth','wear','boutique','style','dress','shop','store','retail','shoes','accessories','jewel','watch'],
+  tech:     ['tech','software','app','digital','code','web','it','computer','developer','startup','saas','ai','data'],
+  creative: ['design','art','creative','photo','video','studio','brand','graphic','animation','portfolio'],
   education:['school','education','tutor','coaching','learn','teach','course','training','academy'],
-  beauty:  ['salon','beauty','hair','nail','makeup','skincare','spa','facial','wax','groom']
+  beauty:   ['salon','beauty','hair','nail','makeup','skincare','spa','facial','wax','groom']
 };
 
-const CAT_EMO = { cafe:'☕',food:'🍽️',health:'💪',retail:'🛍️',tech:'💻',creative:'🎨',education:'📚',beauty:'💄',generic:'✦' };
+const CAT_EMO = { cafe:'☕', food:'🍽️', health:'💪', retail:'🛍️', tech:'💻', creative:'🎨', education:'📚', beauty:'💄', generic:'✦' };
+
 const ITEM_EMO = {
   'coffee':'☕','tea':'🍵','chai':'🫖','latte':'☕','matcha':'🍵','espresso':'☕','cappuccino':'☕','mocha':'☕','frappe':'🥤',
   'croissant':'🥐','pastry':'🥐','sandwich':'🥪','cake':'🎂','muffin':'🧁','bread':'🍞','pizza':'🍕','burger':'🍔',
@@ -540,8 +542,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (!SD) { showNotFound(); return; }
 
   applyAccentColor();
-  category = detectCat(SD.services || SD.description || '', SD.type || '');
-  if (SD.purpose && SD.purpose !== 'generic') category = SD.purpose;
+  siteCategory = detectCat(SD.services || SD.description || '', SD.type || '');
+  if (SD.purpose && SD.purpose !== 'generic') siteCategory = SD.purpose;
 
   populatePage();
   initCursor();
@@ -556,50 +558,48 @@ window.addEventListener('DOMContentLoaded', async () => {
   fetchGalleryImages();
 });
 
-/* ══ LOAD SITE DATA — reads from Supabase first, then localStorage ══
-   Same pattern as preview.html                                        */
+/* ══ LOAD SITE DATA ══ */
 async function loadSiteData() {
   if (LOCAL_ID) {
-    /* localStorage path */
     try {
       const arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-      SD = arr.find(s => s.id === LOCAL_ID) || null;
+      SD = arr.find(function(s){ return s.id === LOCAL_ID; }) || null;
       if (SD) { parseDescription(SD); return; }
-    } catch {}
+    } catch(e) { console.warn('[AV] localStorage read:', e); }
   }
 
   if (SITE_ID) {
-    /* Supabase path — same pattern as preview.html */
     try {
-      const { data, error } = await db
-        .from(TBL_SITES)
-        .select('*')
-        .eq('id', SITE_ID)
-        .single();
-      if (error) console.error('[AV 3D preview] Supabase:', error.message);
-      if (data) { SD = data; parseDescription(SD); return; }
-    } catch (e) { console.error('[AV 3D preview] exception:', e); }
+      const res = await db.from(TBL_SITES).select('*').eq('id', SITE_ID).single();
+      if (res.error) console.error('[AV 3D preview] Supabase:', res.error.message);
+      if (res.data) { SD = res.data; parseDescription(SD); return; }
+    } catch(e) { console.error('[AV 3D preview] exception:', e); }
   }
 
-  /* last resort: first localStorage entry */
+  /* Last resort: first localStorage entry */
   try {
     const arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-    const match = arr.find(s => s._is3d) || arr[0];
+    const match = arr.find(function(s){ return s._is3d; }) || arr[0];
     if (match) { SD = match; parseDescription(SD); }
-  } catch {}
+  } catch(e) { console.warn('[AV] fallback localStorage:', e); }
 }
 
-/* Pull 3D-specific fields out of the description JSON (set by 3d-builder.html) */
+/* ══ PARSE DESCRIPTION ══ */
 function parseDescription(s) {
   if (!s) return;
-  try {
-    const d = JSON.parse(s.description || '{}');
-    if (d.style3d)     s.style3d     = d.style3d;
-    if (d.color)       s.color       = d.color;
-    if (d.interaction) s.interaction = d.interaction;
-    if (d.purpose)     s.purpose     = d.purpose;
-  } catch {}
-  /* website_theme holds the color (set by 3d-builder.html) */
+  /* Try to read 3D fields from the description JSON blob */
+  if (s.description && typeof s.description === 'string') {
+    try {
+      const d = JSON.parse(s.description);
+      if (d && typeof d === 'object') {
+        if (d.style3d)     s.style3d     = d.style3d;
+        if (d.color)       s.color       = d.color;
+        if (d.interaction) s.interaction = d.interaction;
+        if (d.purpose)     s.purpose     = d.purpose;
+      }
+    } catch(e) { /* description is plain text, not JSON — that's fine */ }
+  }
+  /* Fallback: website_theme column holds accent color */
   if (!s.color && s.website_theme && s.website_theme.startsWith('#')) {
     s.color = s.website_theme;
   }
@@ -607,53 +607,60 @@ function parseDescription(s) {
 
 /* ══ ACCENT COLOR ══ */
 function applyAccentColor() {
-  accentColor = SD.color || '#f0a500';
-  const hx = accentColor.replace('#', '');
-  const r = parseInt(hx.slice(0,2),16), g = parseInt(hx.slice(2,4),16), b = parseInt(hx.slice(4,6),16);
-  accentRGB = `${r},${g},${b}`;
+  accentColor = (SD && SD.color) ? SD.color : '#f0a500';
+  var hx = accentColor.replace('#', '');
+  var rr = parseInt(hx.slice(0,2), 16);
+  var gg = parseInt(hx.slice(2,4), 16);
+  var bb = parseInt(hx.slice(4,6), 16);
+  accentRGB = rr + ',' + gg + ',' + bb;
   document.documentElement.style.setProperty('--accent', accentColor);
   document.documentElement.style.setProperty('--accent-rgb', accentRGB);
-  document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${accentColor} 0%,${lightenHex(accentColor,50)} 100%)`);
+  document.documentElement.style.setProperty('--grad',
+    'linear-gradient(135deg,' + accentColor + ' 0%,' + lightenHex(accentColor, 50) + ' 100%)');
 }
 
-function lightenHex(h, a) {
-  const hx = h.replace('#','');
-  const c = v => Math.min(255, v + a).toString(16).padStart(2,'0');
-  return '#' + c(parseInt(hx.slice(0,2),16)) + c(parseInt(hx.slice(2,4),16)) + c(parseInt(hx.slice(4,6),16));
+function lightenHex(h, amount) {
+  var hx = h.replace('#', '');
+  function lc(v) { return Math.min(255, v + amount).toString(16).padStart(2, '0'); }
+  return '#' + lc(parseInt(hx.slice(0,2),16)) + lc(parseInt(hx.slice(2,4),16)) + lc(parseInt(hx.slice(4,6),16));
 }
 
 /* ══ CATEGORY DETECT ══ */
 function detectCat(svc, type) {
-  const t = (svc + ' ' + type).toLowerCase();
-  for (const [c, ws] of Object.entries(CAT_KW)) { if (ws.some(w => t.includes(w))) return c; }
+  var t = (svc + ' ' + type).toLowerCase();
+  for (var c in CAT_KW) {
+    if (CAT_KW[c].some(function(w){ return t.includes(w); })) return c;
+  }
   return 'generic';
 }
 
 /* ══ ITEM PARSING ══ */
 function parseItems(s) {
-  return (s || '').split(/[,\n;]+/).map(x => x.trim().toLowerCase()).filter(x => x.length > 1).slice(0, 8);
+  return (s || '').split(/[,\n;]+/).map(function(x){ return x.trim().toLowerCase(); }).filter(function(x){ return x.length > 1; }).slice(0, 8);
 }
 
 function getEmoji(n) {
-  const k = (n || '').toLowerCase();
-  for (const [kw, e] of Object.entries(ITEM_EMO)) { if (k.includes(kw)) return e; }
-  return CAT_EMO[category] || '✦';
+  var k = (n || '').toLowerCase();
+  for (var kw in ITEM_EMO) {
+    if (k.includes(kw)) return ITEM_EMO[kw];
+  }
+  return CAT_EMO[siteCategory] || '✦';
 }
 
 /* ══ POPULATE PAGE ══ */
 function populatePage() {
-  const name  = SD.name  || 'Business';
-  const words = name.trim().split(/\s+/);
-  const items = parseItems(SD.services || '');
+  var name  = SD.name || 'Business';
+  var words = name.trim().split(/\s+/);
+  var items = parseItems(SD.services || '');
 
-  /* Hero title — no duplication */
-  let l1, l2;
+  /* Hero title */
+  var l1, l2;
   if (words.length === 1) {
     l1 = words[0].toUpperCase();
-    const tw = (SD.type || 'Premium').split(/[\s\/]+/)[0].trim().toUpperCase();
+    var tw = ((SD.type || 'Premium').split(/[\s\/]+/)[0] || '').trim().toUpperCase();
     l2 = tw === l1 ? 'EXPERIENCE' : tw;
   } else {
-    const mid = Math.ceil(words.length / 2);
+    var mid = Math.ceil(words.length / 2);
     l1 = words.slice(0, mid).join(' ').toUpperCase();
     l2 = words.slice(mid).join(' ').toUpperCase() || 'PREMIUM';
   }
@@ -661,74 +668,74 @@ function populatePage() {
   document.getElementById('heroL2').textContent = l2;
 
   document.title = name + ' — AutoVision 3D';
-  document.getElementById('navLogo').innerHTML = esc(words[0].toUpperCase()) + '<span class="dot">.</span>';
+  document.getElementById('navLogo').innerHTML  = esc(words[0].toUpperCase()) + '<span class="dot">.</span>';
   document.getElementById('footerLogo').textContent = name.toUpperCase();
   document.getElementById('footerCopy').textContent = '© ' + new Date().getFullYear() + ' ' + name;
-  document.getElementById('heroEyebrow').textContent = CAT_EMO[category] + ' ' + (SD.type || 'Premium') + ' ' + CAT_EMO[category];
+  document.getElementById('heroEyebrow').textContent = (CAT_EMO[siteCategory] || '✦') + ' ' + (SD.type || 'Premium') + ' ' + (CAT_EMO[siteCategory] || '✦');
 
-  const top3 = items.slice(0, 3);
+  var top3 = items.slice(0, 3);
   document.getElementById('heroSub').textContent = top3.length
-    ? 'Specialising in ' + top3.map(i => cap(i)).join(', ') + ' — and so much more.'
+    ? 'Specialising in ' + top3.map(cap).join(', ') + ' — and so much more.'
     : (SD.tagline || 'Excellence in everything we do.');
 
   buildMarquee(name, items);
 
-  document.getElementById('aboutTitle').innerHTML = `THE<br><span class="acc">${esc(words[0].toUpperCase())}</span> STORY`;
-  document.getElementById('aboutBody').textContent = `At ${name}, we take pride in delivering exceptional experiences. Whether it's our ${items[0] || 'services'}, our ${items[1] || 'products'}, or the atmosphere we create — every detail is crafted with care.`;
+  document.getElementById('aboutTitle').innerHTML = 'THE<br><span class="acc">' + esc(words[0].toUpperCase()) + '</span> STORY';
+  document.getElementById('aboutBody').textContent = 'At ' + name + ', we take pride in delivering exceptional experiences. Whether it\'s our ' + (items[0] || 'services') + ', our ' + (items[1] || 'products') + ', or the atmosphere we create — every detail is crafted with care.';
 
-  const feats = [
-    { icon:'⭐', t:'Premium Quality',    d:'Every offering meets the highest standards.' },
+  var feats = [
+    { icon:'⭐', t:'Premium Quality',     d:'Every offering meets the highest standards.' },
     { icon:'🤝', t:'Trusted by Hundreds', d:'Our growing community of satisfied clients speaks for itself.' },
-    { icon:'⚡', t:'Fast & Reliable',    d:'We value your time and always deliver on our promises.' },
-    { icon:'💎', t:'Best in Class',      d:'Unmatched expertise and passion in everything we create.' }
+    { icon:'⚡', t:'Fast & Reliable',     d:'We value your time and always deliver on our promises.' },
+    { icon:'💎', t:'Best in Class',       d:'Unmatched expertise and passion in everything we create.' }
   ];
-  document.getElementById('featList').innerHTML = feats.map(f =>
-    `<div class="feat-row reveal"><div class="feat-icon">${f.icon}</div><div class="feat-text"><div class="ft">${f.t}</div><div class="fd">${f.d}</div></div></div>`
-  ).join('');
+  document.getElementById('featList').innerHTML = feats.map(function(f){
+    return '<div class="feat-row reveal"><div class="feat-icon">' + f.icon + '</div><div class="feat-text"><div class="ft">' + f.t + '</div><div class="fd">' + f.d + '</div></div></div>';
+  }).join('');
 
   document.getElementById('showcaseName').textContent = words[0].toUpperCase();
-  document.getElementById('showcaseSub').textContent = `Every visit, every ${items[0] || 'interaction'} — crafted to leave an impression that lasts.`;
+  document.getElementById('showcaseSub').textContent  = 'Every visit, every ' + (items[0] || 'interaction') + ' — crafted to leave an impression that lasts.';
 
   /* Testimonials */
-  const quotes = [
-    `Honestly one of the best experiences I've had. The ${items[0] || 'service'} is absolutely top-notch.`,
-    `I've been a regular at ${name} for over a year and every visit has been perfect. Highly recommend!`,
-    `Outstanding quality and incredible attention to detail. ${name} truly stands apart from everything else.`
+  var quotes = [
+    'Honestly one of the best experiences I\'ve had. The ' + (items[0] || 'service') + ' is absolutely top-notch.',
+    'I\'ve been a regular at ' + name + ' for over a year and every visit has been perfect. Highly recommend!',
+    'Outstanding quality and incredible attention to detail. ' + name + ' truly stands apart from everything else.'
   ];
-  const authors = [
+  var authors = [
     { n:'Priya S.',  r:'Regular Customer', i:'P' },
     { n:'Arjun M.',  r:'Loyal Client',     i:'A' },
     { n:'Neha R.',   r:'Happy Customer',   i:'N' }
   ];
-  document.getElementById('testiGrid').innerHTML = authors.map((a, i) =>
-    `<div class="testi-card reveal d${i}">
-      <span class="testi-qm">"</span>
-      <div class="testi-stars">★★★★★</div>
-      <div class="testi-q">${esc(quotes[i])}</div>
-      <div class="testi-au"><div class="testi-av">${a.i}</div><div><div class="testi-name">${esc(a.n)}</div><div class="testi-role">${esc(a.r)}</div></div></div>
-    </div>`
-  ).join('');
+  document.getElementById('testiGrid').innerHTML = authors.map(function(a, i){
+    return '<div class="testi-card reveal d' + i + '">' +
+      '<span class="testi-qm">"</span>' +
+      '<div class="testi-stars">★★★★★</div>' +
+      '<div class="testi-q">' + esc(quotes[i]) + '</div>' +
+      '<div class="testi-au"><div class="testi-av">' + a.i + '</div><div><div class="testi-name">' + esc(a.n) + '</div><div class="testi-role">' + esc(a.r) + '</div></div></div>' +
+      '</div>';
+  }).join('');
 
   /* Contact */
-  document.getElementById('contactBody').textContent = `Ready to experience ${name}? We'd love to hear from you.`;
-  const cItems = [];
+  document.getElementById('contactBody').textContent = 'Ready to experience ' + name + '? We\'d love to hear from you.';
+  var cItems = [];
   if (SD.phone)   cItems.push({ icon:'📞', label:'Phone',   val:SD.phone });
   if (SD.email)   cItems.push({ icon:'✉️', label:'Email',   val:SD.email });
   if (SD.address) cItems.push({ icon:'📍', label:'Address', val:SD.address });
   if (!cItems.length) cItems.push({ icon:'💬', label:'Reach Out', val:'Connect with us today' });
-  document.getElementById('contactItems').innerHTML = cItems.map(c =>
-    `<div class="ci"><div class="ci-icon">${c.icon}</div><div><div class="ci-lbl">${esc(c.label)}</div><div class="ci-val">${esc(c.val)}</div></div></div>`
-  ).join('');
+  document.getElementById('contactItems').innerHTML = cItems.map(function(c){
+    return '<div class="ci"><div class="ci-icon">' + c.icon + '</div><div><div class="ci-lbl">' + esc(c.label) + '</div><div class="ci-val">' + esc(c.val) + '</div></div></div>';
+  }).join('');
 
-  document.getElementById('ccIcon').textContent = CAT_EMO[category];
-  document.getElementById('ccName').textContent = name.toUpperCase();
-  document.getElementById('ccTag').textContent  = SD.type || 'Premium Experience';
+  document.getElementById('ccIcon').textContent = CAT_EMO[siteCategory] || '✦';
+  document.getElementById('ccName').textContent  = name.toUpperCase();
+  document.getElementById('ccTag').textContent   = SD.type || 'Premium Experience';
 
-  /* About image from Pexels */
-  fetchPexels(buildQuery(SD.services || SD.type || 'business', 0), 1).then(imgs => {
+  /* About section image */
+  fetchPexels(buildQuery(SD.services || SD.type || 'business', 0), 1).then(function(imgs){
     if (imgs[0]) {
-      const el = document.getElementById('aboutBgImg');
-      if (el) { el.style.backgroundImage = `url('${imgs[0]}')`; el.classList.remove('loading'); }
+      var el = document.getElementById('aboutBgImg');
+      if (el) { el.style.backgroundImage = 'url(\'' + imgs[0] + '\')'; el.classList.remove('loading'); }
     }
   });
 
@@ -737,81 +744,79 @@ function populatePage() {
 
 /* ══ MARQUEE ══ */
 function buildMarquee(name, items) {
-  const all = items.length ? items : [name.toLowerCase(), 'quality', 'excellence', 'premium'];
-  const chips = [...all.slice(0, 7), name.toLowerCase(), 'quality guaranteed'].map(item =>
-    `<span class="mq-chip"><span>${getEmoji(item)}</span><span>${esc(cap(item))}</span><span class="mq-dot">✦</span></span>`
-  ).join('');
+  var all = items.length ? items : [name.toLowerCase(), 'quality', 'excellence', 'premium'];
+  var chips = all.slice(0, 7).concat([name.toLowerCase(), 'quality guaranteed']).map(function(item){
+    return '<span class="mq-chip"><span>' + getEmoji(item) + '</span><span>' + esc(cap(item)) + '</span><span class="mq-dot">✦</span></span>';
+  }).join('');
   document.getElementById('mq1').innerHTML = chips;
   document.getElementById('mq2').innerHTML = chips;
 }
 
-/* ══════════════════════════════════════════════════════
-   PEXELS IMAGE FETCHING
-══════════════════════════════════════════════════════ */
-async function fetchPexels(query, count = 4) {
+/* ══ PEXELS ══ */
+async function fetchPexels(query, count) {
+  if (count === undefined) count = 4;
   if (!query) return [];
-  const key = query.toLowerCase().trim();
+  var key = query.toLowerCase().trim();
   if (pxCache[key]) return pxCache[key];
   try {
-    const res = await fetch(
-      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=${count + 3}&orientation=landscape`,
+    var res = await fetch(
+      'https://api.pexels.com/v1/search?query=' + encodeURIComponent(query) + '&per_page=' + (count + 3) + '&orientation=landscape',
       { headers: { Authorization: PEXELS_KEY } }
     );
     if (!res.ok) return [];
-    const data = await res.json();
-    const urls = (data.photos || []).map(p => p.src.large2x || p.src.large);
+    var data = await res.json();
+    var urls = (data.photos || []).map(function(p){ return p.src.large2x || p.src.large; });
     pxCache[key] = urls;
     return urls;
-  } catch { return []; }
+  } catch(e) { return []; }
 }
 
 function buildQuery(services, idx) {
-  const items = parseItems(services);
-  const type  = (SD.type || 'business').split('/')[0].trim().toLowerCase();
-  const kws   = items.filter(Boolean);
-  if (kws[idx]) return `${kws[idx]} ${type}`;
+  var items = parseItems(services);
+  var type  = ((SD.type || 'business').split('/')[0] || '').trim().toLowerCase();
+  if (items[idx]) return items[idx] + ' ' + type;
   return type + ' professional';
 }
 
 /* ══ GALLERY IMAGES ══ */
 async function fetchGalleryImages() {
-  const items   = parseItems(SD.services || '');
-  const type    = (SD.type || 'business').split('/')[0].trim().toLowerCase();
-  const queries = [
-    items[0] ? `${items[0]} ${type}` : type + ' interior',
-    items[1] ? `${items[1]} closeup`  : type + ' product',
-    items[2] ? `${items[2]} ${type}`  : type + ' lifestyle',
-    items[0] ? `${items[0]} detail`   : type + ' team',
+  var items = parseItems(SD.services || '');
+  var type  = ((SD.type || 'business').split('/')[0] || '').trim().toLowerCase();
+  var queries = [
+    items[0] ? items[0] + ' ' + type : type + ' interior',
+    items[1] ? items[1] + ' closeup'  : type + ' product',
+    items[2] ? items[2] + ' ' + type  : type + ' lifestyle',
+    items[0] ? items[0] + ' detail'   : type + ' team',
     type + ' premium quality'
   ];
 
-  const labels = ['Our World','The Detail','Our Craft','Premium Quality','The Experience'];
-  const emojis = ['🖼️','✨','🎯','💎','⭐'];
-  const grid   = document.getElementById('galleryGrid');
+  var labels = ['Our World','The Detail','Our Craft','Premium Quality','The Experience'];
+  var emojis = ['🖼️','✨','🎯','💎','⭐'];
+  var grid   = document.getElementById('galleryGrid');
   grid.innerHTML = '';
 
-  for (let i = 0; i < 5; i++) {
-    const div = document.createElement('div');
+  for (var i = 0; i < 5; i++) {
+    var div = document.createElement('div');
     div.className = 'g-item reveal-scale';
     div.style.transitionDelay = (i * 0.08) + 's';
-    div.innerHTML = `<div class="g-loading" id="gl${i}">${emojis[i]}</div><div class="g-overlay"></div><div class="g-label">${labels[i]}</div>`;
+    div.innerHTML = '<div class="g-loading" id="gl' + i + '">' + emojis[i] + '</div><div class="g-overlay"></div><div class="g-label">' + labels[i] + '</div>';
     if (i === 0) div.style.gridRow = 'span 2';
     grid.appendChild(div);
   }
 
-  const allImgs = await Promise.all(queries.map(q => fetchPexels(q, 3)));
+  var allImgs = await Promise.all(queries.map(function(q){ return fetchPexels(q, 3); }));
 
-  for (let i = 0; i < 5; i++) {
-    const urls = allImgs[i];
-    const loader = document.getElementById('gl' + i);
+  for (var j = 0; j < 5; j++) {
+    var urls   = allImgs[j];
+    var loader = document.getElementById('gl' + j);
     if (!loader) continue;
-    const item = loader.parentElement;
+    var item = loader.parentElement;
     if (urls && urls[0]) {
-      const img = document.createElement('img');
+      var img = document.createElement('img');
       img.src = urls[0];
-      img.alt = labels[i];
+      img.alt = labels[j];
       img.loading = 'lazy';
-      img.onload = () => { loader.style.display = 'none'; };
+      (function(l){ img.onload = function(){ l.style.display = 'none'; }; })(loader);
       item.insertBefore(img, loader);
     }
   }
@@ -819,13 +824,13 @@ async function fetchGalleryImages() {
 }
 
 /* ══════════════════════════════════════════════════════
-   3D PRODUCT CARDS — each service item gets own card
+   3D PRODUCT CARDS
 ══════════════════════════════════════════════════════ */
 async function buildProductCards() {
-  const items = parseItems(SD.services || '');
+  var items = parseItems(SD.services || '');
   if (!items.length) return;
-  const container = document.getElementById('productCards');
-  const descs = [
+  var container = document.getElementById('productCards');
+  var descs = [
     'Our signature offering, crafted to perfection for every occasion.',
     'An experience you will remember long after your visit.',
     'Made with care, precision, and the finest ingredients.',
@@ -836,150 +841,166 @@ async function buildProductCards() {
     'Our bestseller — unmatched quality guaranteed.'
   ];
 
-  for (let i = 0; i < Math.min(items.length, 6); i++) {
-    const item  = items[i];
-    const label = cap(item);
-    const even  = i % 2 === 1;
-    const card  = document.createElement('div');
+  for (var i = 0; i < Math.min(items.length, 6); i++) {
+    var item  = items[i];
+    var label = cap(item);
+    var even  = (i % 2 === 1);
+    var card  = document.createElement('div');
     card.className = 'product-card reveal';
     card.id = 'pcard_' + i;
 
-    /* Fetch pexels images for this item */
-    const imgQuery = item + ' ' + ((SD.type || '').split('/')[0].trim() || 'professional');
-    const imgPromise = fetchPexels(imgQuery, 4);
+    var imgQuery   = item + ' ' + (((SD.type || '').split('/')[0] || '').trim() || 'professional');
+    var imgPromise = fetchPexels(imgQuery, 4);
 
-    card.innerHTML = `
-      <div class="product-canvas-wrap" id="pcvp_${i}">
-        <canvas id="pc3d_${i}" style="display:none"></canvas>
-        <div class="product-canvas-loading" id="pcld_${i}">
-          <div class="pc-spin"></div>
-          <div class="pc-lbl">Rendering "${label}" in 3D…</div>
-        </div>
-        <div class="prod-3d-hint">↻ Drag to rotate</div>
-      </div>
-      <div class="product-info">
-        <div class="prod-num">— ${String(i+1).padStart(2,'0')}</div>
-        <div class="prod-name">${esc(label)}</div>
-        <div class="prod-desc">${esc(descs[i % descs.length])}</div>
-        <div class="prod-img-row" id="pimgrow_${i}"></div>
-        <span class="prod-tag">${getEmoji(item)} ${esc(label)}</span>
-      </div>`;
+    card.innerHTML =
+      '<div class="product-canvas-wrap" id="pcvp_' + i + '">' +
+        '<canvas id="pc3d_' + i + '" style="display:none"></canvas>' +
+        '<div class="product-canvas-loading" id="pcld_' + i + '">' +
+          '<div class="pc-spin"></div>' +
+          '<div class="pc-lbl">Rendering &ldquo;' + esc(label) + '&rdquo; in 3D&hellip;</div>' +
+        '</div>' +
+        '<div class="prod-3d-hint">↻ Drag to rotate</div>' +
+      '</div>' +
+      '<div class="product-info">' +
+        '<div class="prod-num">— ' + String(i+1).padStart(2,'0') + '</div>' +
+        '<div class="prod-name">' + esc(label) + '</div>' +
+        '<div class="prod-desc">' + esc(descs[i % descs.length]) + '</div>' +
+        '<div class="prod-img-row" id="pimgrow_' + i + '"></div>' +
+        '<span class="prod-tag">' + getEmoji(item) + ' ' + esc(label) + '</span>' +
+      '</div>';
 
     if (even) card.style.direction = 'rtl';
     container.appendChild(card);
-    if (even) card.querySelectorAll('*').forEach(el => el.style.direction = 'ltr');
+    if (even) card.querySelectorAll('*').forEach(function(el){ el.style.direction = 'ltr'; });
 
-    /* Render 3D mesh */
     renderProductMesh(i, item);
 
-    /* Inject images */
-    imgPromise.then(imgs => {
-      const row = document.getElementById('pimgrow_' + i);
-      if (!row) return;
-      imgs.slice(0, 3).forEach((url, j) => {
-        const t = document.createElement('img');
-        t.className = 'prod-thumb';
-        t.src = url;
-        t.alt = label;
-        t.loading = 'lazy';
-        row.appendChild(t);
+    /* Inject thumbnail images */
+    (function(idx, lbl) {
+      imgPromise.then(function(imgs) {
+        var row = document.getElementById('pimgrow_' + idx);
+        if (!row) return;
+        imgs.slice(0, 3).forEach(function(url) {
+          var t = document.createElement('img');
+          t.className = 'prod-thumb';
+          t.src = url;
+          t.alt = lbl;
+          t.loading = 'lazy';
+          row.appendChild(t);
+        });
       });
-    });
+    })(i, label);
   }
   setTimeout(initReveal, 400);
 }
 
-/* ══ RENDER PRODUCT 3D MESH — procedural Three.js ══ */
-function renderProductMesh(i, keyword) {
-  const vp     = document.getElementById('pcvp_'  + i);
-  const canvas = document.getElementById('pc3d_'  + i);
-  const ldEl   = document.getElementById('pcld_'  + i);
+/* ══ RENDER PRODUCT 3D MESH ══
+   FIX: renamed local "g" (group) to "grp" to avoid conflict with
+   the destructured { r, g, b } from hexToRGB in the same scope.   */
+function renderProductMesh(idx, keyword) {
+  var vp     = document.getElementById('pcvp_'  + idx);
+  var canvas = document.getElementById('pc3d_'  + idx);
+  var ldEl   = document.getElementById('pcld_'  + idx);
   if (!vp || !canvas) return;
 
-  const W = vp.offsetWidth  || 480;
-  const H = vp.offsetHeight || 400;
+  var W = vp.offsetWidth  || 480;
+  var H = vp.offsetHeight || 400;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(W, H, false);
   renderer.setClearColor(0, 0);
 
-  const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(48, W/H, .1, 100);
+  var scene  = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(48, W/H, 0.1, 100);
   camera.position.set(0, 0, 4);
 
   /* Lighting */
-  const { r, g, b } = hexToRGB(accentColor);
-  const col = (r << 16) + (g << 8) + b;
-  scene.add(new THREE.AmbientLight(0xffffff, .35));
-  const kl  = new THREE.PointLight(col, 4, 20); kl.position.set(3, 3, 3); scene.add(kl);
-  const fl  = new THREE.PointLight(0x6688ff, 2, 16); fl.position.set(-3, -2, 2); scene.add(fl);
-  const rl  = new THREE.PointLight(col, 1.5, 14); rl.position.set(0, -3, -2); scene.add(rl);
+  var rgb = hexToRGB(accentColor);
+  var col = (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+  scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+  var kl = new THREE.PointLight(col, 4, 20); kl.position.set(3, 3, 3); scene.add(kl);
+  var fl = new THREE.PointLight(0x6688ff, 2, 16); fl.position.set(-3, -2, 2); scene.add(fl);
+  var rl = new THREE.PointLight(col, 1.5, 14); rl.position.set(0, -3, -2); scene.add(rl);
 
   /* Materials */
-  const mat  = new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .22, transparent: true, opacity: .88, shininess: 100 });
-  const wmat = new THREE.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: .28 });
+  var mat  = new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.22, transparent:true, opacity:0.88, shininess:100 });
+  var wmat = new THREE.MeshBasicMaterial({ color:col, wireframe:true, transparent:true, opacity:0.28 });
 
-  const g = new THREE.Group(); scene.add(g);
-  const k = (keyword || '').toLowerCase();
+  /* ── RENAMED: group variable is now "grp" instead of "g" ── */
+  var grp = new THREE.Group();
+  scene.add(grp);
 
-  /* Shape by keyword */
-  if (['coffee','tea','chai','latte','matcha','espresso','cappuccino','mocha','americano','frappe','soup','drink','cup','mug','bowl'].some(kw => k.includes(kw))) {
-    g.add(new THREE.Mesh(new THREE.CylinderGeometry(.6, .48, 1.15, 28), mat));
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(.6, .06, 10, 40), new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .5 }));
-    rim.rotation.x = Math.PI/2; rim.position.y = .58; g.add(rim);
-    const handle = new THREE.Mesh(new THREE.TorusGeometry(.38, .07, 10, 28, Math.PI), mat);
-    handle.rotation.y = Math.PI/2; handle.position.set(.6, 0, 0); g.add(handle);
-  } else if (['donut','bagel','taco','pizza','ring','torus','bangle','bracelet','necklace'].some(kw => k.includes(kw))) {
-    g.add(new THREE.Mesh(new THREE.TorusGeometry(1.0, .4, 24, 60), mat));
-    g.add(new THREE.Mesh(new THREE.TorusGeometry(1.0, .42, 12, 60), wmat));
-  } else if (['jewel','ring','diamond','gem','nail','perfume','makeup','lipstick','crystal'].some(kw => k.includes(kw))) {
-    const top = new THREE.Mesh(new THREE.ConeGeometry(.82, 1.2, 8), mat);
-    const bot = new THREE.Mesh(new THREE.ConeGeometry(.82, .65, 8), mat);
-    bot.rotation.z = Math.PI; bot.position.y = -.92;
-    const band = new THREE.Mesh(new THREE.CylinderGeometry(.85, .85, .06, 8), new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .7 }));
-    band.position.y = -.04; g.add(top, bot, band);
-  } else if (['yoga','pilates','design','art','animation','hair','skin','facial','creative','torusknot','star'].some(kw => k.includes(kw))) {
-    g.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0, .28, 120, 16, 2, 3), mat));
-    g.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0, .30, 60, 8, 2, 3), wmat));
-  } else if (['app','web','software','ai','data','cloud','tech','biryani','curry','rice','icosahedron'].some(kw => k.includes(kw))) {
-    g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.2, 1), mat));
-    g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.3, 0), wmat));
-  } else if (['dress','shoes','bag','cloth','fashion','watch','book','course','exam','coaching','box'].some(kw => k.includes(kw))) {
-    g.add(new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.6), mat));
-    g.add(new THREE.Mesh(new THREE.BoxGeometry(1.65, 1.65, 1.65), wmat));
-  } else if (['gym','dumbbell','training','workout','massage','fitness','bottle'].some(kw => k.includes(kw))) {
-    const bar = new THREE.Mesh(new THREE.CylinderGeometry(.12, .12, 2.4, 12), mat);
-    bar.rotation.z = Math.PI/2; g.add(bar);
-    [-1.1, 1.1].forEach(x => {
-      const w = new THREE.Mesh(new THREE.CylinderGeometry(.45, .45, .5, 24), mat);
-      w.rotation.z = Math.PI/2; w.position.x = x; g.add(w);
+  var k = (keyword || '').toLowerCase();
+
+  if (['coffee','tea','chai','latte','matcha','espresso','cappuccino','mocha','americano','frappe','soup','drink','cup','mug','bowl'].some(function(kw){ return k.includes(kw); })) {
+    grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.48, 1.15, 28), mat));
+    var rim = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.06, 10, 40), new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.5 }));
+    rim.rotation.x = Math.PI/2; rim.position.y = 0.58; grp.add(rim);
+    var handle = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.07, 10, 28, Math.PI), mat);
+    handle.rotation.y = Math.PI/2; handle.position.set(0.6, 0, 0); grp.add(handle);
+
+  } else if (['donut','bagel','taco','pizza','ring','torus','bangle','bracelet','necklace'].some(function(kw){ return k.includes(kw); })) {
+    grp.add(new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.4, 24, 60), mat));
+    grp.add(new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.42, 12, 60), wmat));
+
+  } else if (['jewel','ring','diamond','gem','nail','perfume','makeup','lipstick','crystal'].some(function(kw){ return k.includes(kw); })) {
+    var top = new THREE.Mesh(new THREE.ConeGeometry(0.82, 1.2, 8), mat);
+    var bot = new THREE.Mesh(new THREE.ConeGeometry(0.82, 0.65, 8), mat);
+    bot.rotation.z = Math.PI; bot.position.y = -0.92;
+    var band = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.06, 8), new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.7 }));
+    band.position.y = -0.04; grp.add(top, bot, band);
+
+  } else if (['yoga','pilates','design','art','animation','hair','skin','facial','creative','torusknot','star'].some(function(kw){ return k.includes(kw); })) {
+    grp.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0, 0.28, 120, 16, 2, 3), mat));
+    grp.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0, 0.30, 60, 8, 2, 3), wmat));
+
+  } else if (['app','web','software','ai','data','cloud','tech','biryani','curry','rice','icosahedron'].some(function(kw){ return k.includes(kw); })) {
+    grp.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.2, 1), mat));
+    grp.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.3, 0), wmat));
+
+  } else if (['dress','shoes','bag','cloth','fashion','watch','book','course','exam','coaching','box'].some(function(kw){ return k.includes(kw); })) {
+    grp.add(new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.6), mat));
+    grp.add(new THREE.Mesh(new THREE.BoxGeometry(1.65, 1.65, 1.65), wmat));
+
+  } else if (['gym','dumbbell','training','workout','massage','fitness','bottle'].some(function(kw){ return k.includes(kw); })) {
+    var bar = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.4, 12), mat);
+    bar.rotation.z = Math.PI/2; grp.add(bar);
+    [-1.1, 1.1].forEach(function(x) {
+      var w = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.5, 24), mat);
+      w.rotation.z = Math.PI/2; w.position.x = x; grp.add(w);
     });
-  } else if (['cake','muffin','bread','pastry','croissant','dessert','sushi','pasta','noodle','salad','cylinder'].some(kw => k.includes(kw))) {
-    g.add(new THREE.Mesh(new THREE.CylinderGeometry(.75, .65, 1.5, 28), mat));
-    g.add(new THREE.Mesh(new THREE.CylinderGeometry(.77, .67, 1.52, 14), wmat));
-    const top = new THREE.Mesh(new THREE.CircleGeometry(.75, 28), mat);
-    top.rotation.x = -Math.PI/2; top.position.y = .76; g.add(top);
-  } else if (['burger','sandwich','pizza','food','snack','wrap','chicken','fish','meat'].some(kw => k.includes(kw))) {
-    /* Stack of discs for food */
-    [0, .35, .7].forEach((y, j) => {
-      const d = new THREE.Mesh(new THREE.CylinderGeometry(.9 - j*.1, .85 - j*.1, .28, 32), mat);
-      d.position.y = y; g.add(d);
+
+  } else if (['cake','muffin','bread','pastry','croissant','dessert','sushi','pasta','noodle','salad','cylinder'].some(function(kw){ return k.includes(kw); })) {
+    grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.65, 1.5, 28), mat));
+    grp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.77, 0.67, 1.52, 14), wmat));
+    var topCap = new THREE.Mesh(new THREE.CircleGeometry(0.75, 28), mat);
+    topCap.rotation.x = -Math.PI/2; topCap.position.y = 0.76; grp.add(topCap);
+
+  } else if (['burger','sandwich','snack','wrap','chicken','fish','meat'].some(function(kw){ return k.includes(kw); })) {
+    [0, 0.35, 0.7].forEach(function(y, j) {
+      var d = new THREE.Mesh(new THREE.CylinderGeometry(0.9 - j*0.1, 0.85 - j*0.1, 0.28, 32), mat);
+      d.position.y = y; grp.add(d);
     });
+
   } else {
     /* Default: octahedron */
-    g.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 1), mat));
-    g.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.3, 0), wmat));
+    grp.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 1), mat));
+    grp.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.3, 0), wmat));
   }
 
   /* Orbiting particles */
-  const orbs = [];
-  for (let oi = 0; oi < 4; oi++) {
-    const ang = (oi / 4) * Math.PI * 2;
-    const sp  = new THREE.Mesh(new THREE.SphereGeometry(.1, 8, 8), new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .6, transparent: true, opacity: .9 }));
-    sp.position.set(Math.cos(ang) * 1.9, .1 * Math.sin(ang * 2), Math.sin(ang) * 1.9);
-    sp.userData = { ang, speed: .018 + oi * .004 };
-    orbs.push(sp); g.add(sp);
+  var orbs = [];
+  for (var oi = 0; oi < 4; oi++) {
+    var ang = (oi / 4) * Math.PI * 2;
+    var sp  = new THREE.Mesh(
+      new THREE.SphereGeometry(0.1, 8, 8),
+      new THREE.MeshPhongMaterial({ color:col, emissive:col, emissiveIntensity:0.6, transparent:true, opacity:0.9 })
+    );
+    sp.position.set(Math.cos(ang) * 1.9, 0.1 * Math.sin(ang * 2), Math.sin(ang) * 1.9);
+    sp.userData = { ang: ang, speed: 0.018 + oi * 0.004 };
+    orbs.push(sp);
+    grp.add(sp);
   }
 
   /* Show canvas, hide loader */
@@ -987,83 +1008,86 @@ function renderProductMesh(i, keyword) {
   if (ldEl) ldEl.classList.add('gone');
 
   /* Drag to rotate */
-  let isDrag = false, px = 0, py = 0, vx = .005, vy = 0;
+  var isDrag = false, px = 0, py = 0, vx = 0.005, vy = 0;
   vp.style.cursor = 'grab';
-  vp.addEventListener('mousedown', e => { isDrag = true; px = e.clientX; py = e.clientY; vp.style.cursor = 'grabbing'; });
-  window.addEventListener('mouseup', () => { isDrag = false; vp.style.cursor = 'grab'; });
-  vp.addEventListener('mousemove', e => {
+  vp.addEventListener('mousedown', function(e){ isDrag = true; px = e.clientX; py = e.clientY; vp.style.cursor = 'grabbing'; });
+  window.addEventListener('mouseup', function(){ isDrag = false; vp.style.cursor = 'grab'; });
+  vp.addEventListener('mousemove', function(e){
     if (!isDrag) return;
-    vx = (e.clientX - px) * .009; vy = (e.clientY - py) * .009;
-    g.rotation.y += vx; g.rotation.x = Math.max(-.8, Math.min(.8, g.rotation.x + vy));
+    vx = (e.clientX - px) * 0.009; vy = (e.clientY - py) * 0.009;
+    grp.rotation.y += vx;
+    grp.rotation.x = Math.max(-0.8, Math.min(0.8, grp.rotation.x + vy));
     px = e.clientX; py = e.clientY;
   });
-  vp.addEventListener('touchstart', e => { isDrag = true; px = e.touches[0].clientX; py = e.touches[0].clientY; }, { passive: true });
-  vp.addEventListener('touchend', () => { isDrag = false; });
-  vp.addEventListener('touchmove', e => {
+  vp.addEventListener('touchstart', function(e){ isDrag = true; px = e.touches[0].clientX; py = e.touches[0].clientY; }, { passive:true });
+  vp.addEventListener('touchend',   function(){ isDrag = false; });
+  vp.addEventListener('touchmove',  function(e){
     if (!isDrag) return;
-    vx = (e.touches[0].clientX - px) * .008; vy = (e.touches[0].clientY - py) * .008;
-    g.rotation.y += vx; g.rotation.x = Math.max(-.8, Math.min(.8, g.rotation.x + vy));
+    vx = (e.touches[0].clientX - px) * 0.008; vy = (e.touches[0].clientY - py) * 0.008;
+    grp.rotation.y += vx;
+    grp.rotation.x = Math.max(-0.8, Math.min(0.8, grp.rotation.x + vy));
     px = e.touches[0].clientX; py = e.touches[0].clientY;
-  }, { passive: false });
+  }, { passive:false });
 
-  let t = 0;
+  var t = 0;
   (function anim() {
-    requestAnimationFrame(anim); t += .012;
-    if (!isDrag) { vx *= .92; vy *= .92; g.rotation.y += .006 + vx; g.rotation.x += vy; }
-    g.position.y = Math.sin(t * .8) * .07;
-    g.scale.setScalar(1 + Math.sin(t * 1.6) * .012);
-    orbs.forEach(o => {
+    requestAnimationFrame(anim);
+    t += 0.012;
+    if (!isDrag) { vx *= 0.92; vy *= 0.92; grp.rotation.y += 0.006 + vx; grp.rotation.x += vy; }
+    grp.position.y = Math.sin(t * 0.8) * 0.07;
+    grp.scale.setScalar(1 + Math.sin(t * 1.6) * 0.012);
+    orbs.forEach(function(o){
       o.userData.ang += o.userData.speed;
       o.position.x = Math.cos(o.userData.ang) * 1.9;
       o.position.z = Math.sin(o.userData.ang) * 1.9;
-      o.position.y = Math.sin(o.userData.ang * 1.5) * .2;
+      o.position.y = Math.sin(o.userData.ang * 1.5) * 0.2;
     });
     renderer.render(scene, camera);
   })();
 
-  new ResizeObserver(() => {
-    const nw = vp.offsetWidth, nh = vp.offsetHeight || 400;
-    camera.aspect = nw / nh; camera.updateProjectionMatrix(); renderer.setSize(nw, nh, false);
+  new ResizeObserver(function(){
+    var nw = vp.offsetWidth, nh = vp.offsetHeight || 400;
+    camera.aspect = nw/nh; camera.updateProjectionMatrix(); renderer.setSize(nw, nh, false);
   }).observe(vp);
 }
 
-/* ══════════════════════════════════════════════════════
-   HERO THREE.JS SCENE
-══════════════════════════════════════════════════════ */
+/* ══ HERO THREE.JS SCENE ══ */
 function initHeroScene() {
-  const canvas = document.getElementById('threeCanvas');
-  const sec    = document.getElementById('heroSection');
-  const W = sec.offsetWidth, H = sec.offsetHeight;
+  var canvas = document.getElementById('threeCanvas');
+  var sec    = document.getElementById('heroSection');
+  var W = sec.offsetWidth, H = sec.offsetHeight;
 
-  heroRenderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  heroRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
   heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
   heroRenderer.setSize(W, H);
   heroRenderer.setClearColor(0, 0);
 
   heroScene  = new THREE.Scene();
-  heroCamera = new THREE.PerspectiveCamera(55, W/H, .1, 300);
+  heroCamera = new THREE.PerspectiveCamera(55, W/H, 0.1, 300);
   heroCamera.position.set(0, 0, 7);
 
-  heroScene.add(new THREE.AmbientLight(0xffffff, .25));
-  const { r, g, b } = hexToRGB(accentColor);
-  const col = (r << 16) + (g << 8) + b;
-  const kl  = new THREE.PointLight(col, 4, 40); kl.position.set(4, 4, 4); heroScene.add(kl);
-  const fl  = new THREE.PointLight(0x8888ff, 1.5, 30); fl.position.set(-4, -2, 3); heroScene.add(fl);
+  heroScene.add(new THREE.AmbientLight(0xffffff, 0.25));
 
-  heroMainGroup = new THREE.Group(); heroScene.add(heroMainGroup);
-  const acm = new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .18, transparent: true, opacity: .88, shininess: 120 });
-  const wm  = new THREE.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: .32 });
+  var rgb2 = hexToRGB(accentColor);
+  var col2 = (rgb2.r << 16) + (rgb2.g << 8) + rgb2.b;
+  var kl2  = new THREE.PointLight(col2, 4, 40); kl2.position.set(4, 4, 4); heroScene.add(kl2);
+  var fl2  = new THREE.PointLight(0x8888ff, 1.5, 30); fl2.position.set(-4, -2, 3); heroScene.add(fl2);
 
-  /* Category-based hero shape */
-  if (category === 'cafe') {
-    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.6, .42, 28, 80), acm));
-    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.6, .44, 28, 80), wm));
-  } else if (category === 'health') {
-    heroMainGroup.add(new THREE.Mesh(new THREE.SphereGeometry(.9, 32, 32), acm));
-    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.5, .06, 8, 80), wm));
-  } else if (category === 'creative' || category === 'beauty') {
-    heroMainGroup.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.2, .35, 140, 18, 2, 3), acm));
-  } else if (category === 'tech') {
+  heroMainGroup = new THREE.Group();
+  heroScene.add(heroMainGroup);
+
+  var acm = new THREE.MeshPhongMaterial({ color:col2, emissive:col2, emissiveIntensity:0.18, transparent:true, opacity:0.88, shininess:120 });
+  var wm  = new THREE.MeshBasicMaterial({ color:col2, wireframe:true, transparent:true, opacity:0.32 });
+
+  if (siteCategory === 'cafe') {
+    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.42, 28, 80), acm));
+    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.44, 28, 80), wm));
+  } else if (siteCategory === 'health') {
+    heroMainGroup.add(new THREE.Mesh(new THREE.SphereGeometry(0.9, 32, 32), acm));
+    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.06, 8, 80), wm));
+  } else if (siteCategory === 'creative' || siteCategory === 'beauty') {
+    heroMainGroup.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.2, 0.35, 140, 18, 2, 3), acm));
+  } else if (siteCategory === 'tech') {
     heroMainGroup.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.6, 2), wm));
     heroMainGroup.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 0), acm));
   } else {
@@ -1071,213 +1095,282 @@ function initHeroScene() {
     heroMainGroup.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.7, 0), wm));
   }
 
-  /* Orbiting particle sparks */
-  const items = parseItems(SD.services || '');
-  const n = Math.max(items.length, 5);
-  for (let i = 0; i < n; i++) {
-    const ang = (i / n) * Math.PI * 2;
-    const sp  = new THREE.Mesh(new THREE.SphereGeometry(.13, 10, 10), new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .4, transparent: true, opacity: .85 }));
-    sp.position.set(Math.cos(ang) * 2.4, Math.sin(ang * .5) * .6, Math.sin(ang) * 2.4);
-    sp.userData = { ang, speed: .009 + i * .002 };
-    heroScene.add(sp); heroParticles.push(sp);
+  var items2 = parseItems(SD.services || '');
+  var n = Math.max(items2.length, 5);
+  for (var i2 = 0; i2 < n; i2++) {
+    var ang2 = (i2 / n) * Math.PI * 2;
+    var sp2  = new THREE.Mesh(
+      new THREE.SphereGeometry(0.13, 10, 10),
+      new THREE.MeshPhongMaterial({ color:col2, emissive:col2, emissiveIntensity:0.4, transparent:true, opacity:0.85 })
+    );
+    sp2.position.set(Math.cos(ang2) * 2.4, Math.sin(ang2 * 0.5) * 0.6, Math.sin(ang2) * 2.4);
+    sp2.userData = { ang: ang2, speed: 0.009 + i2 * 0.002 };
+    heroScene.add(sp2);
+    heroParticles.push(sp2);
   }
 
-  document.addEventListener('mousemove', e => {
-    mouseX = (e.clientX / window.innerWidth  - .5) * 2;
-    mouseY = (e.clientY / window.innerHeight - .5) * 2;
+  document.addEventListener('mousemove', function(e){
+    mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
   });
-  window.addEventListener('resize', () => {
-    const s = document.getElementById('heroSection');
-    const W = s.offsetWidth, H = s.offsetHeight;
-    heroCamera.aspect = W/H; heroCamera.updateProjectionMatrix(); heroRenderer.setSize(W, H);
+  window.addEventListener('resize', function(){
+    var s2 = document.getElementById('heroSection');
+    var W2 = s2.offsetWidth, H2 = s2.offsetHeight;
+    heroCamera.aspect = W2/H2; heroCamera.updateProjectionMatrix(); heroRenderer.setSize(W2, H2);
   });
 
   animHero();
 }
 
 function animHero() {
-  requestAnimationFrame(animHero); heroTime += .01;
+  requestAnimationFrame(animHero);
+  heroTime += 0.01;
   if (heroMainGroup) {
-    heroMainGroup.rotation.y += .007;
-    heroMainGroup.rotation.x = Math.sin(heroTime * .4) * .06 + mouseY * .04;
-    heroMainGroup.rotation.y += mouseX * .006;
+    heroMainGroup.rotation.y += 0.007;
+    heroMainGroup.rotation.x = Math.sin(heroTime * 0.4) * 0.06 + mouseY * 0.04;
+    heroMainGroup.rotation.y += mouseX * 0.006;
   }
-  heroCamera.position.x += (mouseX * .4 - heroCamera.position.x) * .02;
-  heroCamera.position.y += (-mouseY * .25 - heroCamera.position.y) * .02;
-  heroParticles.forEach((p, i) => {
-    p.userData.ang += p.userData.speed || .012;
+  heroCamera.position.x += (mouseX * 0.4 - heroCamera.position.x) * 0.02;
+  heroCamera.position.y += (-mouseY * 0.25 - heroCamera.position.y) * 0.02;
+  heroParticles.forEach(function(p, i){
+    p.userData.ang += (p.userData.speed || 0.012);
     p.position.x = Math.cos(p.userData.ang) * 2.4;
     p.position.z = Math.sin(p.userData.ang) * 2.4;
-    p.position.y = Math.sin(heroTime + i) * .2;
+    p.position.y = Math.sin(heroTime + i) * 0.2;
   });
   heroRenderer.render(heroScene, heroCamera);
 }
 
 /* ══ SHOWCASE SCENE ══ */
 function initShowcaseScene() {
-  const canvas = document.getElementById('showcaseCanvas');
-  const sec    = document.getElementById('showcaseSection');
-  const W = sec.offsetWidth || window.innerWidth, H = 600;
+  var canvas = document.getElementById('showcaseCanvas');
+  var sec    = document.getElementById('showcaseSection');
+  var W = sec.offsetWidth || window.innerWidth;
+  var H = 600;
 
-  const sr = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+  var sr = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: true });
   sr.setPixelRatio(1); sr.setSize(W, H); sr.setClearColor(0, 0);
 
-  const ss = new THREE.Scene();
-  const sc = new THREE.PerspectiveCamera(70, W/H, .1, 200);
+  var ss = new THREE.Scene();
+  var sc = new THREE.PerspectiveCamera(70, W/H, 0.1, 200);
   sc.position.set(0, 0, 8);
 
-  const { r, g, b } = hexToRGB(accentColor);
-  const col = (r << 16) + (g << 8) + b;
+  var rgb3 = hexToRGB(accentColor);
+  var col3 = (rgb3.r << 16) + (rgb3.g << 8) + rgb3.b;
 
-  const count = 1200;
-  const pos   = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) {
-    pos[i*3]   = (Math.random() - .5) * 28;
-    pos[i*3+1] = (Math.random() - .5) * 18;
-    pos[i*3+2] = (Math.random() - .5) * 12;
+  var count = 1200;
+  var pos   = new Float32Array(count * 3);
+  for (var pi = 0; pi < count; pi++) {
+    pos[pi*3]   = (Math.random() - 0.5) * 28;
+    pos[pi*3+1] = (Math.random() - 0.5) * 18;
+    pos[pi*3+2] = (Math.random() - 0.5) * 12;
   }
-  const pGeo = new THREE.BufferGeometry();
+  var pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  const pMat = new THREE.PointsMaterial({ color: col, size: .07, transparent: true, opacity: .7 });
-  const pts  = new THREE.Points(pGeo, pMat); ss.add(pts);
+  var pMat = new THREE.PointsMaterial({ color: col3, size: 0.07, transparent: true, opacity: 0.7 });
+  var pts  = new THREE.Points(pGeo, pMat);
+  ss.add(pts);
 
-  let smx = 0, smy = 0;
-  sec.addEventListener('mousemove', e => {
-    const rc = sec.getBoundingClientRect();
-    smx = ((e.clientX - rc.left) / rc.width  - .5) * 5;
-    smy = -((e.clientY - rc.top)  / rc.height - .5) * 3;
+  var smx = 0, smy = 0;
+  sec.addEventListener('mousemove', function(e){
+    var rc = sec.getBoundingClientRect();
+    smx = ((e.clientX - rc.left) / rc.width  - 0.5) * 5;
+    smy = -((e.clientY - rc.top)  / rc.height - 0.5) * 3;
   });
 
-  let st = 0;
-  (function a() {
-    requestAnimationFrame(a); st += .003;
-    pts.rotation.y += .001; pts.rotation.x += .0004;
-    sc.position.x += (smx - sc.position.x) * .025;
-    sc.position.y += (smy - sc.position.y) * .025;
-    pMat.opacity = .5 + Math.sin(st * 2) * .2;
+  var st = 0;
+  (function a(){
+    requestAnimationFrame(a); st += 0.003;
+    pts.rotation.y += 0.001; pts.rotation.x += 0.0004;
+    sc.position.x += (smx - sc.position.x) * 0.025;
+    sc.position.y += (smy - sc.position.y) * 0.025;
+    pMat.opacity = 0.5 + Math.sin(st * 2) * 0.2;
     sr.render(ss, sc);
   })();
 
-  new ResizeObserver(() => {
-    const w = sec.offsetWidth, h = sec.offsetHeight || 600;
+  new ResizeObserver(function(){
+    var w = sec.offsetWidth, h = sec.offsetHeight || 600;
     sc.aspect = w/h; sc.updateProjectionMatrix(); sr.setSize(w, h);
   }).observe(sec);
 }
 
 /* ══ HERO GSAP ENTRANCE ══ */
 function initHeroGsap() {
-  const tl = gsap.timeline({ delay: .2 });
-  tl.to('#heroEyebrow', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' })
-    .to('#heroTitle',   { opacity: 1, y: 0, duration: 1,  ease: 'power3.out' }, '-=.5')
-    .to('#heroSub',     { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, '-=.6')
-    .to('#heroBtns',    { opacity: 1, y: 0, duration: .7, ease: 'power3.out' }, '-=.5');
+  var tl = gsap.timeline({ delay: 0.2 });
+  tl.to('#heroEyebrow', { opacity:1, y:0, duration:0.8, ease:'power3.out' })
+    .to('#heroTitle',   { opacity:1, y:0, duration:1,   ease:'power3.out' }, '-=.5')
+    .to('#heroSub',     { opacity:1, y:0, duration:0.8, ease:'power3.out' }, '-=.6')
+    .to('#heroBtns',    { opacity:1, y:0, duration:0.7, ease:'power3.out' }, '-=.5');
 
-  /* Parallax on scroll */
   gsap.to('#heroTitle', {
     yPercent: -18, ease: 'none',
-    scrollTrigger: { trigger: '#heroSection', start: 'top top', end: 'bottom top', scrub: true }
+    scrollTrigger: { trigger:'#heroSection', start:'top top', end:'bottom top', scrub:true }
   });
 }
 
 /* ══ SCROLL NAV ══ */
 function initScrollNav() {
-  const nav = document.getElementById('siteNav');
-  window.addEventListener('scroll', () => { nav.classList.toggle('solid', window.scrollY > 60); }, { passive: true });
+  var nav = document.getElementById('siteNav');
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('solid', window.scrollY > 60);
+  }, { passive: true });
 }
 
 /* ══ REVEAL ══ */
 function initReveal() {
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); } });
-  }, { threshold: .08, rootMargin: '0px 0px -30px 0px' });
-  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => obs.observe(el));
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(function(el){
+    obs.observe(el);
+  });
 }
 
 /* ══ COUNT UP ══ */
 function initCountUp() {
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(en => {
+  var obs2 = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
       if (!en.isIntersecting) return;
-      document.querySelectorAll('.stat-num[data-count]').forEach(el => {
-        const end = parseInt(el.dataset.count);
-        const sfx = el.textContent.replace(/\d/g, '');
-        let cur = 0;
-        const iv = setInterval(() => { cur = Math.min(cur + Math.ceil(end/60), end); el.textContent = cur + sfx; if (cur >= end) clearInterval(iv); }, 18);
+      document.querySelectorAll('.stat-num[data-count]').forEach(function(el){
+        var end = parseInt(el.dataset.count);
+        var sfx = el.textContent.replace(/\d/g, '');
+        var cur = 0;
+        var iv = setInterval(function(){
+          cur = Math.min(cur + Math.ceil(end/60), end);
+          el.textContent = cur + sfx;
+          if (cur >= end) clearInterval(iv);
+        }, 18);
       });
-      obs.disconnect();
+      obs2.disconnect();
     });
-  }, { threshold: .4 });
-  const st = document.querySelector('.stats-sec');
-  if (st) obs.observe(st);
+  }, { threshold: 0.4 });
+  var st2 = document.querySelector('.stats-sec');
+  if (st2) obs2.observe(st2);
 }
 
 /* ══ EXPIRE TIMER ══ */
 function updateExpire() {
-  if (!SD?.expires_at) return;
-  const exp = new Date(SD.expires_at).getTime();
+  if (!SD || !SD.expires_at) return;
+  var exp = new Date(SD.expires_at).getTime();
   function tick() {
-    const diff = exp - Date.now();
+    var diff = exp - Date.now();
     if (diff <= 0) { document.getElementById('expireTxt').textContent = '⚠️ Expired'; return; }
-    const h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000);
-    document.getElementById('expireTxt').textContent = `⚠️ ${h}h ${m}m left`;
+    var h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('expireTxt').textContent = '⚠️ ' + h + 'h ' + m + 'm left';
   }
   tick(); setInterval(tick, 60000);
 }
 
 /* ══ CURSOR ══ */
 function initCursor() {
-  const cur  = document.getElementById('cursor');
-  const ring = document.getElementById('cursor-ring');
+  var cur  = document.getElementById('cursor');
+  var ring = document.getElementById('cursor-ring');
   if (!cur || !ring || window.matchMedia('(max-width:600px)').matches) return;
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
-  (function a() { rx += (mx-rx)*.12; ry += (my-ry)*.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(a); })();
-  document.querySelectorAll('a,button,.product-canvas-wrap').forEach(el => {
-    el.addEventListener('mouseenter', () => { cur.style.width='20px'; cur.style.height='20px'; ring.style.width='52px'; ring.style.height='52px'; });
-    el.addEventListener('mouseleave', () => { cur.style.width='12px'; cur.style.height='12px'; ring.style.width='36px'; ring.style.height='36px'; });
+  var mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', function(e){ mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
+  (function a(){ rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(a); })();
+  document.querySelectorAll('a,button,.product-canvas-wrap').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ cur.style.width='20px'; cur.style.height='20px'; ring.style.width='52px'; ring.style.height='52px'; });
+    el.addEventListener('mouseleave', function(){ cur.style.width='12px'; cur.style.height='12px'; ring.style.width='36px'; ring.style.height='36px'; });
   });
 }
 
 /* ══ NOT FOUND ══ */
 function showNotFound() {
-  document.getElementById('heroSection').innerHTML = `
-    <div style="text-align:center;padding:120px 20px;font-family:'Outfit',sans-serif;position:relative;z-index:2">
-      <div style="font-size:64px;margin-bottom:18px">😕</div>
-      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--text);margin-bottom:10px">WEBSITE NOT FOUND</h2>
-      <p style="color:var(--text2);margin-bottom:24px;font-size:15px">Please go back to the dashboard and create a 3D website first.</p>
-      <a href="dashboard.html" style="padding:14px 28px;background:var(--grad);color:#1a0e00;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;font-family:'Outfit',sans-serif">← Back to Dashboard</a>
-    </div>`;
+  document.getElementById('heroSection').innerHTML =
+    '<div style="text-align:center;padding:120px 20px;font-family:Outfit,sans-serif;position:relative;z-index:2">' +
+    '<div style="font-size:64px;margin-bottom:18px">😕</div>' +
+    '<h2 style="font-family:\'Bebas Neue\',sans-serif;font-size:48px;color:var(--text);margin-bottom:10px">WEBSITE NOT FOUND</h2>' +
+    '<p style="color:var(--text2);margin-bottom:24px;font-size:15px">Please go back to the dashboard and create a 3D website first.</p>' +
+    '<a href="dashboard.html" style="padding:14px 28px;background:var(--grad);color:#1a0e00;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;font-family:Outfit,sans-serif">← Back to Dashboard</a>' +
+    '</div>';
 }
 
-/* ══ PAYMENT ══ */
+/* ══════════════════════════════════════════════════════
+   PAYMENT — FIXED RAZORPAY IMPLEMENTATION
+   Issue: original code called "new Razorpay({}).open()" in one
+   chained expression which does not work reliably. The correct
+   pattern is: create instance → store it → call .open() separately.
+   Added proper error handler and modal.ondismiss to avoid silent
+   failures and improve UX.
+══════════════════════════════════════════════════════ */
 function openPayModal()  { document.getElementById('payModal').classList.add('open'); }
 function closePayModal() { document.getElementById('payModal').classList.remove('open'); }
 
-async function processPayment() {
-  new Razorpay({
-    key: RZP_KEY, amount: 79900, currency: 'INR',
-    name: 'AutoVision', description: '3D Website Activation — ₹799',
-    handler: async function(res) {
+function processPayment() {
+  /* Validate Razorpay is loaded */
+  if (typeof Razorpay === 'undefined') {
+    alert('Payment gateway is loading. Please wait a moment and try again.');
+    return;
+  }
+
+  var options = {
+    key:         RZP_KEY,
+    amount:      79900,          /* Amount in paise (₹799 = 79900 paise) */
+    currency:    'INR',
+    name:        'AutoVision',
+    description: '3D Website Activation — ₹799',
+    image:       '',             /* Optional: logo URL */
+    prefill: {
+      email: (currentUser && currentUser.email) ? currentUser.email : '',
+      name:  (SD && SD.name) ? SD.name : ''
+    },
+    theme: {
+      color: accentColor
+    },
+    handler: function(response) {
+      /* Payment successful */
       closePayModal();
-      if (SD?.id && !SD._isLocal) {
-        try {
-          await db.from(TBL_SITES).update({ status: 'active' }).eq('id', SD.id);
-          await db.from('av_payments').insert([{
-            user_email: SD.user_email, website_id: SD.id,
-            amount: 799, payment_id: res.razorpay_payment_id,
-            type: 'activation', status: 'paid', created_at: new Date().toISOString()
-          }]);
-        } catch(e) { console.error('[AV] payment record:', e); }
+
+      /* Update Supabase record status to active */
+      if (SD && SD.id && !SD._isLocal) {
+        db.from(TBL_SITES)
+          .update({ status: 'active' })
+          .eq('id', SD.id)
+          .then(function() { return db.from('av_payments').insert([{
+            user_email: SD.user_email || (currentUser && currentUser.email) || '',
+            website_id: SD.id,
+            amount:     799,
+            payment_id: response.razorpay_payment_id,
+            type:       'activation',
+            status:     'paid',
+            created_at: new Date().toISOString()
+          }]); })
+          .catch(function(e){ console.error('[AV] payment record error:', e); });
       }
-      alert('🎉 Payment successful!\nYour 3D website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
+
+      alert('🎉 Payment successful!\nYour 3D website is now LIVE!\nPayment ID: ' + response.razorpay_payment_id);
       window.location.href = 'dashboard.html';
     },
-    prefill: { email: currentUser?.email || '' },
-    theme:   { color: accentColor }
-  }).open();
+    modal: {
+      ondismiss: function() {
+        /* User closed the Razorpay modal without paying — do nothing, just log */
+        console.log('[AV] Razorpay modal dismissed by user.');
+      }
+    }
+  };
+
+  /* ── FIXED: Create instance first, then call open() ── */
+  try {
+    var rzpInstance = new Razorpay(options);
+
+    /* Handle payment failure events */
+    rzpInstance.on('payment.failed', function(response) {
+      console.error('[AV] Payment failed:', response.error);
+      alert('Payment failed: ' + (response.error.description || 'Unknown error') + '\nPlease try again.');
+    });
+
+    rzpInstance.open();
+  } catch(e) {
+    console.error('[AV] Razorpay init error:', e);
+    alert('Could not open payment gateway. Please refresh the page and try again.');
+  }
 }
 
-document.getElementById('payModal').addEventListener('click', e => {
+/* Close pay modal on backdrop click */
+document.getElementById('payModal').addEventListener('click', function(e){
   if (e.target === document.getElementById('payModal')) closePayModal();
 });
 
@@ -1286,11 +1379,11 @@ function toggleMenu() { document.getElementById('mobMenu').classList.toggle('ope
 function closeMenu()  { document.getElementById('mobMenu').classList.remove('open'); }
 
 /* ══ UTILS ══ */
-function sc(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' }); }
-function esc(s) { const d = document.createElement('div'); d.appendChild(document.createTextNode(s||'')); return d.innerHTML; }
+function sc(id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' }); }
+function esc(s) { var d = document.createElement('div'); d.appendChild(document.createTextNode(s||'')); return d.innerHTML; }
 function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 function hexToRGB(h) {
-  const hx = h.replace('#','');
+  var hx = h.replace('#','');
   return { r: parseInt(hx.slice(0,2),16), g: parseInt(hx.slice(2,4),16), b: parseInt(hx.slice(4,6),16) };
 }
 </script>
