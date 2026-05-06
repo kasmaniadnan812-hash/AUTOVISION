@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title id="pageTitle">3D Preview — AutoVision</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+:root{
+  --accent:#f0a500;--accent-rgb:240,165,0;
+  --bg:#050810;
+  --surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#f0f4ff;--text2:#8899bb;--text3:#3a4a6a;
+  --grad:linear-gradient(135deg,var(--accent) 0%,#ffcd60 100%);
+  --bh:52px;--nh:66px;--top:118px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:rgba(var(--accent-rgb),.5);border-radius:2px}
+
+/* ── CURSOR ── */
+#cursor{position:fixed;width:12px;height:12px;border-radius:50%;background:var(--accent);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .25s,height .25s}
+#cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(var(--accent-rgb),.45);pointer-events:none;z-index:99998;transform:translate(-50%,-50%)}
+
+/* ── BANNER ── */
+.pb{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--bh);background:rgba(5,8,16,.98);border-bottom:1px solid rgba(var(--accent-rgb),.2);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:10px;backdrop-filter:blur(20px)}
+.pb-l{display:flex;align-items:center;gap:12px}
+.pb-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;text-decoration:none;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pb-pill{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:100px;background:rgba(var(--accent-rgb),.12);border:1px solid rgba(var(--accent-rgb),.3);color:var(--accent)}
+.pb-r{display:flex;align-items:center;gap:8px}
+.pb-exp{font-size:11px;color:#fb923c;font-weight:700;white-space:nowrap}
+.pb-dash{font-size:12px;font-weight:600;color:var(--text2);padding:7px 14px;border:1px solid var(--border2);border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap}
+.pb-dash:hover{color:var(--text);border-color:rgba(var(--accent-rgb),.4)}
+.pb-act{padding:8px 18px;font-size:12px;font-weight:800;background:var(--grad);color:#1a0e00;border:none;border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;box-shadow:0 4px 20px rgba(var(--accent-rgb),.4);transition:all .25s}
+.pb-act:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(var(--accent-rgb),.6)}
+
+/* ── NAV ── */
+.site-nav{position:fixed;top:var(--bh);left:0;right:0;z-index:999;padding:0 48px;height:var(--nh);display:flex;align-items:center;justify-content:space-between;transition:all .4s}
+.site-nav.solid{background:rgba(5,8,16,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--text);text-decoration:none}
+.nav-logo .dot{color:var(--accent)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text2);text-decoration:none;letter-spacing:.5px;text-transform:uppercase;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transition:transform .3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{padding:9px 22px;font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.35);color:var(--accent);border-radius:8px;text-decoration:none;transition:all .2s}
+.nav-cta:hover{background:rgba(var(--accent-rgb),.18)}
+.nav-cta::after{display:none!important}
+.hamburger{display:none;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:18px;color:var(--text)}
+.mob-menu{display:none;position:fixed;top:calc(var(--bh) + var(--nh));left:0;right:0;z-index:998;background:rgba(5,8,16,.98);border-bottom:1px solid var(--border);padding:20px;flex-direction:column;gap:4px;backdrop-filter:blur(20px)}
+.mob-menu.open{display:flex}
+.mob-menu a{padding:14px 18px;font-size:14px;font-weight:600;color:var(--text2);text-decoration:none;border-radius:10px;transition:all .2s}
+.mob-menu a:hover{color:var(--accent);background:var(--surface)}
+
+/* ── HERO ── */
+#heroSection{position:relative;width:100%;height:calc(100vh - var(--top));min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:var(--top)}
+#threeCanvas{position:absolute;inset:0;z-index:0;width:100%!important;height:100%!important}
+.hero-vignette{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 80% 60% at 50% 100%,transparent 0%,var(--bg) 72%),linear-gradient(90deg,var(--bg) 0%,transparent 14%,transparent 86%,var(--bg) 100%)}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 24px;max-width:1000px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:0;transform:translateY(-16px)}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:inline-block;width:30px;height:1px;background:rgba(var(--accent-rgb),.5)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,11vw,140px);line-height:.9;letter-spacing:2px;color:var(--text);margin-bottom:22px;opacity:0;transform:translateY(30px)}
+.hero-title .acc{color:var(--accent)}
+.hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2vw,22px);font-style:italic;color:var(--text2);line-height:1.7;margin-bottom:42px;max-width:580px;margin-left:auto;margin-right:auto;opacity:0;transform:translateY(20px)}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(20px)}
+.btn-gold{padding:16px 38px;font-size:14px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:var(--grad);color:#1a0e00;border:none;border-radius:12px;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 6px 30px rgba(var(--accent-rgb),.45);transition:all .3s}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(var(--accent-rgb),.65)}
+.btn-ghost{padding:16px 38px;font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;background:transparent;border:1.5px solid rgba(var(--accent-rgb),.35);color:var(--accent);border-radius:12px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .3s;text-decoration:none;display:inline-block}
+.btn-ghost:hover{background:rgba(var(--accent-rgb),.08);border-color:var(--accent);transform:translateY(-2px)}
+.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;animation:sa 2.4s ease-in-out infinite}
+@keyframes sa{0%,100%{transform:translateX(-50%) translateY(0);opacity:.5}50%{transform:translateX(-50%) translateY(6px);opacity:1}}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--accent),transparent)}
+.scroll-label{font-size:9px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;font-family:'Space Mono',monospace}
+
+/* ── MARQUEE ── */
+.mq-strip{overflow:hidden;background:rgba(var(--accent-rgb),.04);border-top:1px solid rgba(var(--accent-rgb),.1);border-bottom:1px solid rgba(var(--accent-rgb),.1);padding:16px 0}
+.mq-track{display:flex;white-space:nowrap;animation:mqs 30s linear infinite}
+.mq-inner{display:inline-flex;flex-shrink:0}
+.mq-chip{display:inline-flex;align-items:center;gap:10px;padding:0 28px;font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.5px}
+.mq-dot{color:rgba(var(--accent-rgb),.35);font-size:8px}
+@keyframes mqs{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── STATS ── */
+.stats-sec{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stat-b{padding:48px 24px;text-align:center;border-right:1px solid var(--border);transition:background .3s;position:relative;overflow:hidden}
+.stat-b:last-child{border-right:none}
+.stat-b:hover{background:var(--surface)}
+.stat-b::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%) scaleX(0);width:60%;height:2px;background:var(--grad);transition:transform .4s}
+.stat-b:hover::before{transform:translateX(-50%) scaleX(1)}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4vw,68px);letter-spacing:1px;color:var(--accent);line-height:1;margin-bottom:8px;display:block}
+.stat-lbl{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:2px}
+
+/* ── ABOUT ── */
+.about-sec{display:grid;grid-template-columns:1fr 1fr;max-width:1400px;margin:0 auto;padding:120px 60px;align-items:center;gap:80px}
+.about-img-wrap{position:relative;border-radius:24px;overflow:hidden;min-height:480px}
+.about-img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .8s ease}
+.about-img-wrap:hover .about-img{transform:scale(1.04)}
+.about-img.loading{background:var(--surface2);animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.about-img-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.25) 0%,transparent 60%)}
+.about-float{position:absolute;bottom:24px;right:24px;background:var(--accent);padding:16px 22px;border-radius:14px}
+.about-float-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#1a0e00;line-height:1}
+.about-float-lbl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(26,14,0,.7)}
+.about-glow{position:absolute;inset:-30px;background:radial-gradient(ellipse at center,rgba(var(--accent-rgb),.08) 0%,transparent 70%);pointer-events:none;animation:gp 3s ease-in-out infinite}
+@keyframes gp{0%,100%{opacity:.6}50%{opacity:1}}
+.about-r{padding-left:20px}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:'';width:24px;height:2px;background:var(--accent);flex-shrink:0}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,4.5vw,64px);line-height:.93;letter-spacing:1px;color:var(--text);margin-bottom:20px}
+.sec-title .acc{color:var(--accent)}
+.sec-body{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text2);line-height:1.85;margin-bottom:32px}
+.feat-list{display:flex;flex-direction:column;gap:12px;margin-bottom:36px}
+.feat-row{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:14px;transition:all .3s}
+.feat-row:hover{border-color:rgba(var(--accent-rgb),.25);background:var(--surface2);transform:translateX(6px)}
+.feat-icon{width:38px;height:38px;border-radius:10px;flex-shrink:0;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.2);display:flex;align-items:center;justify-content:center;font-size:17px}
+.feat-text .ft{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.feat-text .fd{font-size:12px;color:var(--text3);line-height:1.5}
+
+/* ── PRODUCTS SECTION — each product gets full-width card ── */
+.products-sec{padding:80px 0;max-width:1400px;margin:0 auto}
+.products-hd{text-align:center;padding:0 24px;margin-bottom:64px}
+.product-card{display:grid;grid-template-columns:1fr 1fr;min-height:540px;margin-bottom:4px;overflow:hidden;position:relative}
+.product-card:nth-child(even){direction:rtl}
+.product-card:nth-child(even)>*{direction:ltr}
+.product-canvas-wrap{position:relative;background:radial-gradient(ellipse at 50% 65%,rgba(var(--accent-rgb),.07) 0%,transparent 65%),#060c18;overflow:hidden;cursor:grab;min-height:400px}
+.product-canvas-wrap:active{cursor:grabbing}
+.product-canvas-wrap canvas{display:block;width:100%!important;height:100%!important}
+.product-canvas-wrap::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(var(--accent-rgb),.03) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--accent-rgb),.03) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,.6) 80%);-webkit-mask-image:radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,.6) 80%)}
+.prod-3d-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(var(--accent-rgb),.5);letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace;z-index:2;white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none}
+.product-canvas-wrap:hover .prod-3d-hint{opacity:1}
+.product-canvas-loading{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#060c18;transition:opacity .5s}
+.product-canvas-loading.gone{opacity:0;pointer-events:none}
+.pc-spin{width:36px;height:36px;border-radius:50%;border:2px solid rgba(var(--accent-rgb),.15);border-top-color:var(--accent);animation:spin .85s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pc-lbl{font-family:'Space Mono',monospace;font-size:10px;color:rgba(var(--accent-rgb),.5);letter-spacing:1px;text-align:center;padding:0 16px;line-height:1.6}
+.product-info{background:var(--bg);padding:60px 52px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--border);position:relative;overflow:hidden}
+.product-info::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(var(--accent-rgb),.06) 0%,transparent 70%);pointer-events:none}
+.prod-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:2px;margin-bottom:10px}
+.prod-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,72px);letter-spacing:1.5px;color:var(--text);line-height:.95;margin-bottom:14px}
+.prod-name .acc{color:var(--accent)}
+.prod-desc{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--text2);line-height:1.8;margin-bottom:28px}
+.prod-img-row{display:flex;gap:10px;margin-bottom:28px}
+.prod-thumb{width:80px;height:60px;border-radius:10px;object-fit:cover;border:1px solid var(--border2);transition:transform .2s;cursor:pointer;flex-shrink:0;background:var(--surface);display:block}
+.prod-thumb:hover{transform:scale(1.06);border-color:rgba(var(--accent-rgb),.4)}
+.prod-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 14px;border-radius:100px;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.25);color:var(--accent)}
+
+/* ── GALLERY (images) ── */
+.gallery-sec{padding:100px 60px;max-width:1400px;margin:0 auto}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:280px 280px;gap:10px;margin-top:56px}
+.g-item{position:relative;overflow:hidden;cursor:pointer;border-radius:4px;background:var(--surface)}
+.g-item:first-child{grid-row:span 2}
+.g-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.25,.46,.45,.94)}
+.g-item:hover img{transform:scale(1.07)}
+.g-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 50%);opacity:0;transition:opacity .3s}
+.g-item:hover .g-overlay{opacity:1}
+.g-label{position:absolute;bottom:18px;left:20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.9);opacity:0;transition:opacity .3s;font-family:'Outfit',sans-serif}
+.g-item:hover .g-label{opacity:1}
+.g-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:.3;background:var(--surface);animation:shimmer2 1.5s ease-in-out infinite alternate}
+@keyframes shimmer2{from{opacity:.2}to{opacity:.4}}
+
+/* ── TESTIMONIALS ── */
+.testi-sec{padding:100px 60px;max-width:1400px;margin:0 auto}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:56px;border:1px solid var(--border)}
+.testi-card{background:var(--bg);padding:36px 28px;transition:background .3s;position:relative;overflow:hidden}
+.testi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.testi-card:hover::before{transform:scaleX(1)}
+.testi-card:hover{background:var(--surface)}
+.testi-qm{font-family:'Cormorant Garamond',serif;font-size:80px;line-height:.8;color:rgba(var(--accent-rgb),.14);margin-bottom:8px;display:block}
+.testi-q{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--text2);line-height:1.8;margin-bottom:22px}
+.testi-stars{color:var(--accent);letter-spacing:3px;font-size:13px;margin-bottom:16px}
+.testi-au{display:flex;align-items:center;gap:13px;padding-top:18px;border-top:1px solid var(--border)}
+.testi-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.2);color:var(--accent)}
+.testi-name{font-size:13px;font-weight:700;color:var(--text)}
+.testi-role{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── SHOWCASE (fullscreen 3D bg) ── */
+.showcase-sec{position:relative;overflow:hidden;padding:160px 40px;text-align:center;min-height:600px;display:flex;align-items:center;justify-content:center}
+#showcaseCanvas{position:absolute;inset:0;z-index:0;width:100%!important;height:100%!important}
+.showcase-ct{position:relative;z-index:1;max-width:820px;margin:0 auto}
+.showcase-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,8vw,100px);letter-spacing:2px;line-height:.9;color:var(--text);margin-bottom:22px}
+.showcase-title .acc{color:var(--accent)}
+.showcase-sub{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:var(--text2);line-height:1.7;margin-bottom:40px;max-width:560px;margin-left:auto;margin-right:auto}
+
+/* ── CONTACT ── */
+.contact-sec{display:grid;grid-template-columns:1fr 1fr;max-width:1400px;margin:0 auto;padding:120px 60px;gap:80px;align-items:start}
+.contact-body{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--text2);line-height:1.8;margin-bottom:36px}
+.contact-items{display:flex;flex-direction:column;gap:12px}
+.ci{display:flex;align-items:center;gap:16px;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:14px;transition:all .25s}
+.ci:hover{border-color:rgba(var(--accent-rgb),.3);background:var(--surface2)}
+.ci-icon{width:44px;height:44px;border-radius:12px;flex-shrink:0;background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.18);display:flex;align-items:center;justify-content:center;font-size:20px}
+.ci-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.ci-val{font-size:14px;color:var(--text);font-weight:500}
+.cc{background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.2);border-radius:24px;padding:50px 40px;text-align:center;position:relative;overflow:hidden}
+.cc::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(var(--accent-rgb),.12) 0%,transparent 70%);pointer-events:none}
+.cc-icon{font-size:72px;margin-bottom:20px;display:block}
+.cc-name{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:var(--text);margin-bottom:8px}
+.cc-tag{font-size:14px;color:var(--text2);margin-bottom:30px;line-height:1.6}
+
+/* ── FOOTER ── */
+.site-footer{border-top:1px solid var(--border);padding:40px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--text)}
+.footer-links{display:flex;gap:28px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:var(--text3);text-decoration:none;letter-spacing:.5px;text-transform:uppercase;transition:color .2s}
+.footer-links a:hover{color:var(--accent)}
+.footer-copy{font-size:11px;color:var(--text3);font-family:'Space Mono',monospace}
+.footer-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 14px;border-radius:100px;background:rgba(var(--accent-rgb),.08);border:1px solid rgba(var(--accent-rgb),.2);color:var(--accent)}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(40px)}
+.reveal.visible{opacity:1;transform:translateY(0);transition:opacity .9s cubic-bezier(.23,1,.32,1),transform .9s cubic-bezier(.23,1,.32,1)}
+.reveal-left{opacity:0;transform:translateX(-40px)}
+.reveal-left.visible{opacity:1;transform:translateX(0);transition:all 1s cubic-bezier(.23,1,.32,1)}
+.reveal-right{opacity:0;transform:translateX(40px)}
+.reveal-right.visible{opacity:1;transform:translateX(0);transition:all 1s cubic-bezier(.23,1,.32,1)}
+.reveal-scale{opacity:0;transform:scale(.9)}
+.reveal-scale.visible{opacity:1;transform:scale(1);transition:all .8s cubic-bezier(.23,1,.32,1)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* ── PAYMENT MODAL ── */
+.modal-ov{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.92);backdrop-filter:blur(24px);align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal{background:#0a1020;border:1px solid rgba(var(--accent-rgb),.22);border-radius:24px;padding:44px;max-width:460px;width:100%;box-shadow:0 40px 100px rgba(0,0,0,.8);animation:pu .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pu{from{opacity:0;transform:scale(.9) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-icon{font-size:56px;display:block;text-align:center;margin-bottom:16px}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:1px;color:var(--text);margin-bottom:6px;text-align:center}
+.modal-sub{font-size:14px;color:var(--text2);text-align:center;margin-bottom:22px}
+.pay-row{background:rgba(var(--accent-rgb),.06);border:1px solid rgba(var(--accent-rgb),.15);border-radius:16px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between}
+.pay-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.pay-amt{font-family:'Bebas Neue',sans-serif;font-size:50px;letter-spacing:1px;color:var(--text)}
+.modal-feats{font-size:13px;color:var(--text2);line-height:2.4;margin-bottom:24px}
+.modal-pay-btn{width:100%;padding:16px;background:var(--grad);color:#1a0e00;font-size:15px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;border:none;border-radius:12px;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 6px 28px rgba(var(--accent-rgb),.45);transition:all .25s;margin-bottom:10px}
+.modal-pay-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(var(--accent-rgb),.65)}
+.modal-cancel{width:100%;padding:13px;background:transparent;border:1px solid var(--border2);color:var(--text2);font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
+.modal-cancel:hover{background:var(--surface2);color:var(--text)}
+
+/* ── GRAIN OVERLAY ── */
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");opacity:.5}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .about-sec{grid-template-columns:1fr;padding:80px 32px;gap:48px}
+  .product-card{grid-template-columns:1fr}
+  .product-card:nth-child(even){direction:ltr}
+  .product-canvas-wrap{min-height:320px}
+  .gallery-sec{padding:80px 32px}
+}
+@media(max-width:900px){
+  .site-nav{padding:0 20px}
+  .nav-links,.nav-cta{display:none}
+  .hamburger{display:block}
+  .stats-sec{grid-template-columns:repeat(2,1fr)}
+  .stat-b:nth-child(2){border-right:none}
+  .testi-grid{grid-template-columns:1fr 1fr}
+  .contact-sec{grid-template-columns:1fr;padding:80px 32px;gap:48px}
+  .gallery-sec,.testi-sec,.products-sec{padding:60px 32px}
+}
+@media(max-width:600px){
+  :root{--bh:46px;--nh:56px;--top:102px}
+  .pb-exp{display:none}
+  .pb-dash{display:none}
+  .pb-act{padding:7px 14px;font-size:11px}
+  #heroSection{height:calc(85vh - var(--top))}
+  .stats-sec{grid-template-columns:repeat(2,1fr)}
+  .stat-b{padding:22px 10px}
+  .testi-grid{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .g-item:first-child{grid-row:span 1}
+  .g-item{min-height:180px}
+  .site-footer{padding:24px 16px;flex-direction:column;align-items:flex-start;gap:12px}
+  .product-info{padding:36px 24px}
+  .showcase-sec{padding:80px 20px;min-height:420px}
+  .contact-sec,.gallery-sec,.testi-sec{padding:44px 14px}
+  #cursor,#cursor-ring{display:none}
+  body{cursor:auto}
+}
+@media(max-width:400px){
+  .hero-btns{flex-direction:column;align-items:center}
+  .btn-gold,.btn-ghost{width:100%;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- BANNER -->
+<div class="pb">
+  <div class="pb-l">
+    <a href="index.html" class="pb-logo">AutoVision</a>
+    <span class="pb-pill">✦ 3D Preview</span>
+  </div>
+  <div class="pb-r">
+    <span class="pb-exp" id="expireTxt">⚠️ Expires 48h</span>
+    <a href="dashboard.html" class="pb-dash">← Dashboard</a>
+    <button class="pb-act" onclick="openPayModal()">Activate — ₹799</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="site-nav" id="siteNav">
+  <a href="#heroSection" class="nav-logo" id="navLogo">BRAND<span class="dot">.</span></a>
+  <div class="nav-links">
+    <a href="#aboutSection">About</a>
+    <a href="#productsSection">Services</a>
+    <a href="#gallerySection">Gallery</a>
+    <a href="#contactSection" class="nav-cta">Contact</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="#aboutSection" onclick="closeMenu()">About</a>
+  <a href="#productsSection" onclick="closeMenu()">Services</a>
+  <a href="#gallerySection" onclick="closeMenu()">Gallery</a>
+  <a href="#contactSection" onclick="closeMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="heroSection">
+  <canvas id="threeCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow" id="heroEyebrow">✦ Premium Experience ✦</div>
+    <h1 class="hero-title" id="heroTitle">
+      <span id="heroL1">YOUR</span><br>
+      <span class="acc" id="heroL2">BRAND</span>
+    </h1>
+    <p class="hero-sub" id="heroSub">Crafted with passion. Delivered with excellence.</p>
+    <div class="hero-btns" id="heroBtns">
+      <button class="btn-gold" onclick="sc('productsSection')">Explore Our Work</button>
+      <a href="#contactSection" class="btn-ghost">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div><div class="scroll-label">Scroll</div></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq-strip">
+  <div class="mq-track">
+    <div class="mq-inner" id="mq1"></div>
+    <div class="mq-inner" id="mq2"></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-sec">
+  <div class="stat-b reveal"><span class="stat-num" data-count="500">0+</span><div class="stat-lbl">Happy Clients</div></div>
+  <div class="stat-b reveal d1"><span class="stat-num" data-count="5">0+</span><div class="stat-lbl">Years Excellence</div></div>
+  <div class="stat-b reveal d2"><span class="stat-num" data-count="98">0%</span><div class="stat-lbl">Satisfaction</div></div>
+  <div class="stat-b reveal d3"><span class="stat-num" data-count="24">0/7</span><div class="stat-lbl">Hour Support</div></div>
+</div>
+
+<!-- ABOUT -->
+<section id="aboutSection">
+  <div class="about-sec">
+    <div class="about-img-wrap reveal-left">
+      <div class="about-img loading" id="aboutBgImg"></div>
+      <div class="about-img-overlay"></div>
+      <div class="about-float"><div class="about-float-num">500+</div><div class="about-float-lbl">Happy Clients</div></div>
+      <div class="about-glow"></div>
+    </div>
+    <div class="about-r reveal-right">
+      <div class="eyebrow">Our Story</div>
+      <h2 class="sec-title" id="aboutTitle">CRAFTED WITH<br><span class="acc">PASSION</span></h2>
+      <p class="sec-body" id="aboutBody">We believe in delivering more than just a service — we deliver an experience worth remembering.</p>
+      <div class="feat-list" id="featList"></div>
+      <a href="#contactSection" class="btn-ghost">Start a Conversation →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS / SERVICES — each gets own 3D section -->
+<section id="productsSection">
+  <div class="products-sec">
+    <div class="products-hd reveal">
+      <div class="eyebrow" style="justify-content:center">What We Offer</div>
+      <h2 class="sec-title">OUR <span class="acc">SIGNATURE</span><br>OFFERINGS</h2>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--text2);margin-top:12px">Drag the 3D models · explore every angle</p>
+    </div>
+    <div id="productCards"></div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallerySection">
+  <div class="gallery-sec">
+    <div class="reveal">
+      <div class="eyebrow">Visual Story</div>
+      <h2 class="sec-title">A GLIMPSE INTO<br>OUR <span class="acc">WORLD</span></h2>
+    </div>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="g-item"><div class="g-loading">🖼️</div></div>
+      <div class="g-item"><div class="g-loading">🖼️</div></div>
+      <div class="g-item"><div class="g-loading">🖼️</div></div>
+      <div class="g-item"><div class="g-loading">🖼️</div></div>
+      <div class="g-item"><div class="g-loading">🖼️</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="testi-sec">
+    <div class="reveal" style="margin-bottom:50px">
+      <div class="eyebrow">What They Say</div>
+      <h2 class="sec-title">CUSTOMER <span class="acc">LOVE</span></h2>
+    </div>
+    <div class="testi-grid" id="testiGrid"></div>
+  </div>
+</section>
+
+<!-- SHOWCASE FULLSCREEN -->
+<div class="showcase-sec" id="showcaseSection">
+  <canvas id="showcaseCanvas"></canvas>
+  <div class="showcase-ct reveal">
+    <h2 class="showcase-title">THE <span class="acc" id="showcaseName">BRAND</span><br>DIFFERENCE</h2>
+    <p class="showcase-sub" id="showcaseSub">Every visit, every product, every moment — crafted to leave an impression that lasts.</p>
+    <button class="btn-gold" onclick="sc('contactSection')">Connect With Us</button>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contactSection">
+  <div class="contact-sec">
+    <div class="reveal-left">
+      <div class="eyebrow">Get In Touch</div>
+      <h2 class="sec-title">LET'S<br><span class="acc">TALK</span></h2>
+      <p class="contact-body" id="contactBody">Ready to experience what we have to offer? Reach out today.</p>
+      <div class="contact-items" id="contactItems"></div>
+    </div>
+    <div class="reveal-right">
+      <div class="cc">
+        <span class="cc-icon" id="ccIcon">🏢</span>
+        <div class="cc-name" id="ccName">BUSINESS</div>
+        <div class="cc-tag" id="ccTag">Premium Experience</div>
+        <button class="btn-gold" onclick="sc('contactSection')" style="width:100%;margin-top:10px">Visit Us Today</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-logo" id="footerLogo">BRAND</div>
+  <div class="footer-links">
+    <a href="#heroSection">Home</a>
+    <a href="#aboutSection">About</a>
+    <a href="#productsSection">Services</a>
+    <a href="#contactSection">Contact</a>
+  </div>
+  <div class="footer-copy" id="footerCopy">© 2025</div>
+  <span class="footer-badge">AutoVision 3D ✦</span>
+</footer>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-ov" id="payModal">
+  <div class="modal">
+    <span class="modal-icon">🧊</span>
+    <div class="modal-title">Activate 3D Website</div>
+    <div class="modal-sub">Go live with your immersive 3D experience</div>
+    <div class="pay-row">
+      <div><div class="pay-lbl">One-time Activation</div><div class="pay-amt">₹799</div></div>
+      <span style="font-size:44px">🚀</span>
+    </div>
+    <div class="modal-feats">✦ &nbsp;Website goes live instantly<br>✦ &nbsp;Your own shareable URL<br>✦ &nbsp;All 3D animations included<br>✦ &nbsp;Pay via UPI, GPay, or Card</div>
+    <button class="modal-pay-btn" onclick="processPayment()">Pay ₹799 — Activate Now →</button>
+    <button class="modal-cancel" onclick="closePayModal()">Preview Later</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ══════════════════════════════════════════════════════
+   CONFIG — exact same values as dashboard.html
+══════════════════════════════════════════════════════ */
+const SUPA_URL  = 'https://twneeawhdzgnavudanud.supabase.co';
+const SUPA_KEY  = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
+const RZP_KEY   = 'rzp_live_SaJ684rRC2TUwj';
+const BASE_URL  = 'https://autovision-psi.vercel.app';
+const TBL_SITES = 'av_websites';
+const LS_KEY    = 'av_websites_local';
+const PEXELS_KEY= 'YdYkG3y4W1Hw2miLpLTiQoxWoOeknnmSDra6ahTKCfIAdpWD5w5hpO2w';
+
+/* Supabase client — same as dashboard.html */
+const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+const params   = new URLSearchParams(window.location.search);
+const SITE_ID  = params.get('site');
+const LOCAL_ID = params.get('localsite');
+
+/* ══ GLOBALS ══ */
+let SD = null, accentColor = '#f0a500', accentRGB = '240,165,0';
+let category = 'generic', currentUser = null;
+let heroRenderer, heroScene, heroCamera, heroMainGroup;
+let heroParticles = [], heroTime = 0, mouseX = 0, mouseY = 0;
+const pxCache = {};
+
+/* ══ AUTH — same as dashboard.html ══ */
+try { currentUser = JSON.parse(localStorage.getItem('av_user') || '{}'); } catch {}
+
+/* ══ CATEGORY KEYWORDS ══ */
+const CAT_KW = {
+  cafe:    ['coffee','tea','cafe','latte','matcha','brew','chai','cappuccino','espresso','mocha','frappe'],
+  food:    ['food','pizza','burger','restaurant','dining','cuisine','chef','meal','menu','dish','biryani','sushi','pasta','sandwich','snack','dessert','cake','bakery'],
+  health:  ['gym','fitness','yoga','health','wellness','spa','medical','doctor','clinic','therapy','nutrition','massage'],
+  retail:  ['fashion','cloth','wear','boutique','style','dress','shop','store','retail','shoes','accessories','jewel','watch'],
+  tech:    ['tech','software','app','digital','code','web','it','computer','developer','startup','saas','ai','data'],
+  creative:['design','art','creative','photo','video','studio','brand','graphic','animation','portfolio'],
+  education:['school','education','tutor','coaching','learn','teach','course','training','academy'],
+  beauty:  ['salon','beauty','hair','nail','makeup','skincare','spa','facial','wax','groom']
+};
+
+const CAT_EMO = { cafe:'☕',food:'🍽️',health:'💪',retail:'🛍️',tech:'💻',creative:'🎨',education:'📚',beauty:'💄',generic:'✦' };
+const ITEM_EMO = {
+  'coffee':'☕','tea':'🍵','chai':'🫖','latte':'☕','matcha':'🍵','espresso':'☕','cappuccino':'☕','mocha':'☕','frappe':'🥤',
+  'croissant':'🥐','pastry':'🥐','sandwich':'🥪','cake':'🎂','muffin':'🧁','bread':'🍞','pizza':'🍕','burger':'🍔',
+  'biryani':'🍛','sushi':'🍣','pasta':'🍝','salad':'🥗','soup':'🍲','dessert':'🍮','ice cream':'🍦',
+  'yoga':'🧘','gym':'🏋️','fitness':'💪','massage':'💆','wellness':'🌿',
+  'dress':'👗','shoes':'👠','bag':'👜','jewel':'💍','watch':'⌚','perfume':'💐',
+  'app':'📱','software':'💻','data':'📊','cloud':'☁️','ai':'🤖',
+  'photo':'📸','video':'🎬','design':'🎨','art':'🖼️',
+  'hair':'💇','nail':'💅','makeup':'💄','facial':'✨','skin':'🌸',
+  'course':'📚','coaching':'🎓'
+};
+
+/* ══ BOOT ══ */
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadSiteData();
+  if (!SD) { showNotFound(); return; }
+
+  applyAccentColor();
+  category = detectCat(SD.services || SD.description || '', SD.type || '');
+  if (SD.purpose && SD.purpose !== 'generic') category = SD.purpose;
+
+  populatePage();
+  initCursor();
+  initScrollNav();
+  initReveal();
+  initCountUp();
+  initHeroGsap();
+  initHeroScene();
+  initShowcaseScene();
+  updateExpire();
+  buildProductCards();
+  fetchGalleryImages();
+});
+
+/* ══ LOAD SITE DATA — reads from Supabase first, then localStorage ══
+   Same pattern as preview.html                                        */
+async function loadSiteData() {
+  if (LOCAL_ID) {
+    /* localStorage path */
+    try {
+      const arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+      SD = arr.find(s => s.id === LOCAL_ID) || null;
+      if (SD) { parseDescription(SD); return; }
+    } catch {}
+  }
+
+  if (SITE_ID) {
+    /* Supabase path — same pattern as preview.html */
+    try {
+      const { data, error } = await db
+        .from(TBL_SITES)
+        .select('*')
+        .eq('id', SITE_ID)
+        .single();
+      if (error) console.error('[AV 3D preview] Supabase:', error.message);
+      if (data) { SD = data; parseDescription(SD); return; }
+    } catch (e) { console.error('[AV 3D preview] exception:', e); }
+  }
+
+  /* last resort: first localStorage entry */
+  try {
+    const arr = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+    const match = arr.find(s => s._is3d) || arr[0];
+    if (match) { SD = match; parseDescription(SD); }
+  } catch {}
+}
+
+/* Pull 3D-specific fields out of the description JSON (set by 3d-builder.html) */
+function parseDescription(s) {
+  if (!s) return;
+  try {
+    const d = JSON.parse(s.description || '{}');
+    if (d.style3d)     s.style3d     = d.style3d;
+    if (d.color)       s.color       = d.color;
+    if (d.interaction) s.interaction = d.interaction;
+    if (d.purpose)     s.purpose     = d.purpose;
+  } catch {}
+  /* website_theme holds the color (set by 3d-builder.html) */
+  if (!s.color && s.website_theme && s.website_theme.startsWith('#')) {
+    s.color = s.website_theme;
+  }
+}
+
+/* ══ ACCENT COLOR ══ */
+function applyAccentColor() {
+  accentColor = SD.color || '#f0a500';
+  const hx = accentColor.replace('#', '');
+  const r = parseInt(hx.slice(0,2),16), g = parseInt(hx.slice(2,4),16), b = parseInt(hx.slice(4,6),16);
+  accentRGB = `${r},${g},${b}`;
+  document.documentElement.style.setProperty('--accent', accentColor);
+  document.documentElement.style.setProperty('--accent-rgb', accentRGB);
+  document.documentElement.style.setProperty('--grad', `linear-gradient(135deg,${accentColor} 0%,${lightenHex(accentColor,50)} 100%)`);
+}
+
+function lightenHex(h, a) {
+  const hx = h.replace('#','');
+  const c = v => Math.min(255, v + a).toString(16).padStart(2,'0');
+  return '#' + c(parseInt(hx.slice(0,2),16)) + c(parseInt(hx.slice(2,4),16)) + c(parseInt(hx.slice(4,6),16));
+}
+
+/* ══ CATEGORY DETECT ══ */
+function detectCat(svc, type) {
+  const t = (svc + ' ' + type).toLowerCase();
+  for (const [c, ws] of Object.entries(CAT_KW)) { if (ws.some(w => t.includes(w))) return c; }
+  return 'generic';
+}
+
+/* ══ ITEM PARSING ══ */
+function parseItems(s) {
+  return (s || '').split(/[,\n;]+/).map(x => x.trim().toLowerCase()).filter(x => x.length > 1).slice(0, 8);
+}
+
+function getEmoji(n) {
+  const k = (n || '').toLowerCase();
+  for (const [kw, e] of Object.entries(ITEM_EMO)) { if (k.includes(kw)) return e; }
+  return CAT_EMO[category] || '✦';
+}
+
+/* ══ POPULATE PAGE ══ */
+function populatePage() {
+  const name  = SD.name  || 'Business';
+  const words = name.trim().split(/\s+/);
+  const items = parseItems(SD.services || '');
+
+  /* Hero title — no duplication */
+  let l1, l2;
+  if (words.length === 1) {
+    l1 = words[0].toUpperCase();
+    const tw = (SD.type || 'Premium').split(/[\s\/]+/)[0].trim().toUpperCase();
+    l2 = tw === l1 ? 'EXPERIENCE' : tw;
+  } else {
+    const mid = Math.ceil(words.length / 2);
+    l1 = words.slice(0, mid).join(' ').toUpperCase();
+    l2 = words.slice(mid).join(' ').toUpperCase() || 'PREMIUM';
+  }
+  document.getElementById('heroL1').textContent = l1;
+  document.getElementById('heroL2').textContent = l2;
+
+  document.title = name + ' — AutoVision 3D';
+  document.getElementById('navLogo').innerHTML = esc(words[0].toUpperCase()) + '<span class="dot">.</span>';
+  document.getElementById('footerLogo').textContent = name.toUpperCase();
+  document.getElementById('footerCopy').textContent = '© ' + new Date().getFullYear() + ' ' + name;
+  document.getElementById('heroEyebrow').textContent = CAT_EMO[category] + ' ' + (SD.type || 'Premium') + ' ' + CAT_EMO[category];
+
+  const top3 = items.slice(0, 3);
+  document.getElementById('heroSub').textContent = top3.length
+    ? 'Specialising in ' + top3.map(i => cap(i)).join(', ') + ' — and so much more.'
+    : (SD.tagline || 'Excellence in everything we do.');
+
+  buildMarquee(name, items);
+
+  document.getElementById('aboutTitle').innerHTML = `THE<br><span class="acc">${esc(words[0].toUpperCase())}</span> STORY`;
+  document.getElementById('aboutBody').textContent = `At ${name}, we take pride in delivering exceptional experiences. Whether it's our ${items[0] || 'services'}, our ${items[1] || 'products'}, or the atmosphere we create — every detail is crafted with care.`;
+
+  const feats = [
+    { icon:'⭐', t:'Premium Quality',    d:'Every offering meets the highest standards.' },
+    { icon:'🤝', t:'Trusted by Hundreds', d:'Our growing community of satisfied clients speaks for itself.' },
+    { icon:'⚡', t:'Fast & Reliable',    d:'We value your time and always deliver on our promises.' },
+    { icon:'💎', t:'Best in Class',      d:'Unmatched expertise and passion in everything we create.' }
+  ];
+  document.getElementById('featList').innerHTML = feats.map(f =>
+    `<div class="feat-row reveal"><div class="feat-icon">${f.icon}</div><div class="feat-text"><div class="ft">${f.t}</div><div class="fd">${f.d}</div></div></div>`
+  ).join('');
+
+  document.getElementById('showcaseName').textContent = words[0].toUpperCase();
+  document.getElementById('showcaseSub').textContent = `Every visit, every ${items[0] || 'interaction'} — crafted to leave an impression that lasts.`;
+
+  /* Testimonials */
+  const quotes = [
+    `Honestly one of the best experiences I've had. The ${items[0] || 'service'} is absolutely top-notch.`,
+    `I've been a regular at ${name} for over a year and every visit has been perfect. Highly recommend!`,
+    `Outstanding quality and incredible attention to detail. ${name} truly stands apart from everything else.`
+  ];
+  const authors = [
+    { n:'Priya S.',  r:'Regular Customer', i:'P' },
+    { n:'Arjun M.',  r:'Loyal Client',     i:'A' },
+    { n:'Neha R.',   r:'Happy Customer',   i:'N' }
+  ];
+  document.getElementById('testiGrid').innerHTML = authors.map((a, i) =>
+    `<div class="testi-card reveal d${i}">
+      <span class="testi-qm">"</span>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-q">${esc(quotes[i])}</div>
+      <div class="testi-au"><div class="testi-av">${a.i}</div><div><div class="testi-name">${esc(a.n)}</div><div class="testi-role">${esc(a.r)}</div></div></div>
+    </div>`
+  ).join('');
+
+  /* Contact */
+  document.getElementById('contactBody').textContent = `Ready to experience ${name}? We'd love to hear from you.`;
+  const cItems = [];
+  if (SD.phone)   cItems.push({ icon:'📞', label:'Phone',   val:SD.phone });
+  if (SD.email)   cItems.push({ icon:'✉️', label:'Email',   val:SD.email });
+  if (SD.address) cItems.push({ icon:'📍', label:'Address', val:SD.address });
+  if (!cItems.length) cItems.push({ icon:'💬', label:'Reach Out', val:'Connect with us today' });
+  document.getElementById('contactItems').innerHTML = cItems.map(c =>
+    `<div class="ci"><div class="ci-icon">${c.icon}</div><div><div class="ci-lbl">${esc(c.label)}</div><div class="ci-val">${esc(c.val)}</div></div></div>`
+  ).join('');
+
+  document.getElementById('ccIcon').textContent = CAT_EMO[category];
+  document.getElementById('ccName').textContent = name.toUpperCase();
+  document.getElementById('ccTag').textContent  = SD.type || 'Premium Experience';
+
+  /* About image from Pexels */
+  fetchPexels(buildQuery(SD.services || SD.type || 'business', 0), 1).then(imgs => {
+    if (imgs[0]) {
+      const el = document.getElementById('aboutBgImg');
+      if (el) { el.style.backgroundImage = `url('${imgs[0]}')`; el.classList.remove('loading'); }
+    }
+  });
+
+  setTimeout(initReveal, 200);
+}
+
+/* ══ MARQUEE ══ */
+function buildMarquee(name, items) {
+  const all = items.length ? items : [name.toLowerCase(), 'quality', 'excellence', 'premium'];
+  const chips = [...all.slice(0, 7), name.toLowerCase(), 'quality guaranteed'].map(item =>
+    `<span class="mq-chip"><span>${getEmoji(item)}</span><span>${esc(cap(item))}</span><span class="mq-dot">✦</span></span>`
+  ).join('');
+  document.getElementById('mq1').innerHTML = chips;
+  document.getElementById('mq2').innerHTML = chips;
+}
+
+/* ══════════════════════════════════════════════════════
+   PEXELS IMAGE FETCHING
+══════════════════════════════════════════════════════ */
+async function fetchPexels(query, count = 4) {
+  if (!query) return [];
+  const key = query.toLowerCase().trim();
+  if (pxCache[key]) return pxCache[key];
+  try {
+    const res = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=${count + 3}&orientation=landscape`,
+      { headers: { Authorization: PEXELS_KEY } }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    const urls = (data.photos || []).map(p => p.src.large2x || p.src.large);
+    pxCache[key] = urls;
+    return urls;
+  } catch { return []; }
+}
+
+function buildQuery(services, idx) {
+  const items = parseItems(services);
+  const type  = (SD.type || 'business').split('/')[0].trim().toLowerCase();
+  const kws   = items.filter(Boolean);
+  if (kws[idx]) return `${kws[idx]} ${type}`;
+  return type + ' professional';
+}
+
+/* ══ GALLERY IMAGES ══ */
+async function fetchGalleryImages() {
+  const items   = parseItems(SD.services || '');
+  const type    = (SD.type || 'business').split('/')[0].trim().toLowerCase();
+  const queries = [
+    items[0] ? `${items[0]} ${type}` : type + ' interior',
+    items[1] ? `${items[1]} closeup`  : type + ' product',
+    items[2] ? `${items[2]} ${type}`  : type + ' lifestyle',
+    items[0] ? `${items[0]} detail`   : type + ' team',
+    type + ' premium quality'
+  ];
+
+  const labels = ['Our World','The Detail','Our Craft','Premium Quality','The Experience'];
+  const emojis = ['🖼️','✨','🎯','💎','⭐'];
+  const grid   = document.getElementById('galleryGrid');
+  grid.innerHTML = '';
+
+  for (let i = 0; i < 5; i++) {
+    const div = document.createElement('div');
+    div.className = 'g-item reveal-scale';
+    div.style.transitionDelay = (i * 0.08) + 's';
+    div.innerHTML = `<div class="g-loading" id="gl${i}">${emojis[i]}</div><div class="g-overlay"></div><div class="g-label">${labels[i]}</div>`;
+    if (i === 0) div.style.gridRow = 'span 2';
+    grid.appendChild(div);
+  }
+
+  const allImgs = await Promise.all(queries.map(q => fetchPexels(q, 3)));
+
+  for (let i = 0; i < 5; i++) {
+    const urls = allImgs[i];
+    const loader = document.getElementById('gl' + i);
+    if (!loader) continue;
+    const item = loader.parentElement;
+    if (urls && urls[0]) {
+      const img = document.createElement('img');
+      img.src = urls[0];
+      img.alt = labels[i];
+      img.loading = 'lazy';
+      img.onload = () => { loader.style.display = 'none'; };
+      item.insertBefore(img, loader);
+    }
+  }
+  setTimeout(initReveal, 300);
+}
+
+/* ══════════════════════════════════════════════════════
+   3D PRODUCT CARDS — each service item gets own card
+══════════════════════════════════════════════════════ */
+async function buildProductCards() {
+  const items = parseItems(SD.services || '');
+  if (!items.length) return;
+  const container = document.getElementById('productCards');
+  const descs = [
+    'Our signature offering, crafted to perfection for every occasion.',
+    'An experience you will remember long after your visit.',
+    'Made with care, precision, and the finest ingredients.',
+    'A crowd favourite — tried and trusted by all.',
+    'Expertly prepared for your enjoyment, every single time.',
+    'The finest in its class, without compromise.',
+    'Crafted fresh, delivered with love and excellence.',
+    'Our bestseller — unmatched quality guaranteed.'
+  ];
+
+  for (let i = 0; i < Math.min(items.length, 6); i++) {
+    const item  = items[i];
+    const label = cap(item);
+    const even  = i % 2 === 1;
+    const card  = document.createElement('div');
+    card.className = 'product-card reveal';
+    card.id = 'pcard_' + i;
+
+    /* Fetch pexels images for this item */
+    const imgQuery = item + ' ' + ((SD.type || '').split('/')[0].trim() || 'professional');
+    const imgPromise = fetchPexels(imgQuery, 4);
+
+    card.innerHTML = `
+      <div class="product-canvas-wrap" id="pcvp_${i}">
+        <canvas id="pc3d_${i}" style="display:none"></canvas>
+        <div class="product-canvas-loading" id="pcld_${i}">
+          <div class="pc-spin"></div>
+          <div class="pc-lbl">Rendering "${label}" in 3D…</div>
+        </div>
+        <div class="prod-3d-hint">↻ Drag to rotate</div>
+      </div>
+      <div class="product-info">
+        <div class="prod-num">— ${String(i+1).padStart(2,'0')}</div>
+        <div class="prod-name">${esc(label)}</div>
+        <div class="prod-desc">${esc(descs[i % descs.length])}</div>
+        <div class="prod-img-row" id="pimgrow_${i}"></div>
+        <span class="prod-tag">${getEmoji(item)} ${esc(label)}</span>
+      </div>`;
+
+    if (even) card.style.direction = 'rtl';
+    container.appendChild(card);
+    if (even) card.querySelectorAll('*').forEach(el => el.style.direction = 'ltr');
+
+    /* Render 3D mesh */
+    renderProductMesh(i, item);
+
+    /* Inject images */
+    imgPromise.then(imgs => {
+      const row = document.getElementById('pimgrow_' + i);
+      if (!row) return;
+      imgs.slice(0, 3).forEach((url, j) => {
+        const t = document.createElement('img');
+        t.className = 'prod-thumb';
+        t.src = url;
+        t.alt = label;
+        t.loading = 'lazy';
+        row.appendChild(t);
+      });
+    });
+  }
+  setTimeout(initReveal, 400);
+}
+
+/* ══ RENDER PRODUCT 3D MESH — procedural Three.js ══ */
+function renderProductMesh(i, keyword) {
+  const vp     = document.getElementById('pcvp_'  + i);
+  const canvas = document.getElementById('pc3d_'  + i);
+  const ldEl   = document.getElementById('pcld_'  + i);
+  if (!vp || !canvas) return;
+
+  const W = vp.offsetWidth  || 480;
+  const H = vp.offsetHeight || 400;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(W, H, false);
+  renderer.setClearColor(0, 0);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(48, W/H, .1, 100);
+  camera.position.set(0, 0, 4);
+
+  /* Lighting */
+  const { r, g, b } = hexToRGB(accentColor);
+  const col = (r << 16) + (g << 8) + b;
+  scene.add(new THREE.AmbientLight(0xffffff, .35));
+  const kl  = new THREE.PointLight(col, 4, 20); kl.position.set(3, 3, 3); scene.add(kl);
+  const fl  = new THREE.PointLight(0x6688ff, 2, 16); fl.position.set(-3, -2, 2); scene.add(fl);
+  const rl  = new THREE.PointLight(col, 1.5, 14); rl.position.set(0, -3, -2); scene.add(rl);
+
+  /* Materials */
+  const mat  = new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .22, transparent: true, opacity: .88, shininess: 100 });
+  const wmat = new THREE.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: .28 });
+
+  const g = new THREE.Group(); scene.add(g);
+  const k = (keyword || '').toLowerCase();
+
+  /* Shape by keyword */
+  if (['coffee','tea','chai','latte','matcha','espresso','cappuccino','mocha','americano','frappe','soup','drink','cup','mug','bowl'].some(kw => k.includes(kw))) {
+    g.add(new THREE.Mesh(new THREE.CylinderGeometry(.6, .48, 1.15, 28), mat));
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(.6, .06, 10, 40), new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .5 }));
+    rim.rotation.x = Math.PI/2; rim.position.y = .58; g.add(rim);
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(.38, .07, 10, 28, Math.PI), mat);
+    handle.rotation.y = Math.PI/2; handle.position.set(.6, 0, 0); g.add(handle);
+  } else if (['donut','bagel','taco','pizza','ring','torus','bangle','bracelet','necklace'].some(kw => k.includes(kw))) {
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(1.0, .4, 24, 60), mat));
+    g.add(new THREE.Mesh(new THREE.TorusGeometry(1.0, .42, 12, 60), wmat));
+  } else if (['jewel','ring','diamond','gem','nail','perfume','makeup','lipstick','crystal'].some(kw => k.includes(kw))) {
+    const top = new THREE.Mesh(new THREE.ConeGeometry(.82, 1.2, 8), mat);
+    const bot = new THREE.Mesh(new THREE.ConeGeometry(.82, .65, 8), mat);
+    bot.rotation.z = Math.PI; bot.position.y = -.92;
+    const band = new THREE.Mesh(new THREE.CylinderGeometry(.85, .85, .06, 8), new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .7 }));
+    band.position.y = -.04; g.add(top, bot, band);
+  } else if (['yoga','pilates','design','art','animation','hair','skin','facial','creative','torusknot','star'].some(kw => k.includes(kw))) {
+    g.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0, .28, 120, 16, 2, 3), mat));
+    g.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.0, .30, 60, 8, 2, 3), wmat));
+  } else if (['app','web','software','ai','data','cloud','tech','biryani','curry','rice','icosahedron'].some(kw => k.includes(kw))) {
+    g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.2, 1), mat));
+    g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.3, 0), wmat));
+  } else if (['dress','shoes','bag','cloth','fashion','watch','book','course','exam','coaching','box'].some(kw => k.includes(kw))) {
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.6), mat));
+    g.add(new THREE.Mesh(new THREE.BoxGeometry(1.65, 1.65, 1.65), wmat));
+  } else if (['gym','dumbbell','training','workout','massage','fitness','bottle'].some(kw => k.includes(kw))) {
+    const bar = new THREE.Mesh(new THREE.CylinderGeometry(.12, .12, 2.4, 12), mat);
+    bar.rotation.z = Math.PI/2; g.add(bar);
+    [-1.1, 1.1].forEach(x => {
+      const w = new THREE.Mesh(new THREE.CylinderGeometry(.45, .45, .5, 24), mat);
+      w.rotation.z = Math.PI/2; w.position.x = x; g.add(w);
+    });
+  } else if (['cake','muffin','bread','pastry','croissant','dessert','sushi','pasta','noodle','salad','cylinder'].some(kw => k.includes(kw))) {
+    g.add(new THREE.Mesh(new THREE.CylinderGeometry(.75, .65, 1.5, 28), mat));
+    g.add(new THREE.Mesh(new THREE.CylinderGeometry(.77, .67, 1.52, 14), wmat));
+    const top = new THREE.Mesh(new THREE.CircleGeometry(.75, 28), mat);
+    top.rotation.x = -Math.PI/2; top.position.y = .76; g.add(top);
+  } else if (['burger','sandwich','pizza','food','snack','wrap','chicken','fish','meat'].some(kw => k.includes(kw))) {
+    /* Stack of discs for food */
+    [0, .35, .7].forEach((y, j) => {
+      const d = new THREE.Mesh(new THREE.CylinderGeometry(.9 - j*.1, .85 - j*.1, .28, 32), mat);
+      d.position.y = y; g.add(d);
+    });
+  } else {
+    /* Default: octahedron */
+    g.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.2, 1), mat));
+    g.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.3, 0), wmat));
+  }
+
+  /* Orbiting particles */
+  const orbs = [];
+  for (let oi = 0; oi < 4; oi++) {
+    const ang = (oi / 4) * Math.PI * 2;
+    const sp  = new THREE.Mesh(new THREE.SphereGeometry(.1, 8, 8), new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .6, transparent: true, opacity: .9 }));
+    sp.position.set(Math.cos(ang) * 1.9, .1 * Math.sin(ang * 2), Math.sin(ang) * 1.9);
+    sp.userData = { ang, speed: .018 + oi * .004 };
+    orbs.push(sp); g.add(sp);
+  }
+
+  /* Show canvas, hide loader */
+  canvas.style.display = 'block';
+  if (ldEl) ldEl.classList.add('gone');
+
+  /* Drag to rotate */
+  let isDrag = false, px = 0, py = 0, vx = .005, vy = 0;
+  vp.style.cursor = 'grab';
+  vp.addEventListener('mousedown', e => { isDrag = true; px = e.clientX; py = e.clientY; vp.style.cursor = 'grabbing'; });
+  window.addEventListener('mouseup', () => { isDrag = false; vp.style.cursor = 'grab'; });
+  vp.addEventListener('mousemove', e => {
+    if (!isDrag) return;
+    vx = (e.clientX - px) * .009; vy = (e.clientY - py) * .009;
+    g.rotation.y += vx; g.rotation.x = Math.max(-.8, Math.min(.8, g.rotation.x + vy));
+    px = e.clientX; py = e.clientY;
+  });
+  vp.addEventListener('touchstart', e => { isDrag = true; px = e.touches[0].clientX; py = e.touches[0].clientY; }, { passive: true });
+  vp.addEventListener('touchend', () => { isDrag = false; });
+  vp.addEventListener('touchmove', e => {
+    if (!isDrag) return;
+    vx = (e.touches[0].clientX - px) * .008; vy = (e.touches[0].clientY - py) * .008;
+    g.rotation.y += vx; g.rotation.x = Math.max(-.8, Math.min(.8, g.rotation.x + vy));
+    px = e.touches[0].clientX; py = e.touches[0].clientY;
+  }, { passive: false });
+
+  let t = 0;
+  (function anim() {
+    requestAnimationFrame(anim); t += .012;
+    if (!isDrag) { vx *= .92; vy *= .92; g.rotation.y += .006 + vx; g.rotation.x += vy; }
+    g.position.y = Math.sin(t * .8) * .07;
+    g.scale.setScalar(1 + Math.sin(t * 1.6) * .012);
+    orbs.forEach(o => {
+      o.userData.ang += o.userData.speed;
+      o.position.x = Math.cos(o.userData.ang) * 1.9;
+      o.position.z = Math.sin(o.userData.ang) * 1.9;
+      o.position.y = Math.sin(o.userData.ang * 1.5) * .2;
+    });
+    renderer.render(scene, camera);
+  })();
+
+  new ResizeObserver(() => {
+    const nw = vp.offsetWidth, nh = vp.offsetHeight || 400;
+    camera.aspect = nw / nh; camera.updateProjectionMatrix(); renderer.setSize(nw, nh, false);
+  }).observe(vp);
+}
+
+/* ══════════════════════════════════════════════════════
+   HERO THREE.JS SCENE
+══════════════════════════════════════════════════════ */
+function initHeroScene() {
+  const canvas = document.getElementById('threeCanvas');
+  const sec    = document.getElementById('heroSection');
+  const W = sec.offsetWidth, H = sec.offsetHeight;
+
+  heroRenderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+  heroRenderer.setSize(W, H);
+  heroRenderer.setClearColor(0, 0);
+
+  heroScene  = new THREE.Scene();
+  heroCamera = new THREE.PerspectiveCamera(55, W/H, .1, 300);
+  heroCamera.position.set(0, 0, 7);
+
+  heroScene.add(new THREE.AmbientLight(0xffffff, .25));
+  const { r, g, b } = hexToRGB(accentColor);
+  const col = (r << 16) + (g << 8) + b;
+  const kl  = new THREE.PointLight(col, 4, 40); kl.position.set(4, 4, 4); heroScene.add(kl);
+  const fl  = new THREE.PointLight(0x8888ff, 1.5, 30); fl.position.set(-4, -2, 3); heroScene.add(fl);
+
+  heroMainGroup = new THREE.Group(); heroScene.add(heroMainGroup);
+  const acm = new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .18, transparent: true, opacity: .88, shininess: 120 });
+  const wm  = new THREE.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: .32 });
+
+  /* Category-based hero shape */
+  if (category === 'cafe') {
+    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.6, .42, 28, 80), acm));
+    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.6, .44, 28, 80), wm));
+  } else if (category === 'health') {
+    heroMainGroup.add(new THREE.Mesh(new THREE.SphereGeometry(.9, 32, 32), acm));
+    heroMainGroup.add(new THREE.Mesh(new THREE.TorusGeometry(1.5, .06, 8, 80), wm));
+  } else if (category === 'creative' || category === 'beauty') {
+    heroMainGroup.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.2, .35, 140, 18, 2, 3), acm));
+  } else if (category === 'tech') {
+    heroMainGroup.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.6, 2), wm));
+    heroMainGroup.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 0), acm));
+  } else {
+    heroMainGroup.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.6, 0), acm));
+    heroMainGroup.add(new THREE.Mesh(new THREE.OctahedronGeometry(1.7, 0), wm));
+  }
+
+  /* Orbiting particle sparks */
+  const items = parseItems(SD.services || '');
+  const n = Math.max(items.length, 5);
+  for (let i = 0; i < n; i++) {
+    const ang = (i / n) * Math.PI * 2;
+    const sp  = new THREE.Mesh(new THREE.SphereGeometry(.13, 10, 10), new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: .4, transparent: true, opacity: .85 }));
+    sp.position.set(Math.cos(ang) * 2.4, Math.sin(ang * .5) * .6, Math.sin(ang) * 2.4);
+    sp.userData = { ang, speed: .009 + i * .002 };
+    heroScene.add(sp); heroParticles.push(sp);
+  }
+
+  document.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth  - .5) * 2;
+    mouseY = (e.clientY / window.innerHeight - .5) * 2;
+  });
+  window.addEventListener('resize', () => {
+    const s = document.getElementById('heroSection');
+    const W = s.offsetWidth, H = s.offsetHeight;
+    heroCamera.aspect = W/H; heroCamera.updateProjectionMatrix(); heroRenderer.setSize(W, H);
+  });
+
+  animHero();
+}
+
+function animHero() {
+  requestAnimationFrame(animHero); heroTime += .01;
+  if (heroMainGroup) {
+    heroMainGroup.rotation.y += .007;
+    heroMainGroup.rotation.x = Math.sin(heroTime * .4) * .06 + mouseY * .04;
+    heroMainGroup.rotation.y += mouseX * .006;
+  }
+  heroCamera.position.x += (mouseX * .4 - heroCamera.position.x) * .02;
+  heroCamera.position.y += (-mouseY * .25 - heroCamera.position.y) * .02;
+  heroParticles.forEach((p, i) => {
+    p.userData.ang += p.userData.speed || .012;
+    p.position.x = Math.cos(p.userData.ang) * 2.4;
+    p.position.z = Math.sin(p.userData.ang) * 2.4;
+    p.position.y = Math.sin(heroTime + i) * .2;
+  });
+  heroRenderer.render(heroScene, heroCamera);
+}
+
+/* ══ SHOWCASE SCENE ══ */
+function initShowcaseScene() {
+  const canvas = document.getElementById('showcaseCanvas');
+  const sec    = document.getElementById('showcaseSection');
+  const W = sec.offsetWidth || window.innerWidth, H = 600;
+
+  const sr = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+  sr.setPixelRatio(1); sr.setSize(W, H); sr.setClearColor(0, 0);
+
+  const ss = new THREE.Scene();
+  const sc = new THREE.PerspectiveCamera(70, W/H, .1, 200);
+  sc.position.set(0, 0, 8);
+
+  const { r, g, b } = hexToRGB(accentColor);
+  const col = (r << 16) + (g << 8) + b;
+
+  const count = 1200;
+  const pos   = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    pos[i*3]   = (Math.random() - .5) * 28;
+    pos[i*3+1] = (Math.random() - .5) * 18;
+    pos[i*3+2] = (Math.random() - .5) * 12;
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const pMat = new THREE.PointsMaterial({ color: col, size: .07, transparent: true, opacity: .7 });
+  const pts  = new THREE.Points(pGeo, pMat); ss.add(pts);
+
+  let smx = 0, smy = 0;
+  sec.addEventListener('mousemove', e => {
+    const rc = sec.getBoundingClientRect();
+    smx = ((e.clientX - rc.left) / rc.width  - .5) * 5;
+    smy = -((e.clientY - rc.top)  / rc.height - .5) * 3;
+  });
+
+  let st = 0;
+  (function a() {
+    requestAnimationFrame(a); st += .003;
+    pts.rotation.y += .001; pts.rotation.x += .0004;
+    sc.position.x += (smx - sc.position.x) * .025;
+    sc.position.y += (smy - sc.position.y) * .025;
+    pMat.opacity = .5 + Math.sin(st * 2) * .2;
+    sr.render(ss, sc);
+  })();
+
+  new ResizeObserver(() => {
+    const w = sec.offsetWidth, h = sec.offsetHeight || 600;
+    sc.aspect = w/h; sc.updateProjectionMatrix(); sr.setSize(w, h);
+  }).observe(sec);
+}
+
+/* ══ HERO GSAP ENTRANCE ══ */
+function initHeroGsap() {
+  const tl = gsap.timeline({ delay: .2 });
+  tl.to('#heroEyebrow', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' })
+    .to('#heroTitle',   { opacity: 1, y: 0, duration: 1,  ease: 'power3.out' }, '-=.5')
+    .to('#heroSub',     { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, '-=.6')
+    .to('#heroBtns',    { opacity: 1, y: 0, duration: .7, ease: 'power3.out' }, '-=.5');
+
+  /* Parallax on scroll */
+  gsap.to('#heroTitle', {
+    yPercent: -18, ease: 'none',
+    scrollTrigger: { trigger: '#heroSection', start: 'top top', end: 'bottom top', scrub: true }
+  });
+}
+
+/* ══ SCROLL NAV ══ */
+function initScrollNav() {
+  const nav = document.getElementById('siteNav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('solid', window.scrollY > 60); }, { passive: true });
+}
+
+/* ══ REVEAL ══ */
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); } });
+  }, { threshold: .08, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => obs.observe(el));
+}
+
+/* ══ COUNT UP ══ */
+function initCountUp() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      document.querySelectorAll('.stat-num[data-count]').forEach(el => {
+        const end = parseInt(el.dataset.count);
+        const sfx = el.textContent.replace(/\d/g, '');
+        let cur = 0;
+        const iv = setInterval(() => { cur = Math.min(cur + Math.ceil(end/60), end); el.textContent = cur + sfx; if (cur >= end) clearInterval(iv); }, 18);
+      });
+      obs.disconnect();
+    });
+  }, { threshold: .4 });
+  const st = document.querySelector('.stats-sec');
+  if (st) obs.observe(st);
+}
+
+/* ══ EXPIRE TIMER ══ */
+function updateExpire() {
+  if (!SD?.expires_at) return;
+  const exp = new Date(SD.expires_at).getTime();
+  function tick() {
+    const diff = exp - Date.now();
+    if (diff <= 0) { document.getElementById('expireTxt').textContent = '⚠️ Expired'; return; }
+    const h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('expireTxt').textContent = `⚠️ ${h}h ${m}m left`;
+  }
+  tick(); setInterval(tick, 60000);
+}
+
+/* ══ CURSOR ══ */
+function initCursor() {
+  const cur  = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  if (!cur || !ring || window.matchMedia('(max-width:600px)').matches) return;
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
+  (function a() { rx += (mx-rx)*.12; ry += (my-ry)*.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(a); })();
+  document.querySelectorAll('a,button,.product-canvas-wrap').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.style.width='20px'; cur.style.height='20px'; ring.style.width='52px'; ring.style.height='52px'; });
+    el.addEventListener('mouseleave', () => { cur.style.width='12px'; cur.style.height='12px'; ring.style.width='36px'; ring.style.height='36px'; });
+  });
+}
+
+/* ══ NOT FOUND ══ */
+function showNotFound() {
+  document.getElementById('heroSection').innerHTML = `
+    <div style="text-align:center;padding:120px 20px;font-family:'Outfit',sans-serif;position:relative;z-index:2">
+      <div style="font-size:64px;margin-bottom:18px">😕</div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--text);margin-bottom:10px">WEBSITE NOT FOUND</h2>
+      <p style="color:var(--text2);margin-bottom:24px;font-size:15px">Please go back to the dashboard and create a 3D website first.</p>
+      <a href="dashboard.html" style="padding:14px 28px;background:var(--grad);color:#1a0e00;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;font-family:'Outfit',sans-serif">← Back to Dashboard</a>
+    </div>`;
+}
+
+/* ══ PAYMENT ══ */
+function openPayModal()  { document.getElementById('payModal').classList.add('open'); }
+function closePayModal() { document.getElementById('payModal').classList.remove('open'); }
+
+async function processPayment() {
+  new Razorpay({
+    key: RZP_KEY, amount: 79900, currency: 'INR',
+    name: 'AutoVision', description: '3D Website Activation — ₹799',
+    handler: async function(res) {
+      closePayModal();
+      if (SD?.id && !SD._isLocal) {
+        try {
+          await db.from(TBL_SITES).update({ status: 'active' }).eq('id', SD.id);
+          await db.from('av_payments').insert([{
+            user_email: SD.user_email, website_id: SD.id,
+            amount: 799, payment_id: res.razorpay_payment_id,
+            type: 'activation', status: 'paid', created_at: new Date().toISOString()
+          }]);
+        } catch(e) { console.error('[AV] payment record:', e); }
+      }
+      alert('🎉 Payment successful!\nYour 3D website is now LIVE!\nPayment ID: ' + res.razorpay_payment_id);
+      window.location.href = 'dashboard.html';
+    },
+    prefill: { email: currentUser?.email || '' },
+    theme:   { color: accentColor }
+  }).open();
+}
+
+document.getElementById('payModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('payModal')) closePayModal();
+});
+
+/* ══ MOBILE MENU ══ */
+function toggleMenu() { document.getElementById('mobMenu').classList.toggle('open'); }
+function closeMenu()  { document.getElementById('mobMenu').classList.remove('open'); }
+
+/* ══ UTILS ══ */
+function sc(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' }); }
+function esc(s) { const d = document.createElement('div'); d.appendChild(document.createTextNode(s||'')); return d.innerHTML; }
+function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function hexToRGB(h) {
+  const hx = h.replace('#','');
+  return { r: parseInt(hx.slice(0,2),16), g: parseInt(hx.slice(2,4),16), b: parseInt(hx.slice(4,6),16) };
+}
+</script>
+</body>
+</html>
