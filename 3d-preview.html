@@ -454,82 +454,6 @@ const ITEM_EMO = {
   'course':'📚','coaching':'🎓'
 };
 
-/* ══════════════════════════════════════════════════════
-   SKETCHFAB KEYWORD → UID MAP
-   Pre-mapped UIDs for the most common Indian retail/food/beauty
-   products so we skip the API search entirely.
-   UIDs verified as publicly embeddable on Sketchfab.
-══════════════════════════════════════════════════════ */
-const SF_UID_MAP = {
-  /* ── Jewellery & Accessories ── */
-  'purse':         'b9c7c0f3972e4f2da14ff74c6ba1efed',
-  'handbag':       'b9c7c0f3972e4f2da14ff74c6ba1efed',
-  'bag':           'b9c7c0f3972e4f2da14ff74c6ba1efed',
-  'clutch':        'b9c7c0f3972e4f2da14ff74c6ba1efed',
-  'bangle':        '3dced3ef0cac41efb8f7f0929bd4e8c0',
-  'bangles':       '3dced3ef0cac41efb8f7f0929bd4e8c0',
-  'bracelet':      '3dced3ef0cac41efb8f7f0929bd4e8c0',
-  'necklace':      'a1b01feddc7846ed9f25cca36db7c7eb',
-  'earring':       'a1b01feddc7846ed9f25cca36db7c7eb',
-  'earrings':      'a1b01feddc7846ed9f25cca36db7c7eb',
-  'ring':          '8f8e218f24a14a5e8e14e2d46dd5e853',
-  'rings':         '8f8e218f24a14a5e8e14e2d46dd5e853',
-  'jewellery':     'a1b01feddc7846ed9f25cca36db7c7eb',
-  'jewelry':       'a1b01feddc7846ed9f25cca36db7c7eb',
-  'watch':         '8e7cd4d575694d93a2e9f3c29e4e98f7',
-  'watches':       '8e7cd4d575694d93a2e9f3c29e4e98f7',
-  'pendant':       'a1b01feddc7846ed9f25cca36db7c7eb',
-  'anklet':        '3dced3ef0cac41efb8f7f0929bd4e8c0',
-
-  /* ── Clothing & Fashion ── */
-  'dress':         'a3f5e6b21f2b4d0c8e9a1b3c4d5e6f70',
-  'saree':         'a3f5e6b21f2b4d0c8e9a1b3c4d5e6f70',
-  'kurta':         'a3f5e6b21f2b4d0c8e9a1b3c4d5e6f70',
-  'lehenga':       'a3f5e6b21f2b4d0c8e9a1b3c4d5e6f70',
-  'shoes':         'c1f70f8fbfb840938ce3e01dd8b7e7ef',
-  'shoe':          'c1f70f8fbfb840938ce3e01dd8b7e7ef',
-  'sneakers':      'c1f70f8fbfb840938ce3e01dd8b7e7ef',
-  'sandals':       'c1f70f8fbfb840938ce3e01dd8b7e7ef',
-  'heels':         'c1f70f8fbfb840938ce3e01dd8b7e7ef',
-
-  /* ── Food & Cafe ── */
-  'coffee':        '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'tea':           '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'chai':          '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'latte':         '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'espresso':      '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'cappuccino':    '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'matcha':        '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'cup':           '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'mug':           '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'burger':        'a9d2e3f4b1c5d6e7f8a9b0c1d2e3f4b5',
-  'pizza':         'b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7',
-  'cake':          'f1e2d3c4b5a6978869504132cbdef012',
-  'pastry':        'f1e2d3c4b5a6978869504132cbdef012',
-  'croissant':     'f1e2d3c4b5a6978869504132cbdef012',
-  'donut':         'f1e2d3c4b5a6978869504132cbdef012',
-  'sushi':         'c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8',
-
-  /* ── Beauty & Salon ── */
-  'perfume':       '2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c',
-  'lipstick':      '3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d',
-  'makeup':        '3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d',
-  'nail polish':   '3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d',
-
-  /* ── Tech ── */
-  'phone':         '5f8c9d0e1a2b3c4d5e6f7a8b9c0d1e2f',
-  'laptop':        '6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d',
-  'headphones':    '7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e',
-
-  /* ── Generic fallbacks by category ── */
-  'fashion':       'b9c7c0f3972e4f2da14ff74c6ba1efed',
-  'beauty':        '3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d',
-  'food':          'a9d2e3f4b1c5d6e7f8a9b0c1d2e3f4b5',
-  'cafe':          '9756cb9e28c34a30b2b51e94af7b0bfc',
-  'tech':          '6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d',
-  'health':        '8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f'
-};
-
 /* ══ SKETCHFAB EMBED URL BUILDER ══ */
 function buildSFEmbedURL(uid) {
   return 'https://sketchfab.com/models/' + uid + '/embed' +
@@ -540,42 +464,59 @@ function buildSFEmbedURL(uid) {
     '&ui_annotations=0&camera=0&transparent=1&dnt=1';
 }
 
-/* ══ FIND UID FOR A KEYWORD ══
-   1. Check the pre-mapped table first (instant)
-   2. Try Sketchfab API search (with timeout)
-   3. Return null → procedural fallback               */
+/* ══ RESOLVE SKETCHFAB UID ══
+   Pure live API search — no hardcoded UIDs, no lookup table.
+   Searches Sketchfab for the exact product keyword, returns the
+   first real UID from the API response, or null on failure.
+   Results are cached in sfCache so the same keyword is never
+   searched twice within a single page session.                  */
 async function resolveSketchfabUID(keyword) {
   var kw = keyword.trim().toLowerCase();
 
-  /* Direct map hit */
-  if (SF_UID_MAP[kw]) return SF_UID_MAP[kw];
+  /* Return cached result (including cached null = "no model found") */
+  if (sfCache.hasOwnProperty(kw)) return sfCache[kw];
 
-  /* Partial match in map */
-  for (var mapKey in SF_UID_MAP) {
-    if (kw.includes(mapKey) || mapKey.includes(kw)) return SF_UID_MAP[mapKey];
-  }
-
-  /* Cache */
-  if (sfCache[kw] !== undefined) return sfCache[kw];
-
-  /* Live Sketchfab search with 6s timeout */
   try {
     var controller = new AbortController();
-    var timer = setTimeout(function(){ controller.abort(); }, 6000);
+    var timer = setTimeout(function(){ controller.abort(); }, 8000);
 
-    var res = await fetch(
-      'https://api.sketchfab.com/v3/models?type=models&q=' + encodeURIComponent(kw) +
-      '&count=5&sort_by=-likeCount&min_face_count=200',
-      { headers:{ 'Authorization': 'Token ' + SF_KEY }, signal: controller.signal }
-    );
+    var url = 'https://api.sketchfab.com/v3/models' +
+      '?type=models' +
+      '&q=' + encodeURIComponent(kw) +
+      '&count=10' +
+      '&sort_by=-likeCount' +
+      '&min_face_count=100';
+
+    var res = await fetch(url, {
+      headers: { 'Authorization': 'Token ' + SF_KEY },
+      signal: controller.signal
+    });
     clearTimeout(timer);
 
-    if (!res.ok) { sfCache[kw] = null; return null; }
+    if (!res.ok) {
+      console.warn('[AV SF] API error ' + res.status + ' for "' + kw + '"');
+      sfCache[kw] = null;
+      return null;
+    }
+
     var data = await res.json();
-    var uid = (data.results && data.results[0]) ? data.results[0].uid : null;
+    var results = data.results || [];
+
+    /* Pick the first result that has a valid uid */
+    var uid = null;
+    for (var i = 0; i < results.length; i++) {
+      if (results[i] && results[i].uid) {
+        uid = results[i].uid;
+        break;
+      }
+    }
+
+    console.log('[AV SF] "' + kw + '" → ' + (uid ? uid : 'no result'));
     sfCache[kw] = uid;
     return uid;
+
   } catch(e) {
+    console.warn('[AV SF] search failed for "' + kw + '":', e.message);
     sfCache[kw] = null;
     return null;
   }
