@@ -415,7 +415,8 @@ const RZP_KEY    = 'rzp_live_SaJ684rRC2TUwj';
 const TBL_SITES  = 'av_websites';
 const LS_KEY     = 'av_websites_local';
 const PEXELS_KEY = 'YdYkG3y4W1Hw2miLpLTiQoxWoOeknnmSDra6ahTKCfIAdpWD5w5hpO2w';
-const SF_KEY     = '3bfe6bf1bd92489495ef2aeef263f445';
+/* SF_KEY removed — Sketchfab API key is now only used server-side in the Edge Function */
+const SF_EDGE_URL = 'https://twneeawhdzgnavudanud.supabase.co/functions/v1/search-sketchfab';
 
 const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 const urlParams = new URLSearchParams(window.location.search);
@@ -454,7 +455,15 @@ const ITEM_EMO = {
   'course':'📚','coaching':'🎓'
 };
 
-/* ══ SKETCHFAB EMBED URL BUILDER ══ */
+/* ══════════════════════════════════════════════════════
+   SKETCHFAB — via Supabase Edge Function (server-side)
+   The API key lives only in the Edge Function secret.
+   The browser calls our Edge Function → Edge Function
+   calls Sketchfab → returns the real UID + embed URL.
+   This avoids CORS blocks and keeps the key private.
+══════════════════════════════════════════════════════ */
+
+/* Build embed URL from a UID (also returned by Edge Function, kept here as fallback) */
 function buildSFEmbedURL(uid) {
   return 'https://sketchfab.com/models/' + uid + '/embed' +
     '?autospin=0.25&autostart=1&preload=1' +
@@ -464,59 +473,48 @@ function buildSFEmbedURL(uid) {
     '&ui_annotations=0&camera=0&transparent=1&dnt=1';
 }
 
-/* ══ RESOLVE SKETCHFAB UID ══
-   Pure live API search — no hardcoded UIDs, no lookup table.
-   Searches Sketchfab for the exact product keyword, returns the
-   first real UID from the API response, or null on failure.
-   Results are cached in sfCache so the same keyword is never
-   searched twice within a single page session.                  */
+/* ══ RESOLVE SKETCHFAB UID via Edge Function ══
+   Calls our Supabase Edge Function search-sketchfab.
+   The Edge Function runs server-side → no CORS issues,
+   API key is never exposed in the browser.
+   sfCache prevents duplicate calls for the same keyword. */
 async function resolveSketchfabUID(keyword) {
   var kw = keyword.trim().toLowerCase();
 
-  /* Return cached result (including cached null = "no model found") */
+  /* Return cached result — null means "already searched, nothing found" */
   if (sfCache.hasOwnProperty(kw)) return sfCache[kw];
 
   try {
     var controller = new AbortController();
-    var timer = setTimeout(function(){ controller.abort(); }, 8000);
+    var timer = setTimeout(function(){ controller.abort(); }, 10000);
 
-    var url = 'https://api.sketchfab.com/v3/models' +
-      '?type=models' +
-      '&q=' + encodeURIComponent(kw) +
-      '&count=10' +
-      '&sort_by=-likeCount' +
-      '&min_face_count=100';
-
-    var res = await fetch(url, {
-      headers: { 'Authorization': 'Token ' + SF_KEY },
-      signal: controller.signal
-    });
+    var res = await fetch(
+      SF_EDGE_URL + '?keyword=' + encodeURIComponent(kw),
+      {
+        method:  'GET',
+        headers: { 'Content-Type': 'application/json' },
+        signal:  controller.signal
+      }
+    );
     clearTimeout(timer);
 
     if (!res.ok) {
-      console.warn('[AV SF] API error ' + res.status + ' for "' + kw + '"');
+      console.warn('[AV SF Edge] HTTP ' + res.status + ' for "' + kw + '"');
       sfCache[kw] = null;
       return null;
     }
 
     var data = await res.json();
-    var results = data.results || [];
 
-    /* Pick the first result that has a valid uid */
-    var uid = null;
-    for (var i = 0; i < results.length; i++) {
-      if (results[i] && results[i].uid) {
-        uid = results[i].uid;
-        break;
-      }
-    }
+    /* Edge function returns { uid, embedUrl } or { uid: null } */
+    var uid = (data && data.uid) ? data.uid : null;
 
-    console.log('[AV SF] "' + kw + '" → ' + (uid ? uid : 'no result'));
+    console.log('[AV SF Edge] "' + kw + '" → ' + (uid || 'no result'));
     sfCache[kw] = uid;
     return uid;
 
   } catch(e) {
-    console.warn('[AV SF] search failed for "' + kw + '":', e.message);
+    console.warn('[AV SF Edge] fetch failed for "' + kw + '":', e.message);
     sfCache[kw] = null;
     return null;
   }
