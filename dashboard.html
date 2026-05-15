@@ -167,34 +167,57 @@ select option{background:var(--bg3);}
 .type-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.35);}
 .type-card.basic:hover,.type-card.basic.selected{border-color:var(--accent);box-shadow:0 0 0 4px rgba(79,142,255,.12),0 20px 50px rgba(0,0,0,.3);}
 .type-card.premium:hover,.type-card.premium.selected{border-color:var(--gold);box-shadow:0 0 0 4px rgba(240,165,0,.12),0 20px 50px rgba(0,0,0,.3);}
-.type-card.threed:hover,.type-card.threed.selected{border-color:#f0a500;box-shadow:0 0 0 4px rgba(240,165,0,.18),0 20px 50px rgba(240,165,0,.15);}
 
 .type-card .selected-badge{display:none;position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:100px;}
 .type-card.basic .selected-badge{background:rgba(79,142,255,.15);color:var(--accent);border:1px solid rgba(79,142,255,.3);}
 .type-card.premium .selected-badge{background:rgba(240,165,0,.15);color:var(--gold);border:1px solid rgba(240,165,0,.3);}
-.type-card.threed .selected-badge{background:rgba(240,165,0,.2);color:#f0a500;border:1px solid rgba(240,165,0,.4);}
 .type-card.selected .selected-badge{display:inline-block;}
 
-/* NEW badge for 3D card */
-.new-badge{
+/* ── COMING SOON / LOCKED CARD ── */
+.type-card.locked-soon{
+  opacity:0.5;
+  cursor:not-allowed !important;
+  pointer-events:none;
+  filter:grayscale(0.45);
+}
+.type-card.locked-soon:hover{
+  transform:none;
+  box-shadow:none;
+}
+.coming-soon-badge{
   position:absolute;top:14px;left:14px;
   font-size:9px;font-weight:900;letter-spacing:1px;text-transform:uppercase;
-  padding:4px 9px;border-radius:100px;
-  background:linear-gradient(135deg,#f0a500,#ffcd60);
-  color:#1a0e00;
-  box-shadow:0 2px 10px rgba(240,165,0,.5);
+  padding:5px 11px;border-radius:100px;
+  background:linear-gradient(135deg,#334155,#475569);
+  color:#94a3b8;
+  border:1px solid rgba(148,163,184,.25);
+  z-index:3;
+}
+.locked-overlay{
+  position:absolute;inset:0;border-radius:22px;
+  background:rgba(8,12,20,.22);
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;z-index:4;
+}
+.locked-overlay-inner{
+  background:rgba(8,12,20,.88);backdrop-filter:blur(8px);
+  border:1px solid rgba(148,163,184,.2);
+  border-radius:12px;padding:11px 22px;
+  font-size:12px;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;color:#94a3b8;
+  display:flex;align-items:center;gap:8px;
 }
 
 .type-card-icon-wrap{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;transition:transform .25s;}
-.type-card:hover .type-card-icon-wrap{transform:scale(1.08) rotate(-3deg);}
+.type-card:not(.locked-soon):hover .type-card-icon-wrap{transform:scale(1.08) rotate(-3deg);}
 .type-card.basic .type-card-icon-wrap{background:rgba(79,142,255,.1);border:1px solid rgba(79,142,255,.2);}
 .type-card.premium .type-card-icon-wrap{background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.22);}
-.type-card.threed .type-card-icon-wrap{background:rgba(240,165,0,.12);border:1px solid rgba(240,165,0,.3);}
+.type-card.threed .type-card-icon-wrap{background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.2);}
 
 .type-card-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px;}
 .type-card.basic .type-card-name{color:var(--accent);}
 .type-card.premium .type-card-name{color:var(--gold);}
-.type-card.threed .type-card-name{color:#f0a500;}
+.type-card.threed .type-card-name{color:#64748b;}
 
 .type-card-tagline{font-size:12.5px;color:var(--text3);margin-bottom:18px;line-height:1.5;}
 
@@ -203,13 +226,13 @@ select option{background:var(--bg3);}
 .feat-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px;}
 .type-card.basic .feat-dot{background:var(--accent);}
 .type-card.premium .feat-dot{background:var(--gold);}
-.type-card.threed .feat-dot{background:#f0a500;}
+.type-card.threed .feat-dot{background:#475569;}
 
 .feat-price-line{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
 .feat-price-icon{font-size:14px;flex-shrink:0;}
 .type-card.basic .feat-price-line{color:var(--accent);}
 .type-card.premium .feat-price-line{color:var(--gold);}
-.type-card.threed .feat-price-line{color:#f0a500;}
+.type-card.threed .feat-price-line{color:#64748b;}
 
 /* Premium shimmer */
 .type-card.premium::after{
@@ -218,27 +241,7 @@ select option{background:var(--bg3);}
   background:linear-gradient(105deg,transparent 40%,rgba(240,165,0,.06) 50%,transparent 60%);
   transform:skewX(-20deg);animation:shimmer 4s ease-in-out infinite;pointer-events:none;
 }
-
-/* 3D card shimmer — more prominent gold shimmer */
-.type-card.threed::after{
-  content:'';position:absolute;top:-60%;left:-60%;
-  width:50%;height:220%;
-  background:linear-gradient(105deg,transparent 35%,rgba(240,165,0,.12) 48%,rgba(255,210,100,.08) 52%,transparent 65%);
-  transform:skewX(-20deg);
-  animation:shimmer3d 2.8s ease-in-out infinite;
-  pointer-events:none;
-}
-
 @keyframes shimmer{0%{left:-60%;opacity:0;}20%{opacity:1;}80%{opacity:1;}100%{left:140%;opacity:0;}}
-@keyframes shimmer3d{0%{left:-70%;opacity:0;}15%{opacity:1;}85%{opacity:1;}100%{left:150%;opacity:0;}}
-
-/* Pulsing gold glow on 3D card */
-@keyframes threedGlow{
-  0%,100%{box-shadow:0 0 0 0 rgba(240,165,0,0), 0 4px 24px rgba(0,0,0,.25);}
-  50%{box-shadow:0 0 0 6px rgba(240,165,0,.08), 0 4px 24px rgba(240,165,0,.12);}
-}
-.type-card.threed{animation:threedGlow 3s ease-in-out infinite;}
-.type-card.threed.selected{animation:none;}
 
 .free-preview-note{text-align:center;padding:14px 20px;background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.15);border-radius:12px;margin-bottom:16px;}
 .free-preview-note strong{color:var(--accent3);font-weight:800;}
@@ -249,10 +252,6 @@ select option{background:var(--bg3);}
 .type-select-btn:not(:disabled):hover{transform:translateY(-2px);}
 .type-select-btn.gen-free-btn{background:var(--grad);color:white;box-shadow:0 6px 24px rgba(79,142,255,.35);}
 .type-select-btn.gen-free-btn:not(:disabled):hover{box-shadow:0 10px 32px rgba(79,142,255,.5);}
-.type-select-btn.basic-btn{background:var(--grad);color:white;box-shadow:0 6px 24px rgba(79,142,255,.35);}
-.type-select-btn.premium-btn{background:var(--grad);color:white;box-shadow:0 6px 24px rgba(79,142,255,.35);}
-.type-select-btn.threed-btn{background:linear-gradient(135deg,#b37800 0%,#f0a500 50%,#ffd060 100%);color:#1a0e00;box-shadow:0 6px 24px rgba(240,165,0,.45);}
-.type-select-btn.threed-btn:not(:disabled):hover{box-shadow:0 10px 32px rgba(240,165,0,.6);}
 
 .type-compare-note{text-align:center;font-size:11.5px;color:var(--text3);margin-top:10px;}
 
@@ -260,7 +259,6 @@ select option{background:var(--bg3);}
 .selected-type-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;margin-bottom:20px;font-size:13px;font-weight:600;max-width:720px;border:1px solid;}
 .selected-type-banner.basic-banner{background:rgba(79,142,255,.07);border-color:rgba(79,142,255,.2);color:var(--accent);}
 .selected-type-banner.premium-banner{background:rgba(240,165,0,.07);border-color:rgba(240,165,0,.22);color:var(--gold);}
-.selected-type-banner.threed-banner{background:rgba(240,165,0,.07);border-color:rgba(240,165,0,.3);color:#f0a500;}
 .stb-change{margin-left:auto;font-size:12px;text-decoration:underline;cursor:pointer;opacity:.8;transition:opacity .2s;}
 .stb-change:hover{opacity:1;}
 
@@ -341,11 +339,8 @@ select option{background:var(--bg3);}
   .modal{padding:24px;}
   .modal-actions{flex-direction:column;}
   .modal-btn-p,.modal-btn-s{flex:none;width:100%;}
-  /* On tablet: 2 columns + 3D stacks below */
   .type-cards-row{grid-template-columns:1fr 1fr;}
 }
-
-/* ═══ MOBILE (600px) ═══ */
 @media(max-width:600px){
   .hamburger-dash{top:10px;left:10px;padding:8px 10px;font-size:16px;border-radius:9px;}
   .main{padding:14px;padding-top:58px;}
@@ -359,79 +354,27 @@ select option{background:var(--bg3);}
   .stat-val{font-size:22px;margin-bottom:2px;}
   .stat-lbl{font-size:10.5px;}
   .website-grid{grid-template-columns:1fr;gap:12px;}
-  .website-card{border-radius:16px;}
   .card-thumb{height:72px;font-size:14px;}
-  .card-status{font-size:9.5px;padding:3px 8px;}
   .card-body{padding:12px;}
   .card-name{font-size:13.5px;}
   .card-meta{font-size:10.5px;margin-bottom:8px;}
   .card-btn{font-size:10.5px;padding:7px 8px;min-width:44px;}
-  .card-actions{gap:5px;}
-  .live-link-row{font-size:10px;padding:7px 10px;gap:5px;}
   .empty-state{padding:44px 20px;}
-  .empty-icon{font-size:40px;margin-bottom:10px;}
-  .empty-title{font-size:17px;}
-  .empty-sub{font-size:13px;margin-bottom:18px;}
-  .free-gen-banner{padding:14px 16px;gap:10px;margin-bottom:18px;border-radius:12px;}
-  .free-gen-icon{width:38px;height:38px;font-size:18px;border-radius:10px;}
-  .free-gen-title{font-size:15px;}
-  .free-gen-sub{font-size:12px;}
-  .type-selection-header{margin-bottom:16px;}
-  .type-selection-header .page-title{font-size:20px;}
-  .type-selection-header p{font-size:12.5px;}
-  /* On mobile: all 3 cards stack 1 column */
   .type-cards-row{grid-template-columns:1fr;gap:12px;margin-bottom:14px;}
   .type-card{padding:18px 16px 16px;border-radius:18px;}
   .type-card-icon-wrap{width:52px;height:52px;font-size:24px;margin-bottom:10px;}
-  .type-card-name{font-size:18px;margin-bottom:3px;}
-  .type-card-tagline{font-size:12px;margin-bottom:14px;}
-  .type-card-features li{font-size:12px;gap:7px;}
-  .feat-price-line{font-size:12px;margin-top:8px;padding-top:8px;}
-  .free-preview-note{padding:11px 14px;font-size:12px;}
-  .type-select-btn{padding:14px;font-size:14px;border-radius:11px;}
-  .type-compare-note{font-size:11px;}
-  .generate-free-btn{padding:14px;font-size:14px;}
-  .generate-free-note{font-size:11.5px;}
-  .form-card{padding:18px;border-radius:16px;margin-bottom:14px;}
-  .form-card-title{font-size:14px;margin-bottom:14px;padding-bottom:10px;}
-  .form-group{margin-bottom:10px;}
-  label{font-size:10.5px;margin-bottom:4px;}
-  input,select,textarea{padding:10px 12px;font-size:13.5px;border-radius:9px;}
-  .design-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
-  .design-opt{padding:11px 8px;font-size:11.5px;border-radius:9px;}
-  .theme-picker{grid-template-columns:repeat(2,1fr);gap:8px;}
-  .theme-opt{padding:11px 8px;border-radius:9px;}
-  .theme-opt-icon{font-size:18px;margin-bottom:4px;}
-  .theme-opt-label{font-size:9.5px;}
-  .theme-opt-sub{font-size:9px;}
-  .feat-grid{grid-template-columns:1fr;gap:8px;}
-  .feat-label{padding:10px 12px;font-size:12.5px;}
+  .type-card-name{font-size:18px;}
+  .form-card{padding:18px;border-radius:16px;}
   .sidebar{width:240px;}
   .sidebar-header{padding:16px;}
-  .sidebar-logo{font-size:18px;}
-  .nav-item{padding:9px 16px;font-size:13px;}
-  .nav-icon{width:28px;height:28px;font-size:13px;}
-  .user-card{padding:9px;}
-  .user-name{font-size:12px;}
-  .user-email{font-size:10px;max-width:120px;}
-  .logout-btn{font-size:12px;padding:8px;}
-  .sidebar-bottom{padding:12px 16px;}
   .modal{padding:20px;border-radius:18px;}
-  .modal-icon{font-size:40px;margin-bottom:12px;}
-  .modal-title{font-size:20px;margin-bottom:6px;}
-  .modal-sub{font-size:13px;margin-bottom:16px;}
-  .warn-box{padding:10px 12px;font-size:12px;margin-bottom:18px;}
-  .pay-amount{font-size:30px;}
-  .live-link-input{font-size:10px;}
+  .modal-icon{font-size:40px;}
+  .modal-title{font-size:20px;}
 }
-
 @media(max-width:390px){
   .main{padding:10px;padding-top:54px;}
   .stats-row{gap:8px;}
-  .stat-card{padding:12px;}
-  .stat-val{font-size:20px;}
   .page-title{font-size:18px;}
-  .type-card{padding:14px 12px;}
   .form-card{padding:14px;}
   .sidebar{width:220px;}
 }
@@ -544,10 +487,12 @@ select option{background:var(--bg3);}
             </ul>
           </div>
 
-          <!-- 3D WEBSITE CARD — NEW -->
-          <div class="type-card threed" id="typeCard3d" onclick="selectWebsiteType('3d')">
-            <div class="new-badge">✦ NEW</div>
-            <div class="selected-badge">✓ Selected</div>
+          <!-- 3D WEBSITE CARD — COMING SOON (LOCKED) -->
+          <div class="type-card threed locked-soon" id="typeCard3d">
+            <div class="coming-soon-badge">🔒 Coming Soon</div>
+            <div class="locked-overlay">
+              <div class="locked-overlay-inner">🚧 &nbsp;Feature Coming Soon</div>
+            </div>
             <div class="type-card-icon-wrap">🧊</div>
             <div class="type-card-name">3D Website</div>
             <div class="type-card-tagline">Immersive Three.js 3D experience with scroll-reactive effects &amp; particle bursts.</div>
@@ -560,7 +505,7 @@ select option{background:var(--bg3);}
               <li><span class="feat-dot"></span>Mobile optimized fallback</li>
               <li class="feat-price-line">
                 <span class="feat-price-icon">💳</span>
-                Activate to go live for <strong>₹799</strong>
+                Will be available for <strong>₹799</strong>
               </li>
             </ul>
           </div>
@@ -847,17 +792,15 @@ applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
 let selectedWebsiteTier  = null;
 let selectedWebsiteTheme = 'dark-blue';
 
+/* ── TYPE SELECTION — 3D is locked, cannot be selected ── */
 function selectWebsiteType(tier) {
+  if (tier === '3d') return; /* 3D locked — ignore */
   selectedWebsiteTier = tier;
   document.getElementById('typeCardBasic').classList.toggle('selected', tier === 'basic');
   document.getElementById('typeCardPremium').classList.toggle('selected', tier === 'premium');
-  document.getElementById('typeCard3d').classList.toggle('selected', tier === '3d');
   const btn = document.getElementById('typeSelectContinueBtn');
   btn.disabled = false;
-  if (tier === '3d') {
-    btn.className = 'type-select-btn threed-btn';
-    btn.textContent = '🧊 Generate Free → (3D)';
-  } else if (tier === 'premium') {
+  if (tier === 'premium') {
     btn.className = 'type-select-btn gen-free-btn';
     btn.textContent = '👑 Generate Free → (Premium)';
   } else {
@@ -868,13 +811,6 @@ function selectWebsiteType(tier) {
 
 function continueToForm() {
   if (!selectedWebsiteTier) return;
-
-  // 3D tier → go to 3d-builder.html
-  if (selectedWebsiteTier === '3d') {
-    window.location.href = '3d-builder.html';
-    return;
-  }
-
   const isPrem = selectedWebsiteTier === 'premium';
   const price  = isPrem ? '₹499' : '₹299';
 
@@ -1027,12 +963,10 @@ async function renderWebsites(containerId, limit) {
     const isActive  = s.status === 'active';
     const isPreview = s.status === 'preview';
     const isLocal   = !!s._isLocal;
-    const is3d      = !!s._is3d || s.website_tier === '3d';
-    const previewUrl = is3d
-      ? (isLocal ? `3d-preview.html?localsite=${s.id}` : `${BASE_URL}/3d-preview.html?site=${s.id}`)
-      : (isLocal ? `preview.html?localsite=${s.id}` : `${BASE_URL}/preview.html?site=${s.id}`);
+    const isPrem    = s.website_tier === 'premium';
+    const previewUrl = isLocal ? `preview.html?localsite=${s.id}` : `${BASE_URL}/preview.html?site=${s.id}`;
     const themeLabel = s.website_theme ? s.website_theme.replace('-',' ').replace(/\b\w/g,c=>c.toUpperCase()) : 'Dark Blue';
-    const tierLabel  = s.website_tier === '3d' ? '🧊 3D' : s.website_tier === 'premium' ? '👑 Premium' : '⚡ Basic';
+    const tierLabel  = isPrem ? '👑 Premium' : '⚡ Basic';
     const localBadge = isLocal ? ' <span style="color:var(--orange);font-size:10px;font-weight:700">📦 Local</span>' : '';
     const liveLinkHtml = (isActive && !isLocal) ? `<div class="live-link-row">🔗 <span>${previewUrl}</span><button class="copy-btn" onclick="copyText('${previewUrl}',this)">Copy</button></div>` : '';
     const editBtn = isPreview
@@ -1040,11 +974,11 @@ async function renderWebsites(containerId, limit) {
       : isActive
         ? `<button class="card-btn cb-edit-locked" onclick="openLockedEdit('${s.id}','${sa(s.name)}','${sa(s.services||'')}','${sa(s.phone||'')}','${sa(s.email||'')}','${sa(s.address||'')}','${s.website_theme||'dark-blue'}')">🔒 Edit ₹99</button>`
         : '';
-    const actPrice = s.website_tier === '3d' ? '₹799' : s.website_tier === 'premium' ? '₹499' : '₹299';
+    const actPrice = isPrem ? '₹499' : '₹299';
     const actBtn   = (isPreview && !isLocal) ? `<button class="card-btn cb-activate" onclick="openPaymentFor('${s.id}','${sa(s.name)}','${s.website_tier||'basic'}')">⚡ Activate ${actPrice}</button>` : '';
     const delFn    = isLocal ? `deleteLocalSite('${s.id}','${containerId}')` : `deleteWebsite('${s.id}','${containerId}')`;
     return `<div class="website-card">
-      <div class="card-thumb" style="${is3d?'background:linear-gradient(140deg,#1a0e00 0%,#3d2800 100%);':''}">${esc(s.name)}${is3d?' 🧊':''}<div class="card-status ${isActive?'s-active':isPreview?'s-preview':'s-expired'}">${isActive?'✅ Live':isPreview?'⏳ Preview':'❌ Expired'}</div></div>
+      <div class="card-thumb">${esc(s.name)}<div class="card-status ${isActive?'s-active':isPreview?'s-preview':'s-expired'}">${isActive?'✅ Live':isPreview?'⏳ Preview':'❌ Expired'}</div></div>
       <div class="card-body">
         <div class="card-name">${esc(s.name)}${localBadge}</div>
         <div class="card-meta">${esc(s.type||'')} · ${tierLabel} · ${esc(s.design||'')} · ${fmtDate(s.created_at)}</div>
@@ -1179,10 +1113,10 @@ function openPaymentModal() { closeModal('successModal'); openModal('paymentModa
 
 function openPaymentFor(id, n, tier) {
   currentWebsite = { id, name: n, website_tier: tier || 'basic' };
-  const price = tier === '3d' ? '₹799' : tier === 'premium' ? '₹499' : '₹299';
+  const price = tier === 'premium' ? '₹499' : '₹299';
   document.getElementById('payModalAmount').textContent = price;
   document.getElementById('payBtn').textContent = `Pay ${price} →`;
-  document.getElementById('payModalIcon').textContent = tier === '3d' ? '🧊' : tier === 'premium' ? '👑' : '🌐';
+  document.getElementById('payModalIcon').textContent = tier === 'premium' ? '👑' : '🌐';
   openModal('paymentModal');
 }
 
@@ -1207,8 +1141,8 @@ function copyLiveLink() {
 async function processActivationPayment() {
   if (!currentWebsite?.id) return;
   const tier        = currentWebsite.website_tier || selectedWebsiteTier || 'basic';
-  const amountPaise = tier === '3d' ? 79900 : tier === 'premium' ? 49900 : 29900;
-  const amountLabel = tier === '3d' ? '₹799' : tier === 'premium' ? '₹499' : '₹299';
+  const amountPaise = tier === 'premium' ? 49900 : 29900;
+  const amountLabel = tier === 'premium' ? '₹499' : '₹299';
   const payBtn = document.getElementById('payBtn');
   payBtn.disabled = true; payBtn.textContent = '⏳ Opening...';
 
@@ -1223,13 +1157,12 @@ async function processActivationPayment() {
       overlay.classList.add('open');
       try {
         await db.from(TBL_SITES).update({ status: 'active' }).eq('id', currentWebsite.id).eq('user_email', currentUser.email);
-        const amount = tier === '3d' ? 799 : tier === 'premium' ? 499 : 299;
+        const amount = tier === 'premium' ? 499 : 299;
         await db.from(TBL_PAYMENTS).insert([{ user_email: currentUser.email, website_id: currentWebsite.id, amount, payment_id: res.razorpay_payment_id, type: 'activation', status: 'paid', created_at: new Date().toISOString() }]);
         document.getElementById('progressFill').style.width = '100%';
         await loadStats(); await renderWebsites('recentWebsites', 3);
         overlay.classList.remove('open');
-        const previewPath = tier === '3d' ? '3d-preview.html' : 'preview.html';
-        document.getElementById('liveLinkUrl').value = `${BASE_URL}/${previewPath}?site=${currentWebsite.id}`;
+        document.getElementById('liveLinkUrl').value = `${BASE_URL}/preview.html?site=${currentWebsite.id}`;
         openModal('liveLinkModal');
       } catch (err) {
         overlay.classList.remove('open');
