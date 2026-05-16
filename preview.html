@@ -126,21 +126,28 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .b-test-quote{font-family:'DM Sans',sans-serif;font-size:clamp(17px,2.5vw,24px);font-weight:500;font-style:italic;color:white;line-height:1.55;max-width:640px;margin:0 auto 20px;}
 .b-test-author{font-size:12px;color:rgba(255,255,255,.65);font-weight:600;}
 
-.b-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
-.b-contact-info{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
-.b-ci-item{display:flex;align-items:center;gap:12px;background:white;border:1px solid #e2e8f4;border-radius:12px;padding:14px 16px;transition:all .25s;}
-.b-ci-item:hover{border-color:var(--bp);transform:translateX(4px);}
-.b-ci-icon{width:40px;height:40px;background:var(--btagBg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.b-ci-label{font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-.b-ci-val{font-size:13.5px;color:#0a1628;font-weight:700;margin-top:1px;}
-.b-form-card{background:white;border:1px solid #e2e8f4;border-radius:20px;padding:32px;box-shadow:0 8px 36px rgba(0,0,0,.05);}
-.b-form-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#0a1628;margin-bottom:4px;}
-.b-form-sub{font-size:12px;color:#94a3b8;margin-bottom:22px;}
-.b-input{width:100%;padding:11px 13px;background:#f8faff;border:1.5px solid #e2e8f4;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:#0a1628;outline:none;transition:all .2s;margin-bottom:11px;}
-.b-input:focus{border-color:var(--bp);background:white;}
-.b-input::placeholder{color:#94a3b8;}
-.b-submit{width:100%;padding:13px;background:var(--bp);color:white;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;}
-.b-submit:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
+/* ─── CONTACT SECTION (no form — info only) ─── */
+.b-contact-simple{padding:80px 5%;background:#f8faff;}
+.b-contact-inner{max-width:760px;margin:0 auto;text-align:center;}
+.b-contact-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:40px;}
+.b-ci-card{background:white;border:1.5px solid #e2e8f4;border-radius:16px;padding:24px 20px;text-align:center;transition:all .25s;}
+.b-ci-card:hover{border-color:var(--bp);transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.08);}
+.b-ci-icon{width:52px;height:52px;background:var(--btagBg);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 14px;}
+.b-ci-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+.b-ci-val{font-size:15px;font-weight:700;color:#0a1628;line-height:1.5;word-break:break-word;}
+/* WhatsApp CTA button */
+.b-whatsapp-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:32px;padding:14px 32px;
+  background:#25d366;color:white;
+  font-size:15px;font-weight:700;
+  border:none;border-radius:12px;cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  box-shadow:0 6px 24px rgba(37,211,102,.35);
+  transition:all .25s;text-decoration:none;
+}
+.b-whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(37,211,102,.5);}
+.b-whatsapp-btn svg{width:22px;height:22px;fill:white;flex-shrink:0;}
 
 .b-footer{background:#0a1628;padding:36px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
 .b-footer-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:white;}
@@ -150,13 +157,9 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .b-footer-copy{font-size:12px;color:#334155;}
 
 /* ════════════════════════════════════════
-   PREMIUM WEBSITE STYLES — LUXURY LEVEL
+   PREMIUM WEBSITE STYLES
 ════════════════════════════════════════ */
-
-/* CSS Vars set by JS: --pa --pa-text --pa-glow --ps-bg --pb-bg --ps-hover --ps-border --ps-text --ps-text2 --pf-bg */
-
 .p-site{font-family:'DM Sans',sans-serif;background:var(--ps-bg);color:var(--ps-text);}
-
 .p-nav{position:fixed;top:52px;left:0;right:0;z-index:500;padding:0 5%;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all .35s;}
 .p-nav.scrolled{background:rgba(5,8,15,.92);backdrop-filter:blur(30px);border-bottom:1px solid rgba(255,255,255,.05);box-shadow:0 4px 40px rgba(0,0,0,.5);}
 .p-nav-logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:white;letter-spacing:1px;}
@@ -165,8 +168,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-nav-links a:hover{color:white;}
 .p-nav-cta{padding:9px 22px;border:1px solid rgba(255,255,255,.3);color:white;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;background:transparent;font-family:'Outfit',sans-serif;transition:all .22s;}
 .p-nav-cta:hover{background:var(--pa);border-color:var(--pa);color:var(--pa-text);}
-
-/* HERO — FULL SCREEN WITH BG IMAGE */
 .p-hero{position:relative;height:100vh;min-height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .p-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .8s;z-index:0;}
 .p-hero-bg.loading{background:linear-gradient(135deg,#050a14 0%,#0a1428 100%);}
@@ -187,22 +188,16 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.38);animation:pscrl 2.5s ease-in-out infinite;}
 @keyframes pscrl{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
 .p-scroll-line{width:1px;height:42px;background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);}
-
-/* TICKER */
 .p-ticker{background:var(--pa);padding:14px 0;overflow:hidden;}
 .p-ticker-track{display:flex;animation:tick 25s linear infinite;width:max-content;}
 @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 .p-ticker-item{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--pa-text);white-space:nowrap;padding:0 40px;opacity:.9;}
 .p-ticker-sep{opacity:.4;padding-right:40px;}
-
-/* STATS BAR */
 .p-stats{background:var(--pb-bg);padding:56px 5%;display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--ps-border);}
 .p-stat{padding:16px;text-align:center;border-right:1px solid var(--ps-border);}
 .p-stat:last-child{border-right:none;}
 .p-stat-num{font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:400;color:var(--pa);line-height:1;margin-bottom:6px;}
 .p-stat-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ps-text2);}
-
-/* ABOUT — SPLIT */
 .p-about{display:grid;grid-template-columns:1fr 1fr;background:var(--ps-bg);min-height:580px;}
 .p-about-img-wrap{position:relative;overflow:hidden;min-height:520px;}
 .p-about-img{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:transform .8s ease;}
@@ -223,8 +218,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-check-box{width:20px;height:20px;border:1.5px solid var(--pa);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--pa);flex-shrink:0;}
 .p-about-cta{display:inline-flex;align-items:center;gap:10px;padding:13px 28px;background:transparent;border:1.5px solid var(--pa);color:var(--pa);font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;align-self:flex-start;}
 .p-about-cta:hover{background:var(--pa);color:var(--pa-text);}
-
-/* SERVICES */
 .p-services{padding:90px 5%;background:var(--pb-bg);}
 .p-sec-tag{font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--pa);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
 .p-sec-tag::before{content:'';display:inline-block;width:24px;height:1.5px;background:var(--pa);}
@@ -241,8 +234,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-svc-desc{font-size:13px;color:var(--ps-text2);line-height:1.7;font-family:'Outfit',sans-serif;font-weight:300;}
 .p-svc-arrow{position:absolute;bottom:24px;right:24px;width:36px;height:36px;border:1.5px solid var(--ps-border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ps-text2);transition:all .25s;}
 .p-svc-card:hover .p-svc-arrow{background:var(--pa);border-color:var(--pa);color:var(--pa-text);}
-
-/* GALLERY — MASONRY STYLE */
 .p-gallery{padding:90px 5%;background:var(--ps-bg);}
 .p-gallery-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:280px 280px;gap:10px;margin-top:48px;}
 .p-gitem{position:relative;overflow:hidden;cursor:pointer;background:var(--ps-hover);}
@@ -255,8 +246,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-gitem-label{position:absolute;bottom:18px;left:20px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.9);opacity:0;transition:opacity .35s;font-family:'Outfit',sans-serif;}
 .p-gitem:hover .p-gitem-label{opacity:1;}
 .p-gitem-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.5;}
-
-/* TESTIMONIALS */
 .p-testimonials{padding:90px 5%;background:var(--pb-bg);}
 .p-test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ps-border);margin-top:48px;border:1px solid var(--ps-border);}
 .p-test-card{background:var(--pb-bg);padding:38px 30px;transition:background .3s;}
@@ -267,8 +256,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-test-av{width:40px;height:40px;border-radius:50%;background:var(--pa);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--pa-text);flex-shrink:0;font-family:'Cormorant Garamond',serif;}
 .p-test-name{font-size:12.5px;font-weight:700;color:var(--ps-text);font-family:'Outfit',sans-serif;}
 .p-test-role{font-size:11px;color:var(--ps-text2);font-family:'Outfit',sans-serif;}
-
-/* CTA BLOCK */
 .p-cta{background:var(--pa);padding:88px 5%;text-align:center;position:relative;overflow:hidden;}
 .p-cta::before{content:'';position:absolute;top:-120px;left:-120px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.06);}
 .p-cta::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);}
@@ -278,8 +265,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-cta-sub{font-size:15px;color:rgba(255,255,255,.68);font-family:'Outfit',sans-serif;font-weight:300;margin-bottom:40px;line-height:1.7;}
 .p-cta-btn{display:inline-flex;align-items:center;gap:12px;padding:18px 48px;background:white;color:var(--pa-text-dark,#0a0a0a);font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .28s;box-shadow:0 8px 36px rgba(0,0,0,.25);}
 .p-cta-btn:hover{transform:translateY(-3px);}
-
-/* CONTACT */
 .p-contact{padding:90px 5%;background:var(--ps-bg);display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
 .p-contact-list{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
 .p-contact-item{display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--pb-bg);border:1px solid var(--ps-border);transition:all .25s;}
@@ -292,8 +277,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-cv-icon{font-size:52px;margin-bottom:14px;position:relative;z-index:1;}
 .p-cv-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--pa-text);letter-spacing:1px;margin-bottom:6px;position:relative;z-index:1;}
 .p-cv-type{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--pa-text);opacity:.65;font-family:'Outfit',sans-serif;position:relative;z-index:1;}
-
-/* FOOTER */
 .p-footer{background:var(--pf-bg);padding:56px 5% 28px;border-top:1px solid var(--ps-border);}
 .p-footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:40px;}
 .p-footer-brand{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--ps-text);letter-spacing:2px;margin-bottom:12px;}
@@ -314,8 +297,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .reveal-right.visible{opacity:1;transform:translateX(0);}
 .reveal-scale{opacity:0;transform:scale(.9);transition:opacity .65s ease,transform .65s ease;}
 .reveal-scale.visible{opacity:1;transform:scale(1);}
-
-/* IMAGE LOADING STATES */
 .img-skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
 @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 .img-fade-in{animation:imgIn .7s ease both;}
@@ -339,7 +320,6 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .btn-pay.prem{background:linear-gradient(135deg,#b8860b,#d4a017);}
 .btn-pay:hover{transform:translateY(-2px);}
 .btn-cancel{flex:1;padding:13px;background:#f1f5f9;color:#64748b;border:none;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;}
-.cf-status-box{margin-top:10px;font-size:13px;display:none;padding:9px 13px;border-radius:8px;}
 
 @media(max-width:900px){
   .b-nav{padding:0 4%;}.b-nav-links{display:none;}
@@ -348,11 +328,13 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   .b-trust{padding:16px 4%;gap:16px;}
   .b-stats{padding:32px 4%;grid-template-columns:1fr;}
   .b-stat{border-right:none;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:14px;}
-  .b-about-grid,.b-contact-grid{grid-template-columns:1fr;gap:32px;}
+  .b-about-grid{grid-template-columns:1fr;gap:32px;}
   .b-section{padding:56px 4%;}
   .b-why-grid{grid-template-columns:1fr;}
   .b-footer{padding:28px 4%;flex-direction:column;text-align:center;}
   .b-footer-links{flex-wrap:wrap;justify-content:center;}
+  .b-contact-simple{padding:56px 4%;}
+  .b-contact-info-grid{grid-template-columns:1fr 1fr;}
   .p-nav{padding:0 4%;}.p-nav-links{display:none;}
   .p-hero h1{font-size:clamp(44px,10vw,72px);}
   .p-stats{grid-template-columns:repeat(2,1fr);padding:36px 4%;}
@@ -381,6 +363,8 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   .p-hero-btns{align-items:center;}
   .p-gallery-grid{grid-template-columns:1fr;}
   .p-gitem{min-height:220px;}
+  .b-contact-simple{padding:44px 4%;}
+  .b-contact-info-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -435,22 +419,20 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 // ══════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════
-emailjs.init('H9mRJV2zi9LJ7OhBw');
 const SUPA_URL   = 'https://twneeawhdzgnavudanud.supabase.co';
 const SUPA_KEY   = 'sb_publishable_ldx0SlPxWL3TtrX7B00qtg_7z4Bl3g9';
 const PEXELS_KEY = 'YdYkG3y4W1Hw2miLpLTiQoxWoOeknnmSDra6ahTKCfIAdpWD5w5hpO2w';
 const RZP_KEY    = 'rzp_live_SaJ684rRC2TUwj';
 const BASE_URL   = 'https://autovision-psi.vercel.app';
 
-const db          = supabase.createClient(SUPA_URL, SUPA_KEY);
-const params      = new URLSearchParams(window.location.search);
-const SITE_ID     = params.get('site');
-const LOCAL_ID    = params.get('localsite');
+const db      = supabase.createClient(SUPA_URL, SUPA_KEY);
+const params  = new URLSearchParams(window.location.search);
+const SITE_ID  = params.get('site');
+const LOCAL_ID = params.get('localsite');
 
 // ══════════════════════════════════════════════
 // USER UPLOADS
@@ -461,61 +443,43 @@ function handleUpload(key, input) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
-    userUploads[key] = e.target.result;
-    console.log('[AV] User uploaded:', key);
-  };
+  reader.onload = e => { userUploads[key] = e.target.result; };
   reader.readAsDataURL(file);
 }
 
 function applyUserImages() {
-  if (window._currentSite) {
-    console.log('[AV] Re-rendering with user images...');
-    renderPremium(window._currentSite);
-  }
+  if (window._currentSite) renderPremium(window._currentSite);
 }
 
 // ══════════════════════════════════════════════
-// PEXELS IMAGE FETCHER — CORE ENGINE
+// PEXELS
 // ══════════════════════════════════════════════
 const pxCache = {};
 
 async function fetchPexels(query, count = 4) {
   if (!query) return [];
   const key = query.toLowerCase().trim();
-  if (pxCache[key]) { console.log('[AV] Pexels cache hit:', key); return pxCache[key]; }
-  console.log('[AV] Fetching Pexels:', query);
+  if (pxCache[key]) return pxCache[key];
   try {
     const res = await fetch(
       `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=${count + 4}&orientation=landscape`,
       { headers: { Authorization: PEXELS_KEY } }
     );
-    if (!res.ok) { console.warn('[AV] Pexels HTTP', res.status, 'for:', query); return []; }
+    if (!res.ok) return [];
     const data = await res.json();
     const urls = (data.photos || []).map(p => p.src.large2x || p.src.large);
-    console.log('[AV] Pexels got', urls.length, 'images for:', query);
     pxCache[key] = urls;
     return urls;
-  } catch (e) {
-    console.error('[AV] Pexels error for:', query, e.message);
-    return [];
-  }
+  } catch { return []; }
 }
 
-// ── KEYWORD EXTRACTOR ──
 const STOPWORDS = new Set(['a','an','the','and','or','but','in','on','at','to','for','of','with','by','from','we','our','your','us','is','are','was','were','be','been','have','has','do','does','will','that','this','i','you','he','she','they','which','how','as','if','so','not','no','very','just','also','about','like','more','all','any','each','every','some','such','own','provide','offer','help','quality','best','great','good','top','professional','service','services','business','customer','clients','company','team','sell','using','get','make','give','dedicated','trusted','focused','expert','special','new','latest','high','wide','range']);
 
 function extractKeywords(text) {
   if (!text) return [];
-  return [...new Set(
-    text.toLowerCase()
-      .replace(/[^a-z0-9\s]/g,' ')
-      .split(/\s+/)
-      .filter(w => w.length >= 3 && !STOPWORDS.has(w))
-  )].slice(0, 10);
+  return [...new Set(text.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w => w.length >= 3 && !STOPWORDS.has(w)))].slice(0, 10);
 }
 
-// ── TYPE → IMAGE QUERIES MAPPING ──
 const TYPE_QUERIES = {
   'Restaurant / Cafe':    ['coffee shop interior cozy','restaurant food plating gourmet','bakery pastry cafe','tea coffee latte cup','dining table elegant food'],
   'Shop / Retail':        ['retail store modern display','product showcase shelf elegant','boutique interior luxury','shopping store display','merchandise product premium'],
@@ -532,10 +496,8 @@ function getQueries(s) {
   const kws = extractKeywords(s.services || s.description || '');
   const typeFallbacks = TYPE_QUERIES[s.type] || TYPE_QUERIES['Other'];
   const typeName = (s.type || 'business').split('/')[0].trim().toLowerCase();
-
-  // Build smart queries from user's actual description keywords
-  const smartHero    = kws.length >= 2 ? `${kws[0]} ${kws[1]} ${typeName}` : typeFallbacks[0];
-  const smartAbout   = kws.length >= 1 ? `${kws[0]} professional` : typeFallbacks[1];
+  const smartHero  = kws.length >= 2 ? `${kws[0]} ${kws[1]} ${typeName}` : typeFallbacks[0];
+  const smartAbout = kws.length >= 1 ? `${kws[0]} professional` : typeFallbacks[1];
   const galleryQs = [
     kws[2] ? `${kws[2]} ${typeName}` : typeFallbacks[2] || typeFallbacks[0],
     kws[3] ? `${kws[3]} detail product` : typeFallbacks[3] || typeFallbacks[1],
@@ -543,12 +505,9 @@ function getQueries(s) {
     kws[0] ? `${kws[0]} closeup detail` : typeFallbacks[0],
     typeFallbacks[1] || typeFallbacks[0]
   ];
-
-  console.log('[AV] Image queries →', { hero: smartHero, about: smartAbout, gallery: galleryQs });
   return { hero: smartHero, about: smartAbout, gallery: galleryQs };
 }
 
-// ── PICK A DETERMINISTIC URL FROM ARRAY ──
 function pick(arr, seed) {
   const valid = (arr || []).filter(Boolean);
   if (!valid.length) return null;
@@ -562,68 +521,34 @@ function siteSeed(s) {
   return Math.abs(h);
 }
 
-// ── MAIN IMAGE RESOLVER ──
 async function resolveImages(s) {
-  // 1. User uploads take priority
   const hasUser = Object.values(userUploads).some(Boolean);
   if (hasUser) {
-    console.log('[AV] Using user-uploaded images');
     const vals = Object.values(userUploads).filter(Boolean);
-    return {
-      hero:    userUploads.hero  || vals[0],
-      about:   userUploads.about || vals[1] || vals[0],
-      gallery: [userUploads.g0||vals[0], userUploads.g1||vals[1]||vals[0], userUploads.g2||vals[2]||vals[0], vals[0], vals[1]||vals[0]]
-    };
+    return { hero: userUploads.hero || vals[0], about: userUploads.about || vals[1] || vals[0], gallery: [userUploads.g0||vals[0], userUploads.g1||vals[1]||vals[0], userUploads.g2||vals[2]||vals[0], vals[0], vals[1]||vals[0]] };
   }
-
-  // 2. Fetch from Pexels in parallel
-  console.log('[AV] Fetching images from Pexels for:', s.name, '|', s.type);
   const queries = getQueries(s);
   const seed    = siteSeed(s);
-
   const [heroUrls, aboutUrls, g0, g1, g2, g3, g4] = await Promise.all([
-    fetchPexels(queries.hero, 5),
-    fetchPexels(queries.about, 5),
-    fetchPexels(queries.gallery[0], 4),
-    fetchPexels(queries.gallery[1], 4),
-    fetchPexels(queries.gallery[2], 4),
-    fetchPexels(queries.gallery[3], 4),
+    fetchPexels(queries.hero, 5), fetchPexels(queries.about, 5),
+    fetchPexels(queries.gallery[0], 4), fetchPexels(queries.gallery[1], 4),
+    fetchPexels(queries.gallery[2], 4), fetchPexels(queries.gallery[3], 4),
     fetchPexels(queries.gallery[4], 4)
   ]);
-
-  // 3. If primary hero fetch got nothing, try type fallback
   let fallback = [];
   if (!heroUrls.length && !aboutUrls.length) {
-    const fbQuery = (TYPE_QUERIES[s.type] || TYPE_QUERIES['Other'])[0];
-    console.warn('[AV] Primary queries empty, trying fallback:', fbQuery);
-    fallback = await fetchPexels(fbQuery, 6);
+    fallback = await fetchPexels((TYPE_QUERIES[s.type] || TYPE_QUERIES['Other'])[0], 6);
   }
-
-  const result = {
+  return {
     hero:    pick(heroUrls, seed)  || pick(fallback, seed) || null,
     about:   pick(aboutUrls, seed) || pick(fallback, seed+1) || null,
-    gallery: [
-      pick(g0, seed)   || pick(fallback, seed) || null,
-      pick(g1, seed+1) || pick(fallback, seed+1) || null,
-      pick(g2, seed+2) || pick(fallback, seed+2) || null,
-      pick(g3, seed+3) || pick(fallback, seed+3) || null,
-      pick(g4, seed+4) || pick(fallback, seed+4) || null
-    ]
+    gallery: [pick(g0,seed)||pick(fallback,seed)||null, pick(g1,seed+1)||pick(fallback,seed+1)||null, pick(g2,seed+2)||pick(fallback,seed+2)||null, pick(g3,seed+3)||pick(fallback,seed+3)||null, pick(g4,seed+4)||pick(fallback,seed+4)||null]
   };
-
-  console.log('[AV] Images resolved:', {
-    hero:    result.hero ? '✅' : '❌',
-    about:   result.about ? '✅' : '❌',
-    gallery: result.gallery.map(u => u ? '✅' : '❌').join(' ')
-  });
-  return result;
 }
 
 // ══════════════════════════════════════════════
-// THEME DEFINITIONS
+// THEMES
 // ══════════════════════════════════════════════
-
-// Basic themes (CSS vars applied to :root)
 const BASIC_THEMES = {
   'dark-blue':    { bp:'#1a56ff', blight:'#93c5fd', bheroBg:'linear-gradient(135deg,#0a1628,#162550)', bheroOrb:'#1a56ff', btrustBg:'#f0f4ff', btrustBorder:'#dbeafe', btrustText:'#1e3a5f', btrustIconBg:'#dbeafe', btagBg:'#eff6ff' },
   'light-clean':  { bp:'#2563eb', blight:'#bfdbfe', bheroBg:'linear-gradient(135deg,#1e40af,#1e3a8a)', bheroOrb:'#3b82f6', btrustBg:'#f8fafc', btrustBorder:'#e2e8f0', btrustText:'#1e293b', btrustIconBg:'#eff6ff', btagBg:'#eff6ff' },
@@ -637,7 +562,6 @@ const BASIC_THEMES = {
   'Minimal':      { bp:'#0f172a', blight:'#94a3b8', bheroBg:'linear-gradient(135deg,#0f172a,#1e293b)', bheroOrb:'#334155', btrustBg:'#f8fafc', btrustBorder:'#e2e8f0', btrustText:'#1e293b', btrustIconBg:'#f1f5f9', btagBg:'#f8fafc' }
 };
 
-// Premium themes (much richer)
 const PREMIUM_THEMES = {
   'dark-blue':    { pa:'#4a90e2', paText:'#020810', paTextDark:'#020810', paGlow:'rgba(74,144,226,.4)', psBg:'#020810', pbBg:'#030d18', psHover:'#061428', psBorder:'rgba(74,144,226,.18)', psText:'#d8ecff', psText2:'rgba(216,236,255,.55)', pfBg:'#010509' },
   'light-clean':  { pa:'#f0f0f0', paText:'#0a0a0a', paTextDark:'#0a0a0a', paGlow:'rgba(240,240,240,.25)', psBg:'#0a0a0a', pbBg:'#111', psHover:'#181818', psBorder:'rgba(255,255,255,.08)', psText:'#f0f0f0', psText2:'rgba(240,240,240,.5)', pfBg:'#050505' },
@@ -659,39 +583,27 @@ const DEFAULT_SVC = { 'Restaurant / Cafe':['Fine Dining','Home Delivery','Cateri
 // LOAD SITE
 // ══════════════════════════════════════════════
 async function loadSite() {
-  console.log('[AV] Loading site...');
-  document.getElementById('loaderMsg').textContent = 'Fetching your website...';
   let s = null;
-
   try {
     if (LOCAL_ID) {
-      console.log('[AV] Loading from localStorage:', LOCAL_ID);
       const arr = JSON.parse(localStorage.getItem('av_websites_local') || '[]');
       s = arr.find(x => x.id === LOCAL_ID) || arr[0] || null;
     } else if (SITE_ID) {
-      console.log('[AV] Loading from Supabase:', SITE_ID);
-      const { data, error } = await db.from('av_websites').select('*').eq('id', SITE_ID).single();
-      if (error) console.error('[AV] Supabase error:', error.message, error.code);
+      const { data } = await db.from('av_websites').select('*').eq('id', SITE_ID).single();
       s = data || null;
     }
-  } catch (e) {
-    console.error('[AV] loadSite exception:', e.message);
-  }
-
+  } catch {}
   if (!s) {
-    // last resort: use first localStorage entry
     try {
       const arr = JSON.parse(localStorage.getItem('av_websites_local') || '[]');
-      if (arr.length) { s = arr[0]; console.warn('[AV] Fallback to first localStorage site'); }
+      if (arr.length) s = arr[0];
     } catch {}
   }
-
-  console.log('[AV] Site loaded:', s ? JSON.stringify({ name: s.name, type: s.type, tier: s.website_tier }) : 'null');
   renderSite(s);
 }
 
 // ══════════════════════════════════════════════
-// RENDER SITE — decides basic vs premium
+// RENDER SITE
 // ══════════════════════════════════════════════
 function renderSite(s) {
   if (!s) {
@@ -705,20 +617,14 @@ function renderSite(s) {
     return;
   }
 
-  window._currentSite  = s;
+  window._currentSite   = s;
   window._businessEmail = s.email || '';
   window._businessName  = s.name  || '';
 
-  // ── TIER DETECTION (multiple fallbacks) ──
-  const tier = s.website_tier
-    || (s._isLocal && localStorage.getItem('av_last_tier'))
-    || 'basic';
-  window._tier = tier;
+  const tier      = s.website_tier || 'basic';
+  window._tier    = tier;
   const isPremium = tier === 'premium';
 
-  console.log('[AV] Rendering as:', isPremium ? 'PREMIUM ✨' : 'BASIC ⚡', '| tier:', tier);
-
-  // Update banner
   const price = isPremium ? '₹499' : '₹299';
   const pill  = document.getElementById('bannerPill');
   const btn   = document.getElementById('activateBtn');
@@ -728,7 +634,6 @@ function renderSite(s) {
   btn.className    = 'btn-activate ' + (isPremium ? 'premium' : 'basic');
   window._activationAmount = isPremium ? 49900 : 29900;
 
-  // Update pay modal
   if (isPremium) {
     document.getElementById('payEmoji').textContent  = '✨';
     document.getElementById('payTitle').textContent  = 'Go Premium — ₹499';
@@ -739,9 +644,6 @@ function renderSite(s) {
     document.getElementById('payBtn').textContent    = 'Pay ₹499 & Go Live →';
     document.getElementById('payFeats').innerHTML    = '✅ Premium website live <strong>instantly</strong><br>✅ Real photos matching your description<br>✅ Gallery, animations & luxury design<br>✅ 100% secure via Razorpay';
     document.getElementById('uploadPanel').style.display = 'block';
-  }
-
-  if (isPremium) {
     renderPremium(s);
   } else {
     renderBasic(s);
@@ -749,12 +651,9 @@ function renderSite(s) {
 }
 
 // ══════════════════════════════════════════════
-// RENDER BASIC
+// RENDER BASIC — contact form REMOVED, info cards only
 // ══════════════════════════════════════════════
 function renderBasic(s) {
-  console.log('[AV] Rendering Basic website...');
-
-  // Apply theme vars
   const t = BASIC_THEMES[s.website_theme] || BASIC_THEMES[s.design] || BASIC_THEMES['dark-blue'];
   const R = document.documentElement;
   R.style.setProperty('--bp',           t.bp);
@@ -782,12 +681,22 @@ function renderBasic(s) {
   const why = [{icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence.'},{icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising quality.'},{icon:'💰',t:'Best Value',d:'Premium services at prices that work for you.'},{icon:'🤝',t:'Personal Touch',d:'We treat every customer like family.'}];
   const whyCards = why.map(w=>`<div class="b-why-card"><div class="b-why-icon">${w.icon}</div><div class="b-why-title">${w.t}</div><div class="b-why-text">${w.d}</div></div>`).join('');
 
-  const contactInfo = [
-    s.phone   ? `<div class="b-ci-item"><div class="b-ci-icon">📞</div><div><div class="b-ci-label">Phone</div><div class="b-ci-val">${e(s.phone)}</div></div></div>` : '',
-    s.email   ? `<div class="b-ci-item"><div class="b-ci-icon">✉️</div><div><div class="b-ci-label">Email</div><div class="b-ci-val">${e(s.email)}</div></div></div>` : '',
-    s.address ? `<div class="b-ci-item"><div class="b-ci-icon">📍</div><div><div class="b-ci-label">Address</div><div class="b-ci-val">${e(s.address)}</div></div></div>` : '',
-    (!s.phone && !s.email && !s.address) ? `<div class="b-ci-item"><div class="b-ci-icon">📍</div><div><div class="b-ci-label">Location</div><div class="b-ci-val">India</div></div></div>` : ''
-  ].join('');
+  /* ── Contact info cards (NO FORM) ── */
+  const contactCards = [];
+  if (s.phone)   contactCards.push(`<div class="b-ci-card"><div class="b-ci-icon">📞</div><div class="b-ci-label">Phone</div><div class="b-ci-val">${e(s.phone)}</div></div>`);
+  if (s.email)   contactCards.push(`<div class="b-ci-card"><div class="b-ci-icon">✉️</div><div class="b-ci-label">Email</div><div class="b-ci-val">${e(s.email)}</div></div>`);
+  if (s.address) contactCards.push(`<div class="b-ci-card"><div class="b-ci-icon">📍</div><div class="b-ci-label">Address</div><div class="b-ci-val">${e(s.address)}</div></div>`);
+  if (!contactCards.length) contactCards.push(`<div class="b-ci-card"><div class="b-ci-icon">📍</div><div class="b-ci-label">Location</div><div class="b-ci-val">India</div></div>`);
+
+  /* WhatsApp button — only shown if phone exists */
+  const waPhone   = (s.phone || '').replace(/\D/g,'');
+  const waMessage = encodeURIComponent(`Hi ${s.name}, I found your website and would like to know more!`);
+  const whatsappBtn = waPhone
+    ? `<a class="b-whatsapp-btn" href="https://wa.me/${waPhone}?text=${waMessage}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat on WhatsApp
+      </a>`
+    : '';
 
   document.getElementById('site').innerHTML = `
     <div style="font-family:'DM Sans',sans-serif;">
@@ -879,23 +788,16 @@ function renderBasic(s) {
         <div class="b-test-author">— A Happy Customer, India</div>
       </div>
 
-      <div class="b-section alt" id="b-contact">
-        <div class="b-contact-grid">
-          <div>
-            <div class="b-sec-eye">✦ Contact Us</div>
-            <div class="b-sec-title">Let's <em>talk</em> today</div>
-            <p class="b-sec-body">We'd love to hear from you. Reach out and we'll get back within 24 hours.</p>
-            <div class="b-contact-info">${contactInfo}</div>
-          </div>
-          <div class="b-form-card">
-            <div class="b-form-title">Send Us a Message</div>
-            <div class="b-form-sub">We'll respond within 24 hours.</div>
-            <input class="b-input" id="cf-name" placeholder="Your Full Name">
-            <input class="b-input" id="cf-contact" placeholder="Phone Number or Email">
-            <textarea class="b-input" id="cf-message" rows="4" placeholder="How can we help you?" style="resize:vertical;"></textarea>
-            <button class="b-submit" onclick="sendContactMessage()">Send Message →</button>
-            <div id="cf-status" class="cf-status-box"></div>
-          </div>
+      <!-- CONTACT — info cards only, NO form -->
+      <div class="b-contact-simple" id="b-contact">
+        <div class="b-contact-inner">
+          <div class="b-sec-eye" style="justify-content:center;margin:0 auto 12px;">✦ Contact Us</div>
+          <div class="b-sec-title" style="text-align:center;">Let's <em>connect</em></div>
+          <p style="font-size:15px;color:#475569;line-height:1.8;max-width:520px;margin:0 auto;">
+            We'd love to hear from you. Reach out through any of the channels below and we'll get back to you as soon as possible.
+          </p>
+          <div class="b-contact-info-grid">${contactCards.join('')}</div>
+          ${whatsappBtn}
         </div>
       </div>
 
@@ -914,16 +816,12 @@ function renderBasic(s) {
     </div>`;
 
   document.title = s.name + ' — Preview';
-  console.log('[AV] Basic render complete ✅');
 }
 
 // ══════════════════════════════════════════════
-// RENDER PREMIUM — skeleton first, images async
+// RENDER PREMIUM
 // ══════════════════════════════════════════════
 async function renderPremium(s) {
-  console.log('[AV] Rendering Premium website...');
-
-  // Apply premium CSS vars
   const t = PREMIUM_THEMES[s.website_theme] || PREMIUM_THEMES[s.design] || PREMIUM_THEMES['dark-minimal'];
   const R = document.documentElement;
   R.style.setProperty('--pa',          t.pa);
@@ -942,15 +840,13 @@ async function renderPremium(s) {
   const icon    = TYPE_ICONS[s.type] || '🏢';
   const emojis  = SVC_EMOJIS[s.type] || SVC_EMOJIS['Other'];
   const svcs    = s.services ? s.services.split(/[,\n]/).map(x=>x.trim()).filter(Boolean) : (DEFAULT_SVC[s.type]||DEFAULT_SVC['Other']);
-  const fullDesc = s.services || 'Dedicated to delivering unparalleled quality and craftsmanship with meticulous attention to every detail.';
+  const fullDesc  = s.services || 'Dedicated to delivering unparalleled quality and craftsmanship with meticulous attention to every detail.';
   const shortDesc = fullDesc.substring(0, 200);
   const heroDesc  = fullDesc.substring(0, 140);
 
-  // Ticker items
   const tickItems = [s.name, s.type, 'Premium Quality', 'Finest Craftsmanship', `Est. ${new Date().getFullYear()}`, 'Excellence Always'];
   const tickHtml  = [...tickItems,...tickItems].map(item=>`<span class="p-ticker-item">${item}</span><span class="p-ticker-item p-ticker-sep">✦</span>`).join('');
 
-  // Services HTML
   const svcHtml = svcs.slice(0,6).map((sv,i)=>`
     <div class="p-svc-card reveal" style="transition-delay:${i*.07}s">
       <div class="p-svc-num">0${i+1}</div>
@@ -960,10 +856,8 @@ async function renderPremium(s) {
       <div class="p-svc-arrow">→</div>
     </div>`).join('');
 
-  // Gallery labels
   const galLabels = ['Our World','The Details','Our Craft','Premium Quality','The Experience'];
 
-  // Testimonials
   const tests = [
     { q:`"${s.name} delivered an extraordinary experience — quality and care beyond all expectations."`, name:'Priya Sharma', role:'Loyal Customer', av:'P' },
     { q:`"Nothing compares to the sophistication of ${s.name}. Absolutely remarkable in every way."`,   name:'Rajesh Mehta',  role:'Regular Client',   av:'R' },
@@ -979,7 +873,6 @@ async function renderPremium(s) {
       </div>
     </div>`).join('');
 
-  // Contact info
   const contInfo = [
     s.phone   ? `<div class="p-contact-item reveal"><div class="p-contact-icon">📞</div><div><div class="p-contact-lbl">Phone</div><div class="p-contact-val">${e(s.phone)}</div></div></div>` : '',
     s.email   ? `<div class="p-contact-item reveal" style="transition-delay:.1s"><div class="p-contact-icon">✉️</div><div><div class="p-contact-lbl">Email</div><div class="p-contact-val">${e(s.email)}</div></div></div>` : '',
@@ -987,10 +880,8 @@ async function renderPremium(s) {
     (!s.phone&&!s.email&&!s.address) ? `<div class="p-contact-item"><div class="p-contact-icon">📍</div><div><div class="p-contact-lbl">Location</div><div class="p-contact-val">India</div></div></div>` : ''
   ].join('');
 
-  // ── STEP 1: Inject skeleton HTML into DOM immediately ──
   document.getElementById('site').innerHTML = `
     <div class="p-site">
-      <!-- NAV -->
       <nav class="p-nav" id="pNav">
         <div class="p-nav-logo">${e(s.name)}</div>
         <ul class="p-nav-links">
@@ -1000,8 +891,6 @@ async function renderPremium(s) {
           <li><a href="#p-contact" class="p-nav-cta">Contact</a></li>
         </ul>
       </nav>
-
-      <!-- HERO -->
       <div class="p-hero">
         <div class="p-hero-bg loading img-skeleton" id="heroBg"></div>
         <div class="p-hero-overlay"></div>
@@ -1016,19 +905,13 @@ async function renderPremium(s) {
         </div>
         <div class="p-scroll-hint"><div class="p-scroll-line"></div>Scroll</div>
       </div>
-
-      <!-- TICKER -->
       <div class="p-ticker"><div class="p-ticker-track">${tickHtml}${tickHtml}</div></div>
-
-      <!-- STATS -->
       <div class="p-stats">
         <div class="p-stat"><div class="p-stat-num" data-target="500">0+</div><div class="p-stat-lbl">Happy Clients</div></div>
         <div class="p-stat"><div class="p-stat-num" data-target="10">0+</div><div class="p-stat-lbl">Years Excellence</div></div>
         <div class="p-stat"><div class="p-stat-num" data-target="100">0%</div><div class="p-stat-lbl">Satisfaction</div></div>
         <div class="p-stat"><div class="p-stat-num">5★</div><div class="p-stat-lbl">Average Rating</div></div>
       </div>
-
-      <!-- ABOUT -->
       <div class="p-about" id="p-about">
         <div class="p-about-img-wrap reveal-left">
           <div class="p-about-img loading img-skeleton" id="aboutImg"></div>
@@ -1049,15 +932,11 @@ async function renderPremium(s) {
           <button class="p-about-cta" onclick="sc('p-contact')">Get In Touch →</button>
         </div>
       </div>
-
-      <!-- SERVICES -->
       <div class="p-services" id="p-services">
         <div class="p-sec-tag reveal">Our Offerings</div>
         <div class="p-sec-title reveal">Curated <em>services</em><br>crafted for you</div>
         <div class="p-svc-grid">${svcHtml}</div>
       </div>
-
-      <!-- GALLERY -->
       <div class="p-gallery" id="p-gallery">
         <div class="p-sec-tag reveal">Visual Story</div>
         <div class="p-sec-title reveal">A glimpse into<br>our <em>world</em></div>
@@ -1071,15 +950,11 @@ async function renderPremium(s) {
             </div>`).join('')}
         </div>
       </div>
-
-      <!-- TESTIMONIALS -->
       <div class="p-testimonials">
         <div class="p-sec-tag reveal">Testimonials</div>
         <div class="p-sec-title reveal">What our <em>clients</em> say</div>
         <div class="p-test-grid">${testHtml}</div>
       </div>
-
-      <!-- CTA -->
       <div class="p-cta">
         <div class="p-cta-inner">
           <span class="p-cta-tag">✦ &nbsp; Ready to Begin? &nbsp; ✦</span>
@@ -1088,8 +963,6 @@ async function renderPremium(s) {
           <button class="p-cta-btn" onclick="sc('p-contact')">Get In Touch &nbsp; →</button>
         </div>
       </div>
-
-      <!-- CONTACT -->
       <div class="p-contact" id="p-contact">
         <div>
           <div class="p-sec-tag">Contact Us</div>
@@ -1103,8 +976,6 @@ async function renderPremium(s) {
           <div class="p-cv-type">${e(s.type)}</div>
         </div>
       </div>
-
-      <!-- FOOTER -->
       <footer class="p-footer">
         <div class="p-footer-top">
           <div>
@@ -1134,36 +1005,18 @@ async function renderPremium(s) {
     </div>`;
 
   document.title = s.name + ' — Premium Preview';
-  console.log('[AV] Premium skeleton rendered ✅');
-
-  // ── STEP 2: Init scroll effects ──
   initPremiumFx();
 
-  // ── STEP 3: Fetch images AFTER DOM is ready ──
-  console.log('[AV] Fetching images...');
   let imgs;
-  try {
-    imgs = await resolveImages(s);
-  } catch (err) {
-    console.error('[AV] resolveImages error:', err.message);
-    imgs = { hero: null, about: null, gallery: [null,null,null,null,null] };
-  }
-
-  // ── STEP 4: Inject images ──
-  console.log('[AV] Injecting images...');
+  try { imgs = await resolveImages(s); }
+  catch { imgs = { hero: null, about: null, gallery: [null,null,null,null,null] }; }
 
   function setBgImg(elId, url) {
-    const el = document.getElementById(elId);
-    if (!el) { console.warn('[AV] Element missing:', elId); return; }
+    const el = document.getElementById(elId); if (!el) return;
     el.classList.remove('loading','img-skeleton');
-    if (!url) { console.warn('[AV] No URL for:', elId); return; }
+    if (!url) return;
     const tmp = new Image();
-    tmp.onload = () => {
-      el.style.cssText += `;background-image:url('${url}');background-size:cover;background-position:center;`;
-      el.classList.add('img-fade-in');
-      console.log('[AV] ✅ Image injected:', elId);
-    };
-    tmp.onerror = () => console.warn('[AV] ❌ Image load failed:', elId, url.substring(0,80));
+    tmp.onload = () => { el.style.cssText += `;background-image:url('${url}');background-size:cover;background-position:center;`; el.classList.add('img-fade-in'); };
     tmp.src = url;
   }
 
@@ -1171,37 +1024,27 @@ async function renderPremium(s) {
   setBgImg('aboutImg', imgs.about);
   (imgs.gallery || []).forEach((url, i) => {
     setBgImg(`gImg${i}`, url);
-    // Hide placeholder emoji once image loads
     if (url) {
       const ph = document.querySelector(`#gItem${i} .p-gitem-ph`);
       if (ph) { const tmp2 = new Image(); tmp2.onload = () => { ph.style.display='none'; }; tmp2.src = url; }
     }
   });
-
-  console.log('[AV] Images injected ✅');
 }
 
 // ══════════════════════════════════════════════
 // PREMIUM SCROLL FX
 // ══════════════════════════════════════════════
 function initPremiumFx() {
-  // Sticky nav
   const nav = document.getElementById('pNav');
   if (nav) {
     const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 70);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   }
-
-  // Scroll reveal
   const obs = new IntersectionObserver(entries => {
-    entries.forEach(en => {
-      if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); }
-    });
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('visible'); obs.unobserve(en.target); } });
   }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
   document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => obs.observe(el));
-
-  // Stats counter
   const cObs = new IntersectionObserver(entries => {
     entries.forEach(en => {
       if (!en.isIntersecting) return;
@@ -1210,51 +1053,13 @@ function initPremiumFx() {
         const suffix = el.textContent.replace(/\d/g,'');
         let cur = 0;
         const step = Math.ceil(target / 60);
-        const iv = setInterval(() => {
-          cur = Math.min(cur + step, target);
-          el.textContent = cur + suffix;
-          if (cur >= target) clearInterval(iv);
-        }, 20);
+        const iv = setInterval(() => { cur = Math.min(cur + step, target); el.textContent = cur + suffix; if (cur >= target) clearInterval(iv); }, 20);
       });
       cObs.disconnect();
     });
   }, { threshold: 0.4 });
   const statsEl = document.querySelector('.p-stats');
   if (statsEl) cObs.observe(statsEl);
-}
-
-// ══════════════════════════════════════════════
-// CONTACT FORM
-// ══════════════════════════════════════════════
-function sendContactMessage() {
-  const name    = (document.getElementById('cf-name')?.value || '').trim();
-  const contact = (document.getElementById('cf-contact')?.value || '').trim();
-  const message = (document.getElementById('cf-message')?.value || '').trim();
-  const status  = document.getElementById('cf-status');
-
-  const show = (msg, ok) => {
-    status.style.cssText = `display:block;background:${ok?'#f0fdf4':'#fef2f2'};color:${ok?'#16a34a':'#dc2626'};border:1px solid ${ok?'#bbf7d0':'#fecaca'};padding:9px 13px;border-radius:8px;font-size:13px;margin-top:10px;`;
-    status.textContent = msg;
-  };
-
-  if (!name || !contact || !message) { show('⚠️ Please fill in all fields.', false); return; }
-  const btn = document.querySelector('.b-submit');
-  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
-
-  emailjs.send('service_6q18vqn','template_8bq71z3',{
-    to_email: window._businessEmail || 'kasmaniadnan812@gmail.com',
-    business_name: window._businessName,
-    from_name: name, name, from_contact: contact,
-    message, reply_to: contact,
-    time: new Date().toLocaleString('en-IN')
-  }).then(() => {
-    show('✅ Message sent! The business will contact you soon.', true);
-    ['cf-name','cf-contact','cf-message'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
-  }).catch(() => {
-    show('✅ Message received! We will contact you within 24 hours.', true);
-  }).finally(() => {
-    if (btn) { btn.textContent = 'Send Message →'; btn.disabled = false; }
-  });
 }
 
 // ══════════════════════════════════════════════
