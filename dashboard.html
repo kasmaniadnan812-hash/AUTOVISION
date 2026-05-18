@@ -135,30 +135,52 @@ select option{background:var(--bg3);}
 .theme-opt-label{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
 .theme-opt-sub{font-size:10px;color:var(--text3);margin-top:2px;}
 
+/* ── OPTIONAL SECTION TOGGLE ── */
+.optional-section{margin-bottom:20px;}
+.optional-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;padding:13px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;transition:all .2s;user-select:none;}
+.optional-toggle:hover{border-color:var(--accent);background:rgba(79,142,255,.05);}
+.optional-toggle-icon{font-size:18px;}
+.optional-toggle-label{flex:1;font-size:13.5px;font-weight:700;color:var(--text);}
+.optional-toggle-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;background:rgba(0,212,170,.1);color:var(--accent3);border:1px solid rgba(0,212,170,.2);}
+.optional-toggle-arrow{font-size:12px;color:var(--text3);transition:transform .25s;}
+.optional-toggle.open .optional-toggle-arrow{transform:rotate(180deg);}
+.optional-body{display:none;padding:20px;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;margin-top:-1px;}
+.optional-body.open{display:block;}
+
+/* ── SOCIAL MEDIA FIELDS ── */
+.social-fields{display:flex;flex-direction:column;gap:12px;}
+.social-row{display:flex;align-items:center;gap:10px;}
+.social-icon-badge{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1px solid var(--border2);}
+.social-icon-badge.wa{background:rgba(37,211,102,.1);border-color:rgba(37,211,102,.2);}
+.social-icon-badge.ig{background:rgba(225,48,108,.1);border-color:rgba(225,48,108,.2);}
+.social-icon-badge.fb{background:rgba(24,119,242,.1);border-color:rgba(24,119,242,.2);}
+.social-icon-badge.yt{background:rgba(255,0,0,.1);border-color:rgba(255,0,0,.2);}
+.social-icon-badge.tw{background:rgba(29,161,242,.1);border-color:rgba(29,161,242,.2);}
+.social-input-wrap{flex:1;}
+.social-input-wrap label{font-size:10.5px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px;display:block;}
+.social-input-wrap input{margin:0;padding:9px 12px;font-size:13px;}
+
+/* ── HOURS FIELDS ── */
+.hours-grid{display:flex;flex-direction:column;gap:8px;}
+.hours-row{display:grid;grid-template-columns:100px 1fr 16px 1fr 80px;align-items:center;gap:8px;}
+.hours-day{font-size:12.5px;font-weight:700;color:var(--text2);}
+.hours-sep{font-size:12px;color:var(--text3);text-align:center;}
+.hours-closed{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;color:var(--text3);font-weight:600;white-space:nowrap;}
+.hours-closed input[type=checkbox]{width:auto;accent-color:var(--accent);cursor:pointer;}
+.hours-row input[type=time]{padding:8px 10px;font-size:12px;font-family:'JetBrains Mono',monospace;}
+.hours-row.day-closed input[type=time]{opacity:.3;pointer-events:none;}
+
 /* ── TYPE SELECTION ── */
 .type-selection-wrap{max-width:900px;margin:0 auto;}
-
-.free-gen-banner{
-  background:linear-gradient(135deg,rgba(0,212,170,.08) 0%,rgba(79,142,255,.08) 100%);
-  border:1px solid rgba(0,212,170,.25);border-radius:16px;padding:18px 22px;
-  margin-bottom:28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-}
+.free-gen-banner{background:linear-gradient(135deg,rgba(0,212,170,.08) 0%,rgba(79,142,255,.08) 100%);border:1px solid rgba(0,212,170,.25);border-radius:16px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 .free-gen-icon{width:46px;height:46px;background:rgba(0,212,170,.15);border:1px solid rgba(0,212,170,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
 .free-gen-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--accent3);margin-bottom:3px;}
 .free-gen-sub{font-size:13px;color:var(--text2);line-height:1.5;}
 .type-selection-header{text-align:center;margin-bottom:24px;}
 .type-selection-header .page-title{margin-bottom:6px;}
 .type-selection-header p{font-size:14px;color:var(--text2);line-height:1.6;}
-
-/* 3-column grid for the 3 plan cards */
 .type-cards-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px;}
-
-.type-card{
-  position:relative;background:var(--surface);border:2px solid var(--border);
-  border-radius:24px;padding:28px 24px 24px;cursor:pointer;
-  transition:all .28s cubic-bezier(.34,1.2,.64,1);
-  overflow:hidden;text-align:center;user-select:none;
-}
+.type-card{position:relative;background:var(--surface);border:2px solid var(--border);border-radius:24px;padding:28px 24px 24px;cursor:pointer;transition:all .28s cubic-bezier(.34,1.2,.64,1);overflow:hidden;text-align:center;user-select:none;}
 .type-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .28s;pointer-events:none;border-radius:22px;}
 .type-card.basic::before{background:radial-gradient(ellipse at top,rgba(79,142,255,.07) 0%,transparent 70%);}
 .type-card.premium::before{background:radial-gradient(ellipse at top,rgba(240,165,0,.08) 0%,transparent 70%);}
@@ -167,113 +189,61 @@ select option{background:var(--bg3);}
 .type-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.35);}
 .type-card.basic:hover,.type-card.basic.selected{border-color:var(--accent);box-shadow:0 0 0 4px rgba(79,142,255,.12),0 20px 50px rgba(0,0,0,.3);}
 .type-card.premium:hover,.type-card.premium.selected{border-color:var(--gold);box-shadow:0 0 0 4px rgba(240,165,0,.12),0 20px 50px rgba(0,0,0,.3);}
-
 .type-card .selected-badge{display:none;position:absolute;top:14px;right:14px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:100px;}
 .type-card.basic .selected-badge{background:rgba(79,142,255,.15);color:var(--accent);border:1px solid rgba(79,142,255,.3);}
 .type-card.premium .selected-badge{background:rgba(240,165,0,.15);color:var(--gold);border:1px solid rgba(240,165,0,.3);}
 .type-card.selected .selected-badge{display:inline-block;}
-
-/* ── COMING SOON / LOCKED CARD ── */
-.type-card.locked-soon{
-  opacity:0.5;
-  cursor:not-allowed !important;
-  pointer-events:none;
-  filter:grayscale(0.45);
-}
-.type-card.locked-soon:hover{
-  transform:none;
-  box-shadow:none;
-}
-.coming-soon-badge{
-  position:absolute;top:14px;left:14px;
-  font-size:9px;font-weight:900;letter-spacing:1px;text-transform:uppercase;
-  padding:5px 11px;border-radius:100px;
-  background:linear-gradient(135deg,#334155,#475569);
-  color:#94a3b8;
-  border:1px solid rgba(148,163,184,.25);
-  z-index:3;
-}
-.locked-overlay{
-  position:absolute;inset:0;border-radius:22px;
-  background:rgba(8,12,20,.22);
-  display:flex;align-items:center;justify-content:center;
-  pointer-events:none;z-index:4;
-}
-.locked-overlay-inner{
-  background:rgba(8,12,20,.88);backdrop-filter:blur(8px);
-  border:1px solid rgba(148,163,184,.2);
-  border-radius:12px;padding:11px 22px;
-  font-size:12px;font-weight:800;letter-spacing:1.5px;
-  text-transform:uppercase;color:#94a3b8;
-  display:flex;align-items:center;gap:8px;
-}
-
+.type-card.locked-soon{opacity:0.5;cursor:not-allowed !important;pointer-events:none;filter:grayscale(0.45);}
+.type-card.locked-soon:hover{transform:none;box-shadow:none;}
+.coming-soon-badge{position:absolute;top:14px;left:14px;font-size:9px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:100px;background:linear-gradient(135deg,#334155,#475569);color:#94a3b8;border:1px solid rgba(148,163,184,.25);z-index:3;}
+.locked-overlay{position:absolute;inset:0;border-radius:22px;background:rgba(8,12,20,.22);display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:4;}
+.locked-overlay-inner{background:rgba(8,12,20,.88);backdrop-filter:blur(8px);border:1px solid rgba(148,163,184,.2);border-radius:12px;padding:11px 22px;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#94a3b8;display:flex;align-items:center;gap:8px;}
 .type-card-icon-wrap{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;transition:transform .25s;}
 .type-card:not(.locked-soon):hover .type-card-icon-wrap{transform:scale(1.08) rotate(-3deg);}
 .type-card.basic .type-card-icon-wrap{background:rgba(79,142,255,.1);border:1px solid rgba(79,142,255,.2);}
 .type-card.premium .type-card-icon-wrap{background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.22);}
 .type-card.threed .type-card-icon-wrap{background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.2);}
-
 .type-card-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px;}
 .type-card.basic .type-card-name{color:var(--accent);}
 .type-card.premium .type-card-name{color:var(--gold);}
 .type-card.threed .type-card-name{color:#64748b;}
-
 .type-card-tagline{font-size:12.5px;color:var(--text3);margin-bottom:18px;line-height:1.5;}
-
 .type-card-features{list-style:none;text-align:left;display:flex;flex-direction:column;gap:8px;margin-bottom:0;}
 .type-card-features li{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--text2);font-weight:500;line-height:1.4;}
 .feat-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px;}
 .type-card.basic .feat-dot{background:var(--accent);}
 .type-card.premium .feat-dot{background:var(--gold);}
 .type-card.threed .feat-dot{background:#475569;}
-
 .feat-price-line{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
 .feat-price-icon{font-size:14px;flex-shrink:0;}
 .type-card.basic .feat-price-line{color:var(--accent);}
 .type-card.premium .feat-price-line{color:var(--gold);}
 .type-card.threed .feat-price-line{color:#64748b;}
-
-/* Premium shimmer */
-.type-card.premium::after{
-  content:'';position:absolute;top:-60%;left:-60%;
-  width:40%;height:200%;
-  background:linear-gradient(105deg,transparent 40%,rgba(240,165,0,.06) 50%,transparent 60%);
-  transform:skewX(-20deg);animation:shimmer 4s ease-in-out infinite;pointer-events:none;
-}
+.type-card.premium::after{content:'';position:absolute;top:-60%;left:-60%;width:40%;height:200%;background:linear-gradient(105deg,transparent 40%,rgba(240,165,0,.06) 50%,transparent 60%);transform:skewX(-20deg);animation:shimmer 4s ease-in-out infinite;pointer-events:none;}
 @keyframes shimmer{0%{left:-60%;opacity:0;}20%{opacity:1;}80%{opacity:1;}100%{left:140%;opacity:0;}}
-
 .free-preview-note{text-align:center;padding:14px 20px;background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.15);border-radius:12px;margin-bottom:16px;}
 .free-preview-note strong{color:var(--accent3);font-weight:800;}
 .free-preview-note span{font-size:13px;color:var(--text2);line-height:1.6;}
-
 .type-select-btn{display:block;width:100%;padding:16px;font-family:'Syne',sans-serif;font-size:16px;font-weight:800;border:none;border-radius:14px;cursor:pointer;transition:all .25s;letter-spacing:.3px;}
 .type-select-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
 .type-select-btn:not(:disabled):hover{transform:translateY(-2px);}
 .type-select-btn.gen-free-btn{background:var(--grad);color:white;box-shadow:0 6px 24px rgba(79,142,255,.35);}
 .type-select-btn.gen-free-btn:not(:disabled):hover{box-shadow:0 10px 32px rgba(79,142,255,.5);}
-
 .type-compare-note{text-align:center;font-size:11.5px;color:var(--text3);margin-top:10px;}
-
-/* ── SELECTED TYPE BANNER ── */
 .selected-type-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;margin-bottom:20px;font-size:13px;font-weight:600;max-width:720px;border:1px solid;}
 .selected-type-banner.basic-banner{background:rgba(79,142,255,.07);border-color:rgba(79,142,255,.2);color:var(--accent);}
 .selected-type-banner.premium-banner{background:rgba(240,165,0,.07);border-color:rgba(240,165,0,.22);color:var(--gold);}
 .stb-change{margin-left:auto;font-size:12px;text-decoration:underline;cursor:pointer;opacity:.8;transition:opacity .2s;}
 .stb-change:hover{opacity:1;}
-
 .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 .feat-label{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--input-bg);border:1px solid var(--border2);border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;color:var(--text2);}
 .feat-label:hover{border-color:var(--accent);background:rgba(79,142,255,.06);color:var(--text);}
 .feat-label input{width:auto;accent-color:var(--accent);}
-
 .generate-free-btn{width:100%;padding:15px 34px;font-size:15px;font-weight:800;background:var(--grad);color:white;border:none;border-radius:12px;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:.3px;box-shadow:0 6px 24px rgba(79,142,255,.35);transition:all .25s;}
 .generate-free-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(79,142,255,.5);}
 .generate-free-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-
 .generate-free-note{text-align:center;font-size:12px;color:var(--text3);margin-top:10px;display:flex;align-items:center;justify-content:center;gap:5px;}
 .generate-free-note strong{color:var(--accent3);}
-
 .alert{padding:11px 14px;border-radius:10px;font-size:13px;margin-bottom:14px;display:none;line-height:1.5;border:1px solid;}
 .alert-error{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.2);color:var(--red);}
 .alert-success{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.2);color:#34d399;}
@@ -295,7 +265,7 @@ select option{background:var(--bg3);}
 .modal-btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(79,142,255,.45);}
 .modal-btn-s{flex:1;padding:13px;background:var(--bg3);color:var(--text2);border-radius:10px;border:1px solid var(--border2);font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;min-width:80px;}
 .modal-btn-s:hover{background:var(--surface2);color:var(--text);}
-.edit-modal{max-width:520px;text-align:left;}
+.edit-modal{max-width:580px;text-align:left;}
 .edit-modal .modal-title{text-align:left;}
 .edit-locked-banner{border-radius:10px;padding:12px 15px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;margin-bottom:16px;border:1px solid;}
 .edit-form-group{margin-bottom:13px;}
@@ -305,6 +275,26 @@ select option{background:var(--bg3);}
 .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .edit-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
 .edit-section-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text);margin-bottom:10px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
+
+/* ── EDIT MODAL HOURS ── */
+.edit-hours-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.edit-hours-row{display:grid;grid-template-columns:80px 1fr 14px 1fr 70px;align-items:center;gap:6px;}
+.edit-hours-day{font-size:11.5px;font-weight:700;color:var(--text2);}
+.edit-hours-sep{font-size:11px;color:var(--text3);text-align:center;}
+.edit-hours-closed{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:10.5px;color:var(--text3);font-weight:600;white-space:nowrap;}
+.edit-hours-closed input[type=checkbox]{width:auto;accent-color:var(--accent);cursor:pointer;}
+.edit-hours-row input[type=time]{padding:7px 8px;font-size:11px;font-family:'JetBrains Mono',monospace;}
+.edit-hours-row.day-closed input[type=time]{opacity:.3;pointer-events:none;}
+.edit-social-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.edit-social-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;border:1px solid var(--border2);}
+.edit-social-icon.wa{background:rgba(37,211,102,.1);border-color:rgba(37,211,102,.2);}
+.edit-social-icon.ig{background:rgba(225,48,108,.1);border-color:rgba(225,48,108,.2);}
+.edit-social-icon.fb{background:rgba(24,119,242,.1);border-color:rgba(24,119,242,.2);}
+.edit-social-icon.yt{background:rgba(255,0,0,.1);border-color:rgba(255,0,0,.2);}
+.edit-social-icon.tw{background:rgba(29,161,242,.1);border-color:rgba(29,161,242,.2);}
+.edit-social-wrap{flex:1;}
+.edit-social-wrap label{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;display:block;}
+.edit-social-wrap .edit-input{padding:8px 11px;font-size:12px;}
 
 /* ── LOADING ── */
 .loading-overlay{display:none;position:fixed;inset:0;background:rgba(8,12,20,.95);z-index:1000;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
@@ -323,7 +313,7 @@ select option{background:var(--bg3);}
 .live-link-lbl{font-size:11px;color:#34d399;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
 .live-link-input{width:100%;background:var(--bg2);border:1px solid rgba(52,211,153,.2);border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);outline:none;}
 
-/* ═══ TABLET (900px) ═══ */
+/* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){
   .sidebar{transform:translateX(-100%);}
   .sidebar.open{transform:translateX(0);}
@@ -340,6 +330,8 @@ select option{background:var(--bg3);}
   .modal-actions{flex-direction:column;}
   .modal-btn-p,.modal-btn-s{flex:none;width:100%;}
   .type-cards-row{grid-template-columns:1fr 1fr;}
+  .hours-row{grid-template-columns:80px 1fr 12px 1fr 60px;}
+  .edit-hours-row{grid-template-columns:70px 1fr 12px 1fr 60px;}
 }
 @media(max-width:600px){
   .hamburger-dash{top:10px;left:10px;padding:8px 10px;font-size:16px;border-radius:9px;}
@@ -370,6 +362,9 @@ select option{background:var(--bg3);}
   .modal{padding:20px;border-radius:18px;}
   .modal-icon{font-size:40px;}
   .modal-title{font-size:20px;}
+  .hours-row{grid-template-columns:70px 1fr 10px 1fr 50px;gap:4px;}
+  .edit-hours-row{grid-template-columns:60px 1fr 10px 1fr 50px;gap:4px;}
+  .hours-row input[type=time],.edit-hours-row input[type=time]{padding:6px 6px;font-size:10px;}
 }
 @media(max-width:390px){
   .main{padding:10px;padding-top:54px;}
@@ -427,10 +422,9 @@ select option{background:var(--bg3);}
   <!-- CREATE -->
   <div class="panel" id="createPanel">
 
-    <!-- STEP 1: TYPE SELECTION -->
+    <!-- STEP 1 -->
     <div class="create-step active" id="stepTypeSelection">
       <div class="type-selection-wrap">
-
         <div class="free-gen-banner">
           <div class="free-gen-icon">🆓</div>
           <div>
@@ -438,15 +432,11 @@ select option{background:var(--bg3);}
             <div class="free-gen-sub">Preview your website before paying anything. Pay only when you decide to go live.</div>
           </div>
         </div>
-
         <div class="type-selection-header">
           <div class="page-title">Choose Your Plan</div>
           <p>All plans generate your website for free. Payment only happens if you activate.</p>
         </div>
-
         <div class="type-cards-row">
-
-          <!-- BASIC CARD -->
           <div class="type-card basic" id="typeCardBasic" onclick="selectWebsiteType('basic')">
             <div class="selected-badge">✓ Selected</div>
             <div class="type-card-icon-wrap">🌐</div>
@@ -455,18 +445,13 @@ select option{background:var(--bg3);}
             <ul class="type-card-features">
               <li><span class="feat-dot"></span>Clean, professional layout</li>
               <li><span class="feat-dot"></span>About &amp; Services sections</li>
-              <li><span class="feat-dot"></span>Contact form with email</li>
+              <li><span class="feat-dot"></span>WhatsApp &amp; Social links</li>
+              <li><span class="feat-dot"></span>Business hours display</li>
               <li><span class="feat-dot"></span>Mobile responsive design</li>
               <li><span class="feat-dot"></span>4 colour theme options</li>
-              <li><span class="feat-dot"></span>Fast load time</li>
-              <li class="feat-price-line">
-                <span class="feat-price-icon">💳</span>
-                Activate to go live for <strong>₹299</strong>
-              </li>
+              <li class="feat-price-line"><span class="feat-price-icon">💳</span>Activate to go live for <strong>₹299</strong></li>
             </ul>
           </div>
-
-          <!-- PREMIUM CARD -->
           <div class="type-card premium" id="typeCardPremium" onclick="selectWebsiteType('premium')">
             <div class="selected-badge">✓ Selected</div>
             <div class="type-card-icon-wrap">👑</div>
@@ -479,20 +464,13 @@ select option{background:var(--bg3);}
               <li><span class="feat-dot"></span>Stats counter animations</li>
               <li><span class="feat-dot"></span>Testimonials carousel</li>
               <li><span class="feat-dot"></span>6 premium theme options</li>
-              <li><span class="feat-dot"></span>Scroll-reveal effects</li>
-              <li class="feat-price-line">
-                <span class="feat-price-icon">💳</span>
-                Activate to go live for <strong>₹499</strong>
-              </li>
+              <li><span class="feat-dot"></span>WhatsApp, Social &amp; Hours</li>
+              <li class="feat-price-line"><span class="feat-price-icon">💳</span>Activate to go live for <strong>₹499</strong></li>
             </ul>
           </div>
-
-          <!-- 3D WEBSITE CARD — COMING SOON (LOCKED) -->
           <div class="type-card threed locked-soon" id="typeCard3d">
             <div class="coming-soon-badge">🔒 Coming Soon</div>
-            <div class="locked-overlay">
-              <div class="locked-overlay-inner">🚧 &nbsp;Feature Coming Soon</div>
-            </div>
+            <div class="locked-overlay"><div class="locked-overlay-inner">🚧 &nbsp;Feature Coming Soon</div></div>
             <div class="type-card-icon-wrap">🧊</div>
             <div class="type-card-name">3D Website</div>
             <div class="type-card-tagline">Immersive Three.js 3D experience with scroll-reactive effects &amp; particle bursts.</div>
@@ -503,28 +481,17 @@ select option{background:var(--bg3);}
               <li><span class="feat-dot"></span>Mouse-tracking 3D effects</li>
               <li><span class="feat-dot"></span>Category-specific 3D objects</li>
               <li><span class="feat-dot"></span>Mobile optimized fallback</li>
-              <li class="feat-price-line">
-                <span class="feat-price-icon">💳</span>
-                Will be available for <strong>₹799</strong>
-              </li>
+              <li class="feat-price-line"><span class="feat-price-icon">💳</span>Will be available for <strong>₹799</strong></li>
             </ul>
           </div>
-
         </div>
-
-        <div class="free-preview-note">
-          <span>🎉 <strong>Preview your website free</strong> — pay only when you go live</span>
-        </div>
-
-        <button id="typeSelectContinueBtn" class="type-select-btn gen-free-btn" onclick="continueToForm()" disabled>
-          Select a plan to continue →
-        </button>
-
+        <div class="free-preview-note"><span>🎉 <strong>Preview your website free</strong> — pay only when you go live</span></div>
+        <button id="typeSelectContinueBtn" class="type-select-btn gen-free-btn" onclick="continueToForm()" disabled>Select a plan to continue →</button>
         <div class="type-compare-note">No credit card needed to generate or preview your website.</div>
       </div>
     </div>
 
-    <!-- STEP 2: CREATE FORM -->
+    <!-- STEP 2: FORM -->
     <div class="create-step" id="stepCreateForm">
       <div class="page-header">
         <div><div class="page-title">Create Website</div><div class="page-sub">Fill in your business details below</div></div>
@@ -561,6 +528,76 @@ select option{background:var(--bg3);}
         <div class="form-group"><label>Address</label><input id="bizAddress" type="text" placeholder="Your business address" maxlength="200"></div>
       </div>
 
+      <!-- SOCIAL MEDIA (optional) -->
+      <div class="form-card" style="max-width:720px;">
+        <div class="optional-section">
+          <div class="optional-toggle" id="socialToggle" onclick="toggleOptional('social')">
+            <span class="optional-toggle-icon">📲</span>
+            <span class="optional-toggle-label">Social Media Links</span>
+            <span class="optional-toggle-badge">Optional</span>
+            <span class="optional-toggle-arrow">▼</span>
+          </div>
+          <div class="optional-body" id="socialBody">
+            <p style="font-size:12.5px;color:var(--text3);margin-bottom:14px;line-height:1.6;">Add your social media profiles. Only filled ones will appear on your website.</p>
+            <div class="social-fields">
+              <div class="social-row">
+                <div class="social-icon-badge wa">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                </div>
+                <div class="social-input-wrap">
+                  <label>WhatsApp Number</label>
+                  <input id="bizWhatsapp" type="tel" placeholder="+91 99999 99999 (if different from phone)">
+                </div>
+              </div>
+              <div class="social-row">
+                <div class="social-icon-badge ig">📸</div>
+                <div class="social-input-wrap">
+                  <label>Instagram Username or URL</label>
+                  <input id="bizInstagram" type="text" placeholder="@yourbusiness or https://instagram.com/yourbusiness">
+                </div>
+              </div>
+              <div class="social-row">
+                <div class="social-icon-badge fb">👥</div>
+                <div class="social-input-wrap">
+                  <label>Facebook Page URL</label>
+                  <input id="bizFacebook" type="text" placeholder="https://facebook.com/yourbusiness">
+                </div>
+              </div>
+              <div class="social-row">
+                <div class="social-icon-badge yt">▶️</div>
+                <div class="social-input-wrap">
+                  <label>YouTube Channel URL</label>
+                  <input id="bizYoutube" type="text" placeholder="https://youtube.com/@yourchannel">
+                </div>
+              </div>
+              <div class="social-row">
+                <div class="social-icon-badge tw">🐦</div>
+                <div class="social-input-wrap">
+                  <label>Twitter / X Username or URL</label>
+                  <input id="bizTwitter" type="text" placeholder="@yourhandle or https://x.com/yourhandle">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUSINESS HOURS (optional) -->
+      <div class="form-card" style="max-width:720px;">
+        <div class="optional-section">
+          <div class="optional-toggle" id="hoursToggle" onclick="toggleOptional('hours')">
+            <span class="optional-toggle-icon">🕐</span>
+            <span class="optional-toggle-label">Business Hours</span>
+            <span class="optional-toggle-badge">Optional</span>
+            <span class="optional-toggle-arrow">▼</span>
+          </div>
+          <div class="optional-body" id="hoursBody">
+            <p style="font-size:12.5px;color:var(--text3);margin-bottom:14px;line-height:1.6;">Set your opening and closing times for each day. Check "Closed" for days you don't operate.</p>
+            <div class="hours-grid" id="hoursGrid"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="form-card">
         <div class="form-card-title">Design Preference</div>
         <div class="design-grid" id="designGrid">
@@ -583,12 +620,8 @@ select option{background:var(--bg3);}
         </div>
       </div>
 
-      <button onclick="generateWebsite()" class="generate-free-btn" id="generateBtn">
-        Generate Free →
-      </button>
-      <div class="generate-free-note">
-        🔒 No payment needed now &nbsp;·&nbsp; <strong>Preview first, pay only to go live</strong>
-      </div>
+      <button onclick="generateWebsite()" class="generate-free-btn" id="generateBtn">Generate Free →</button>
+      <div class="generate-free-note">🔒 No payment needed now &nbsp;·&nbsp; <strong>Preview first, pay only to go live</strong></div>
     </div>
   </div>
 
@@ -701,6 +734,32 @@ select option{background:var(--bg3);}
       <div class="edit-form-group"><label>Email</label><input class="edit-input" id="editEmailField" placeholder="business@email.com"></div>
     </div>
     <div class="edit-form-group"><label>Address</label><input class="edit-input" id="editAddress" placeholder="Your address" maxlength="200"></div>
+
+    <div class="edit-section-title">📲 Social Media Links <span style="font-size:10px;color:var(--text3);font-weight:500">(Optional — leave blank to hide)</span></div>
+    <div class="edit-social-row">
+      <div class="edit-social-icon wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+      <div class="edit-social-wrap"><label>WhatsApp Number</label><input class="edit-input" id="editWhatsapp" placeholder="+91 99999 99999"></div>
+    </div>
+    <div class="edit-social-row">
+      <div class="edit-social-icon ig">📸</div>
+      <div class="edit-social-wrap"><label>Instagram</label><input class="edit-input" id="editInstagram" placeholder="@yourbusiness or full URL"></div>
+    </div>
+    <div class="edit-social-row">
+      <div class="edit-social-icon fb">👥</div>
+      <div class="edit-social-wrap"><label>Facebook</label><input class="edit-input" id="editFacebook" placeholder="https://facebook.com/yourbusiness"></div>
+    </div>
+    <div class="edit-social-row">
+      <div class="edit-social-icon yt">▶️</div>
+      <div class="edit-social-wrap"><label>YouTube</label><input class="edit-input" id="editYoutube" placeholder="https://youtube.com/@yourchannel"></div>
+    </div>
+    <div class="edit-social-row">
+      <div class="edit-social-icon tw">🐦</div>
+      <div class="edit-social-wrap"><label>Twitter / X</label><input class="edit-input" id="editTwitter" placeholder="@yourhandle or full URL"></div>
+    </div>
+
+    <div class="edit-section-title">🕐 Business Hours <span style="font-size:10px;color:var(--text3);font-weight:500">(Optional)</span></div>
+    <div class="edit-hours-grid" id="editHoursGrid"></div>
+
     <div class="edit-section-title">🎨 Website Theme &amp; Appearance</div>
     <div class="edit-form-group">
       <label>Choose Theme</label>
@@ -753,6 +812,101 @@ const TBL_UPGRADES = 'av_upgrades';
 emailjs.init(EMAILJS_PUBLIC_KEY);
 const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 
+// ── DAYS ──
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DEFAULT_HOURS = { Monday:{open:'09:00',close:'18:00',closed:false}, Tuesday:{open:'09:00',close:'18:00',closed:false}, Wednesday:{open:'09:00',close:'18:00',closed:false}, Thursday:{open:'09:00',close:'18:00',closed:false}, Friday:{open:'09:00',close:'18:00',closed:false}, Saturday:{open:'10:00',close:'16:00',closed:false}, Sunday:{open:'',close:'',closed:true} };
+
+function buildHoursGrid(containerId, prefix, existingHours) {
+  const grid = document.getElementById(containerId);
+  if (!grid) return;
+  const hours = existingHours || DEFAULT_HOURS;
+  grid.innerHTML = DAYS.map(day => {
+    const h = hours[day] || { open:'09:00', close:'18:00', closed:false };
+    const isClosed = h.closed;
+    return `<div class="hours-row${isClosed?' day-closed':''}" id="${prefix}Row_${day}">
+      <div class="hours-day">${day.slice(0,3)}</div>
+      <input type="time" id="${prefix}Open_${day}" value="${h.open||''}" oninput="hoursChanged('${prefix}','${day}')">
+      <div class="hours-sep">–</div>
+      <input type="time" id="${prefix}Close_${day}" value="${h.close||''}" oninput="hoursChanged('${prefix}','${day}')">
+      <label class="hours-closed"><input type="checkbox" id="${prefix}Closed_${day}" ${isClosed?'checked':''} onchange="toggleDayClosed('${prefix}','${day}')"> Closed</label>
+    </div>`;
+  }).join('');
+}
+
+function buildEditHoursGrid(existingHours) {
+  const grid = document.getElementById('editHoursGrid');
+  if (!grid) return;
+  const hours = existingHours || DEFAULT_HOURS;
+  grid.innerHTML = DAYS.map(day => {
+    const h = hours[day] || { open:'09:00', close:'18:00', closed:false };
+    const isClosed = h.closed;
+    return `<div class="edit-hours-row${isClosed?' day-closed':''}" id="editHRow_${day}">
+      <div class="edit-hours-day">${day.slice(0,3)}</div>
+      <input type="time" class="edit-input" id="editHOpen_${day}" value="${h.open||''}">
+      <div class="edit-hours-sep">–</div>
+      <input type="time" class="edit-input" id="editHClose_${day}" value="${h.close||''}">
+      <label class="edit-hours-closed"><input type="checkbox" id="editHClosed_${day}" ${isClosed?'checked':''} onchange="toggleEditDayClosed('${day}')"> Closed</label>
+    </div>`;
+  }).join('');
+}
+
+function hoursChanged(prefix, day) { /* live update if needed */ }
+
+function toggleDayClosed(prefix, day) {
+  const cb = document.getElementById(prefix+'Closed_'+day);
+  const row = document.getElementById(prefix+'Row_'+day);
+  if (cb && row) row.classList.toggle('day-closed', cb.checked);
+}
+
+function toggleEditDayClosed(day) {
+  const cb = document.getElementById('editHClosed_'+day);
+  const row = document.getElementById('editHRow_'+day);
+  if (cb && row) row.classList.toggle('day-closed', cb.checked);
+}
+
+function collectHours(prefix) {
+  const result = {};
+  DAYS.forEach(day => {
+    const open   = document.getElementById(prefix+'Open_'+day);
+    const close  = document.getElementById(prefix+'Close_'+day);
+    const closed = document.getElementById(prefix+'Closed_'+day);
+    if (!open) return;
+    result[day] = { open: open.value||'', close: close?.value||'', closed: closed?.checked||false };
+  });
+  return result;
+}
+
+function collectEditHours() {
+  const result = {};
+  DAYS.forEach(day => {
+    const open   = document.getElementById('editHOpen_'+day);
+    const close  = document.getElementById('editHClose_'+day);
+    const closed = document.getElementById('editHClosed_'+day);
+    if (!open) return;
+    result[day] = { open: open.value||'', close: close?.value||'', closed: closed?.checked||false };
+  });
+  return result;
+}
+
+function hoursHasData(hoursObj) {
+  if (!hoursObj) return false;
+  return DAYS.some(d => hoursObj[d] && !hoursObj[d].closed && hoursObj[d].open);
+}
+
+// ── OPTIONAL TOGGLE ──
+function toggleOptional(section) {
+  const toggle = document.getElementById(section+'Toggle');
+  const body   = document.getElementById(section+'Body');
+  if (!toggle || !body) return;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+  if (!isOpen && section === 'hours') {
+    buildHoursGrid('hoursGrid', 'h', null);
+  }
+}
+
+// ─────────────────────────────
 function dbg(label, data) {
   const formatted = typeof data === 'object' ? JSON.stringify(data, null, 2) : String(data);
   console.log('[AV]', label, data);
@@ -792,41 +946,28 @@ applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
 let selectedWebsiteTier  = null;
 let selectedWebsiteTheme = 'dark-blue';
 
-/* ── TYPE SELECTION — 3D is locked, cannot be selected ── */
 function selectWebsiteType(tier) {
-  if (tier === '3d') return; /* 3D locked — ignore */
+  if (tier === '3d') return;
   selectedWebsiteTier = tier;
   document.getElementById('typeCardBasic').classList.toggle('selected', tier === 'basic');
   document.getElementById('typeCardPremium').classList.toggle('selected', tier === 'premium');
   const btn = document.getElementById('typeSelectContinueBtn');
   btn.disabled = false;
-  if (tier === 'premium') {
-    btn.className = 'type-select-btn gen-free-btn';
-    btn.textContent = '👑 Generate Free → (Premium)';
-  } else {
-    btn.className = 'type-select-btn gen-free-btn';
-    btn.textContent = '⚡ Generate Free → (Basic)';
-  }
+  btn.className = 'type-select-btn gen-free-btn';
+  btn.textContent = tier === 'premium' ? '👑 Generate Free → (Premium)' : '⚡ Generate Free → (Basic)';
 }
 
 function continueToForm() {
   if (!selectedWebsiteTier) return;
   const isPrem = selectedWebsiteTier === 'premium';
   const price  = isPrem ? '₹499' : '₹299';
-
-  document.getElementById('selectedTypeBanner').className = isPrem
-    ? 'selected-type-banner premium-banner'
-    : 'selected-type-banner basic-banner';
+  document.getElementById('selectedTypeBanner').className = isPrem ? 'selected-type-banner premium-banner' : 'selected-type-banner basic-banner';
   document.getElementById('selectedTypeBannerIcon').textContent = isPrem ? '👑' : '⚡';
-  document.getElementById('selectedTypeBannerText').textContent = isPrem
-    ? 'Premium Website — generate free, preview before paying'
-    : 'Basic Website — generate free, preview before paying';
-
+  document.getElementById('selectedTypeBannerText').textContent = isPrem ? 'Premium Website — generate free, preview before paying' : 'Basic Website — generate free, preview before paying';
   document.getElementById('successActivateBtn').textContent = `Activate Now — ${price}`;
   document.getElementById('payModalAmount').textContent     = price;
   document.getElementById('payBtn').textContent             = `Pay ${price} →`;
   document.getElementById('payModalIcon').textContent       = isPrem ? '👑' : '🌐';
-
   document.getElementById('stepTypeSelection').classList.remove('active');
   document.getElementById('stepCreateForm').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -909,6 +1050,13 @@ function showPanel(name, el) {
       btn.className = 'type-select-btn gen-free-btn';
       btn.textContent = 'Select a plan to continue →';
     }
+    // Reset optional sections
+    ['socialBody','hoursBody'].forEach(id => {
+      const b = document.getElementById(id); if (b) b.classList.remove('open');
+    });
+    ['socialToggle','hoursToggle'].forEach(id => {
+      const t = document.getElementById(id); if (t) t.classList.remove('open');
+    });
   }
   if (name === 'websites') renderWebsites('allWebsites');
   if (name === 'dashboard') { loadStats(); renderWebsites('recentWebsites', 3); }
@@ -965,14 +1113,18 @@ async function renderWebsites(containerId, limit) {
     const isLocal   = !!s._isLocal;
     const isPrem    = s.website_tier === 'premium';
     const previewUrl = isLocal ? `preview.html?localsite=${s.id}` : `${BASE_URL}/preview.html?site=${s.id}`;
-    const themeLabel = s.website_theme ? s.website_theme.replace('-',' ').replace(/\b\w/g,c=>c.toUpperCase()) : 'Dark Blue';
     const tierLabel  = isPrem ? '👑 Premium' : '⚡ Basic';
     const localBadge = isLocal ? ' <span style="color:var(--orange);font-size:10px;font-weight:700">📦 Local</span>' : '';
     const liveLinkHtml = (isActive && !isLocal) ? `<div class="live-link-row">🔗 <span>${previewUrl}</span><button class="copy-btn" onclick="copyText('${previewUrl}',this)">Copy</button></div>` : '';
+
+    // Build social param string for edit
+    const socials = s.socials ? JSON.stringify(s.socials) : '{}';
+    const hours   = s.hours   ? JSON.stringify(s.hours)   : 'null';
+
     const editBtn = isPreview
-      ? `<button class="card-btn cb-edit" onclick="openFreeEdit('${s.id}','${sa(s.name)}','${sa(s.services||'')}','${sa(s.phone||'')}','${sa(s.email||'')}','${sa(s.address||'')}','${s.website_theme||'dark-blue'}')">✏️ Edit Free</button>`
+      ? `<button class="card-btn cb-edit" onclick="openFreeEditFull('${s.id}')">✏️ Edit Free</button>`
       : isActive
-        ? `<button class="card-btn cb-edit-locked" onclick="openLockedEdit('${s.id}','${sa(s.name)}','${sa(s.services||'')}','${sa(s.phone||'')}','${sa(s.email||'')}','${sa(s.address||'')}','${s.website_theme||'dark-blue'}')">🔒 Edit ₹99</button>`
+        ? `<button class="card-btn cb-edit-locked" onclick="openLockedEditFull('${s.id}')">🔒 Edit ₹99</button>`
         : '';
     const actPrice = isPrem ? '₹499' : '₹299';
     const actBtn   = (isPreview && !isLocal) ? `<button class="card-btn cb-activate" onclick="openPaymentFor('${s.id}','${sa(s.name)}','${s.website_tier||'basic'}')">⚡ Activate ${actPrice}</button>` : '';
@@ -992,6 +1144,9 @@ async function renderWebsites(containerId, limit) {
     </div>`;
   }).join('');
   cont.innerHTML = `<div class="website-grid">${cards}</div>`;
+
+  // Store sites in global for edit lookup
+  window._allSitesCache = allSites;
 }
 
 async function generateWebsite() {
@@ -1029,6 +1184,27 @@ async function generateWebsite() {
   await new Promise(r => setTimeout(r, 4000));
   clearInterval(progressInterval);
 
+  // Collect socials
+  const socials = {};
+  const waVal  = document.getElementById('bizWhatsapp')?.value.trim();
+  const igVal  = document.getElementById('bizInstagram')?.value.trim();
+  const fbVal  = document.getElementById('bizFacebook')?.value.trim();
+  const ytVal  = document.getElementById('bizYoutube')?.value.trim();
+  const twVal  = document.getElementById('bizTwitter')?.value.trim();
+  if (waVal) socials.whatsapp  = waVal;
+  if (igVal) socials.instagram = igVal;
+  if (fbVal) socials.facebook  = fbVal;
+  if (ytVal) socials.youtube   = ytVal;
+  if (twVal) socials.twitter   = twVal;
+
+  // Collect hours (only if section was opened)
+  let businessHours = null;
+  const hoursOpen = document.getElementById('hoursBody')?.classList.contains('open');
+  if (hoursOpen) {
+    businessHours = collectHours('h');
+    if (!hoursHasData(businessHours)) businessHours = null;
+  }
+
   const record = {
     user_email:    currentUser.email,
     name,
@@ -1040,6 +1216,8 @@ async function generateWebsite() {
     email:         emailVal                                            || null,
     services:      document.getElementById('bizServices').value.trim() || null,
     address:       document.getElementById('bizAddress').value.trim()  || null,
+    socials:       Object.keys(socials).length ? socials : null,
+    hours:         businessHours,
     status:        'preview',
     expires_at:    new Date(Date.now() + 48 * 3600 * 1000).toISOString()
   };
@@ -1101,7 +1279,9 @@ async function generateWebsite() {
     actBtn.textContent = `Activate Now — ${price}`;
   }
 
-  ['bizName','bizServices','bizPhone','bizEmail','bizAddress'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['bizName','bizServices','bizPhone','bizEmail','bizAddress','bizWhatsapp','bizInstagram','bizFacebook','bizYoutube','bizTwitter'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
   const bt = document.getElementById('bizType'); if (bt) bt.value = '';
   clearDebug();
   openModal('successModal');
@@ -1174,6 +1354,53 @@ async function processActivationPayment() {
   }).open();
 }
 
+// ── EDIT: full data load from cache ──
+function getSiteById(id) {
+  return (window._allSitesCache || []).find(s => s.id === id) || null;
+}
+
+function openFreeEditFull(id) {
+  const s = getSiteById(id);
+  if (!s) { alert('Site data not found. Please refresh.'); return; }
+  _editingWebsite = { ...s }; _editPaidUnlocked = false;
+  populateEditModal(s, false);
+  openModal('editModal');
+}
+
+function openLockedEditFull(id) {
+  const s = getSiteById(id);
+  if (!s) { alert('Site data not found. Please refresh.'); return; }
+  _editingWebsite = { ...s, status: 'active' };
+  _editPaidUnlocked = false;
+  closeModal('editModal'); openModal('editPayModal');
+}
+
+function populateEditModal(s, isLocked) {
+  document.getElementById('editModalTitle').textContent = `Edit "${s.name}"`;
+  document.getElementById('editLockedBanner').style.display = 'none';
+  document.getElementById('editSaveBtn').textContent = 'Save Changes →';
+  document.getElementById('editSaveBtn').disabled    = false;
+  document.getElementById('editName').value          = s.name || '';
+  document.getElementById('editServices').value      = s.services || '';
+  document.getElementById('editPhone').value         = s.phone || '';
+  document.getElementById('editEmailField').value    = s.email || '';
+  document.getElementById('editAddress').value       = s.address || '';
+  // Socials
+  const soc = s.socials || {};
+  document.getElementById('editWhatsapp').value  = soc.whatsapp  || '';
+  document.getElementById('editInstagram').value = soc.instagram || '';
+  document.getElementById('editFacebook').value  = soc.facebook  || '';
+  document.getElementById('editYoutube').value   = soc.youtube   || '';
+  document.getElementById('editTwitter').value   = soc.twitter   || '';
+  // Hours
+  buildEditHoursGrid(s.hours || null);
+  // Theme
+  selectedWebsiteTheme = s.website_theme || 'dark-blue';
+  syncThemePicker('editThemePicker', selectedWebsiteTheme);
+  hideIA('editError');
+}
+
+// Legacy shim kept for old card buttons (if any remain)
 function openFreeEdit(id, name, services, phone, email, address, websiteTheme) {
   _editingWebsite = { id, name, status: 'preview' }; _editPaidUnlocked = false;
   document.getElementById('editModalTitle').textContent = `Edit "${name}"`;
@@ -1185,6 +1412,10 @@ function openFreeEdit(id, name, services, phone, email, address, websiteTheme) {
   document.getElementById('editPhone').value         = phone;
   document.getElementById('editEmailField').value    = email;
   document.getElementById('editAddress').value       = address;
+  ['editWhatsapp','editInstagram','editFacebook','editYoutube','editTwitter'].forEach(id2 => {
+    const el = document.getElementById(id2); if (el) el.value = '';
+  });
+  buildEditHoursGrid(null);
   selectedWebsiteTheme = websiteTheme || 'dark-blue';
   syncThemePicker('editThemePicker', selectedWebsiteTheme);
   hideIA('editError');
@@ -1205,11 +1436,12 @@ function processEditPayment() {
     handler: async function (res) {
       await db.from(TBL_PAYMENTS).insert([{ user_email: currentUser.email, website_id: _editingWebsite.id, amount: 99, payment_id: res.razorpay_payment_id, type: 'edit', status: 'paid', created_at: new Date().toISOString() }]);
       _editPaidUnlocked = true;
-      openFreeEdit(_editingWebsite.id, _editingWebsite.name, _editingWebsite.services||'', _editingWebsite.phone||'', _editingWebsite.email||'', _editingWebsite.address||'', _editingWebsite.websiteTheme||'dark-blue');
+      populateEditModal(_editingWebsite, false);
       _editingWebsite.status = 'active';
       const b = document.getElementById('editLockedBanner');
       b.style.display = 'flex'; b.textContent = '✅ Edit unlocked! Make your changes and save.';
       b.style.background = 'rgba(52,211,153,.08)'; b.style.color = '#34d399'; b.style.borderColor = 'rgba(52,211,153,.2)';
+      openModal('editModal');
     },
     modal: { ondismiss: () => { _editingWebsite = null; } },
     prefill: { email: currentUser.email || '' }, theme: { color: '#4f8eff' }
@@ -1225,10 +1457,31 @@ async function handleEditSave() {
   const address  = document.getElementById('editAddress').value.trim();
   if (!name) return showIA('editError', '⚠️ Business Name is required.');
   if (email && !validEmail(email)) return showIA('editError', '⚠️ Please enter a valid email address.');
+
+  const socials = {};
+  const waV = document.getElementById('editWhatsapp')?.value.trim();
+  const igV = document.getElementById('editInstagram')?.value.trim();
+  const fbV = document.getElementById('editFacebook')?.value.trim();
+  const ytV = document.getElementById('editYoutube')?.value.trim();
+  const twV = document.getElementById('editTwitter')?.value.trim();
+  if (waV) socials.whatsapp  = waV;
+  if (igV) socials.instagram = igV;
+  if (fbV) socials.facebook  = fbV;
+  if (ytV) socials.youtube   = ytV;
+  if (twV) socials.twitter   = twV;
+
+  const hours = collectEditHours();
+  const hoursToSave = hoursHasData(hours) ? hours : null;
+
   const saveBtn = document.getElementById('editSaveBtn');
   saveBtn.disabled = true; saveBtn.textContent = '⏳ Saving...';
   try {
-    const { error } = await db.from(TBL_SITES).update({ name, services, phone, email, address, website_theme: selectedWebsiteTheme }).eq('id', _editingWebsite.id).eq('user_email', currentUser.email);
+    const { error } = await db.from(TBL_SITES).update({
+      name, services, phone, email, address,
+      website_theme: selectedWebsiteTheme,
+      socials: Object.keys(socials).length ? socials : null,
+      hours: hoursToSave
+    }).eq('id', _editingWebsite.id).eq('user_email', currentUser.email);
     if (error) throw error;
     closeModal('editModal'); _editingWebsite = null; _editPaidUnlocked = false;
     await renderWebsites('recentWebsites', 3); await renderWebsites('allWebsites'); await loadStats();
