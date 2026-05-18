@@ -126,7 +126,7 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .b-test-quote{font-family:'DM Sans',sans-serif;font-size:clamp(17px,2.5vw,24px);font-weight:500;font-style:italic;color:white;line-height:1.55;max-width:640px;margin:0 auto 20px;}
 .b-test-author{font-size:12px;color:rgba(255,255,255,.65);font-weight:600;}
 
-/* ─── CONTACT SECTION (no form — info only) ─── */
+/* ─── CONTACT SECTION ─── */
 .b-contact-simple{padding:80px 5%;background:#f8faff;}
 .b-contact-inner{max-width:760px;margin:0 auto;text-align:center;}
 .b-contact-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:40px;}
@@ -135,7 +135,8 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .b-ci-icon{width:52px;height:52px;background:var(--btagBg);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 14px;}
 .b-ci-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
 .b-ci-val{font-size:15px;font-weight:700;color:#0a1628;line-height:1.5;word-break:break-word;}
-/* WhatsApp CTA button */
+
+/* ─── WHATSAPP BUTTON ─── */
 .b-whatsapp-btn{
   display:inline-flex;align-items:center;gap:10px;
   margin-top:32px;padding:14px 32px;
@@ -148,6 +149,36 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 }
 .b-whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(37,211,102,.5);}
 .b-whatsapp-btn svg{width:22px;height:22px;fill:white;flex-shrink:0;}
+
+/* ─── SOCIAL MEDIA SECTION (BASIC) ─── */
+.b-social-section{padding:48px 5%;background:white;border-top:1px solid #e8edf5;}
+.b-social-inner{max-width:640px;margin:0 auto;text-align:center;}
+.b-social-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#0a1628;margin-bottom:6px;}
+.b-social-sub{font-size:13px;color:#64748b;margin-bottom:28px;}
+.b-social-links{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;}
+.b-social-btn{display:inline-flex;align-items:center;gap:9px;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .25s;color:white;}
+.b-social-btn:hover{transform:translateY(-2px);}
+.b-social-btn svg{width:18px;height:18px;fill:currentColor;flex-shrink:0;}
+.b-social-btn.insta{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+.b-social-btn.fb{background:#1877f2;}
+.b-social-btn.yt{background:#ff0000;}
+.b-social-btn.tw{background:#000000;}
+
+/* ─── BUSINESS HOURS (BASIC) ─── */
+.b-hours-section{padding:60px 5%;background:#f8faff;}
+.b-hours-inner{max-width:600px;margin:0 auto;}
+.b-hours-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#0a1628;margin-bottom:6px;text-align:center;}
+.b-hours-sub{font-size:13px;color:#64748b;margin-bottom:28px;text-align:center;}
+.b-hours-grid{display:flex;flex-direction:column;gap:8px;}
+.b-hours-row{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:white;border:1.5px solid #e2e8f4;border-radius:11px;transition:all .2s;}
+.b-hours-row:hover{border-color:var(--bp);}
+.b-hours-row.today{border-color:var(--bp);background:var(--btagBg);}
+.b-hours-day{font-size:13px;font-weight:700;color:#0a1628;min-width:90px;}
+.b-hours-time{font-size:13px;color:#475569;font-weight:500;}
+.b-hours-closed-badge{font-size:11px;font-weight:700;color:#ef4444;background:#fef2f2;border:1px solid #fecaca;padding:3px 10px;border-radius:100px;}
+.b-hours-open-dot{width:8px;height:8px;background:#22c55e;border-radius:50%;margin-right:6px;display:inline-block;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.b-today-badge{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--bp);background:var(--btagBg);border:1px solid rgba(0,0,0,.06);padding:3px 9px;border-radius:100px;margin-left:8px;}
 
 .b-footer{background:#0a1628;padding:36px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
 .b-footer-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:white;}
@@ -232,7 +263,7 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-svc-emoji{font-size:36px;margin-bottom:16px;display:block;}
 .p-svc-title{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:400;color:var(--ps-text);margin-bottom:10px;letter-spacing:.5px;}
 .p-svc-desc{font-size:13px;color:var(--ps-text2);line-height:1.7;font-family:'Outfit',sans-serif;font-weight:300;}
-.p-svc-arrow{position:absolute;bottom:24px;right:24px;width:36px;height:36px;border:1.5px solid var(--ps-border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ps-text2);transition:all .25s;}
+.p-svc-arrow{position:absolute;bottom:24px;right:24px;width:36px;height:36px;border:1.5px solid var(--ps-border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ps-text2);transition:all .25px;}
 .p-svc-card:hover .p-svc-arrow{background:var(--pa);border-color:var(--pa);color:var(--pa-text);}
 .p-gallery{padding:90px 5%;background:var(--ps-bg);}
 .p-gallery-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:280px 280px;gap:10px;margin-top:48px;}
@@ -265,6 +296,8 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-cta-sub{font-size:15px;color:rgba(255,255,255,.68);font-family:'Outfit',sans-serif;font-weight:300;margin-bottom:40px;line-height:1.7;}
 .p-cta-btn{display:inline-flex;align-items:center;gap:12px;padding:18px 48px;background:white;color:var(--pa-text-dark,#0a0a0a);font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .28s;box-shadow:0 8px 36px rgba(0,0,0,.25);}
 .p-cta-btn:hover{transform:translateY(-3px);}
+
+/* ─── PREMIUM CONTACT ─── */
 .p-contact{padding:90px 5%;background:var(--ps-bg);display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
 .p-contact-list{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
 .p-contact-item{display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--pb-bg);border:1px solid var(--ps-border);transition:all .25s;}
@@ -277,6 +310,50 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 .p-cv-icon{font-size:52px;margin-bottom:14px;position:relative;z-index:1;}
 .p-cv-name{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--pa-text);letter-spacing:1px;margin-bottom:6px;position:relative;z-index:1;}
 .p-cv-type{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--pa-text);opacity:.65;font-family:'Outfit',sans-serif;position:relative;z-index:1;}
+
+/* ─── PREMIUM WHATSAPP ─── */
+.p-whatsapp-wrap{margin-top:16px;}
+.p-whatsapp-btn{
+  display:flex;align-items:center;gap:12px;padding:16px 20px;
+  background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.3);
+  color:#25d366;text-decoration:none;font-family:'Outfit',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  transition:all .25s;
+}
+.p-whatsapp-btn:hover{background:rgba(37,211,102,.22);border-color:rgba(37,211,102,.5);transform:translateX(5px);}
+.p-whatsapp-btn svg{width:20px;height:20px;fill:#25d366;flex-shrink:0;}
+
+/* ─── PREMIUM SOCIAL MEDIA ─── */
+.p-social-section{padding:60px 5%;background:var(--pb-bg);border-top:1px solid var(--ps-border);}
+.p-social-inner{max-width:700px;margin:0 auto;}
+.p-social-tag{font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--pa);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.p-social-tag::before{content:'';display:inline-block;width:24px;height:1.5px;background:var(--pa);}
+.p-social-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,40px);font-weight:400;color:var(--ps-text);margin-bottom:32px;letter-spacing:.5px;}
+.p-social-links{display:flex;gap:12px;flex-wrap:wrap;}
+.p-social-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;font-family:'Outfit',sans-serif;transition:all .25s;border:1px solid var(--ps-border);color:var(--ps-text2);background:var(--pb-bg);}
+.p-social-btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.p-social-btn svg{width:16px;height:16px;fill:currentColor;flex-shrink:0;}
+.p-social-btn.insta:hover{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;border-color:transparent;}
+.p-social-btn.fb:hover{background:#1877f2;color:white;border-color:transparent;}
+.p-social-btn.yt:hover{background:#ff0000;color:white;border-color:transparent;}
+.p-social-btn.tw:hover{background:#000;color:white;border-color:transparent;}
+
+/* ─── PREMIUM HOURS ─── */
+.p-hours-section{padding:60px 5%;background:var(--ps-bg);border-top:1px solid var(--ps-border);}
+.p-hours-inner{max-width:600px;}
+.p-hours-tag{font-size:10px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--pa);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.p-hours-tag::before{content:'';display:inline-block;width:24px;height:1.5px;background:var(--pa);}
+.p-hours-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,40px);font-weight:400;color:var(--ps-text);margin-bottom:32px;letter-spacing:.5px;}
+.p-hours-grid{display:flex;flex-direction:column;gap:2px;}
+.p-hours-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--pb-bg);border:1px solid var(--ps-border);transition:all .2s;}
+.p-hours-row:hover{border-color:var(--pa);}
+.p-hours-row.today{border-color:var(--pa);background:var(--ps-hover);}
+.p-hours-day{font-size:12px;font-weight:700;color:var(--ps-text);min-width:90px;font-family:'Outfit',sans-serif;letter-spacing:.5px;text-transform:uppercase;}
+.p-hours-time{font-size:12px;color:var(--ps-text2);font-family:'Outfit',sans-serif;}
+.p-hours-closed{font-size:11px;font-weight:700;color:rgba(239,68,68,.8);letter-spacing:1px;text-transform:uppercase;font-family:'Outfit',sans-serif;}
+.p-hours-open-dot{width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:6px;display:inline-block;animation:pulse 2s infinite;}
+.p-today-badge{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--pa);border:1px solid var(--pa);padding:3px 8px;margin-left:8px;font-family:'Outfit',sans-serif;}
+
 .p-footer{background:var(--pf-bg);padding:56px 5% 28px;border-top:1px solid var(--ps-border);}
 .p-footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:40px;}
 .p-footer-brand{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--ps-text);letter-spacing:2px;margin-bottom:12px;}
@@ -335,6 +412,7 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   .b-footer-links{flex-wrap:wrap;justify-content:center;}
   .b-contact-simple{padding:56px 4%;}
   .b-contact-info-grid{grid-template-columns:1fr 1fr;}
+  .b-social-section,.b-hours-section{padding:40px 4%;}
   .p-nav{padding:0 4%;}.p-nav-links{display:none;}
   .p-hero h1{font-size:clamp(44px,10vw,72px);}
   .p-stats{grid-template-columns:repeat(2,1fr);padding:36px 4%;}
@@ -353,6 +431,7 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   .p-footer{padding:40px 4% 24px;}
   .p-footer-top{grid-template-columns:1fr;gap:22px;}
   .p-footer-bottom{flex-direction:column;gap:8px;text-align:center;}
+  .p-social-section,.p-hours-section{padding:48px 4%;}
 }
 @media(max-width:560px){
   .preview-banner{padding:0 12px;}
@@ -365,6 +444,8 @@ body{background:#fff;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   .p-gitem{min-height:220px;}
   .b-contact-simple{padding:44px 4%;}
   .b-contact-info-grid{grid-template-columns:1fr;}
+  .b-social-links{gap:8px;}
+  .b-social-btn{padding:10px 14px;font-size:12px;}
 }
 </style>
 </head>
@@ -580,6 +661,172 @@ const SVC_EMOJIS  = { 'Restaurant / Cafe':['☕','🥘','🍰','🥗','🍜','�
 const DEFAULT_SVC = { 'Restaurant / Cafe':['Fine Dining','Home Delivery','Catering Services','Takeaway Orders','Special Events','Custom Cakes'],'Shop / Retail':['Quality Products','Fast Delivery','Easy Returns','Wholesale Deals','Custom Orders','Gift Wrapping'],'Service Business':['Expert Consultation','Professional Service','Quick Turnaround','Affordable Rates','24/7 Support','Custom Solutions'],'Healthcare / Clinic':['General Consultation','Health Checkup','Specialist Care','Emergency Support','Wellness Plans','Home Visits'],'Education / Coaching':['One-on-One Tuition','Group Classes','Study Materials','Online Sessions','Exam Prep','Career Guidance'],'Portfolio / Freelance':['Creative Design','Web Development','Brand Strategy','Project Consulting','Photography','Content Creation'],'Fashion / Boutique':['Latest Collection','Custom Stitching','Style Consultation','Premium Fabrics','Alterations','Bridal Wear'],'Beauty / Salon':['Hair Styling','Skin Treatment','Nail Art','Bridal Makeup','Facials','Spa Packages'],'Other':['Quality Service','Expert Team','Customer Support','Fast Delivery','Custom Solutions','Free Consultation'] };
 
 // ══════════════════════════════════════════════
+// SVG ICONS
+// ══════════════════════════════════════════════
+const SVG = {
+  whatsapp: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`,
+  instagram: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
+  facebook:  `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+  youtube:   `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
+  twitter:   `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
+};
+
+// ══════════════════════════════════════════════
+// HELPERS — HOURS
+// ══════════════════════════════════════════════
+const DAYS_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+function getTodayName() {
+  return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()];
+}
+
+function fmt12(time24) {
+  if (!time24) return '';
+  const [h, m] = time24.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12  = h % 12 || 12;
+  return `${h12}:${m.toString().padStart(2,'0')} ${ampm}`;
+}
+
+function hoursHasAnyData(hoursObj) {
+  if (!hoursObj || typeof hoursObj !== 'object') return false;
+  return DAYS_ORDER.some(d => hoursObj[d] && (hoursObj[d].open || !hoursObj[d].closed));
+}
+
+// ══════════════════════════════════════════════
+// HELPERS — SOCIALS
+// ══════════════════════════════════════════════
+function normalizeInstagram(val) {
+  if (!val) return null;
+  val = val.trim();
+  if (val.startsWith('http')) return val;
+  const handle = val.replace('@','');
+  return `https://instagram.com/${handle}`;
+}
+
+function normalizeTwitter(val) {
+  if (!val) return null;
+  val = val.trim();
+  if (val.startsWith('http')) return val;
+  const handle = val.replace('@','');
+  return `https://x.com/${handle}`;
+}
+
+function socialHasData(socials) {
+  if (!socials || typeof socials !== 'object') return false;
+  return !!(socials.instagram || socials.facebook || socials.youtube || socials.twitter || socials.whatsapp);
+}
+
+// ══════════════════════════════════════════════
+// BUILD BASIC HOURS HTML
+// ══════════════════════════════════════════════
+function buildBasicHoursHtml(hours) {
+  if (!hoursHasAnyData(hours)) return '';
+  const today = getTodayName();
+  const rows = DAYS_ORDER.map(day => {
+    const h = hours[day];
+    if (!h) return '';
+    const isToday = day === today;
+    const todayBadge = isToday ? `<span class="b-today-badge">Today</span>` : '';
+    if (h.closed) {
+      return `<div class="b-hours-row${isToday?' today':''}">
+        <div class="b-hours-day">${day}${todayBadge}</div>
+        <span class="b-hours-closed-badge">Closed</span>
+      </div>`;
+    }
+    const openDot = isToday ? `<span class="b-hours-open-dot"></span>` : '';
+    return `<div class="b-hours-row${isToday?' today':''}">
+      <div class="b-hours-day">${day}${todayBadge}</div>
+      <div class="b-hours-time">${openDot}${fmt12(h.open)} – ${fmt12(h.close)}</div>
+    </div>`;
+  }).join('');
+  return `
+    <div class="b-hours-section">
+      <div class="b-hours-inner">
+        <div class="b-sec-eye" style="justify-content:center;margin:0 auto 8px;">🕐 Business Hours</div>
+        <div class="b-hours-title">When we're <span style="font-style:italic">open</span></div>
+        <div class="b-hours-sub">Visit us during these hours</div>
+        <div class="b-hours-grid">${rows}</div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// BUILD BASIC SOCIALS HTML
+// ══════════════════════════════════════════════
+function buildBasicSocialsHtml(socials) {
+  if (!socialHasData(socials)) return '';
+  const links = [];
+  if (socials.instagram) links.push(`<a class="b-social-btn insta" href="${normalizeInstagram(socials.instagram)}" target="_blank" rel="noopener">${SVG.instagram} Instagram</a>`);
+  if (socials.facebook)  links.push(`<a class="b-social-btn fb" href="${socials.facebook}" target="_blank" rel="noopener">${SVG.facebook} Facebook</a>`);
+  if (socials.youtube)   links.push(`<a class="b-social-btn yt" href="${socials.youtube}" target="_blank" rel="noopener">${SVG.youtube} YouTube</a>`);
+  if (socials.twitter)   links.push(`<a class="b-social-btn tw" href="${normalizeTwitter(socials.twitter)}" target="_blank" rel="noopener">${SVG.twitter} Twitter / X</a>`);
+  if (!links.length) return '';
+  return `
+    <div class="b-social-section">
+      <div class="b-social-inner">
+        <div class="b-social-title">Follow Us Online</div>
+        <div class="b-social-sub">Stay connected on social media</div>
+        <div class="b-social-links">${links.join('')}</div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// BUILD PREMIUM HOURS HTML
+// ══════════════════════════════════════════════
+function buildPremiumHoursHtml(hours) {
+  if (!hoursHasAnyData(hours)) return '';
+  const today = getTodayName();
+  const rows = DAYS_ORDER.map(day => {
+    const h = hours[day];
+    if (!h) return '';
+    const isToday = day === today;
+    const todayBadge = isToday ? `<span class="p-today-badge">Today</span>` : '';
+    if (h.closed) {
+      return `<div class="p-hours-row${isToday?' today':''}">
+        <div class="p-hours-day">${day}${todayBadge}</div>
+        <span class="p-hours-closed">Closed</span>
+      </div>`;
+    }
+    const openDot = isToday ? `<span class="p-hours-open-dot"></span>` : '';
+    return `<div class="p-hours-row${isToday?' today':''}">
+      <div class="p-hours-day">${day}${todayBadge}</div>
+      <div class="p-hours-time">${openDot}${fmt12(h.open)} – ${fmt12(h.close)}</div>
+    </div>`;
+  }).join('');
+  return `
+    <div class="p-hours-section reveal">
+      <div class="p-hours-inner">
+        <div class="p-hours-tag">Opening Hours</div>
+        <div class="p-hours-title">When we <em>welcome</em> you</div>
+        <div class="p-hours-grid">${rows}</div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// BUILD PREMIUM SOCIALS HTML
+// ══════════════════════════════════════════════
+function buildPremiumSocialsHtml(socials) {
+  if (!socialHasData(socials)) return '';
+  const links = [];
+  if (socials.instagram) links.push(`<a class="p-social-btn insta" href="${normalizeInstagram(socials.instagram)}" target="_blank" rel="noopener">${SVG.instagram} Instagram</a>`);
+  if (socials.facebook)  links.push(`<a class="p-social-btn fb" href="${socials.facebook}" target="_blank" rel="noopener">${SVG.facebook} Facebook</a>`);
+  if (socials.youtube)   links.push(`<a class="p-social-btn yt" href="${socials.youtube}" target="_blank" rel="noopener">${SVG.youtube} YouTube</a>`);
+  if (socials.twitter)   links.push(`<a class="p-social-btn tw" href="${normalizeTwitter(socials.twitter)}" target="_blank" rel="noopener">${SVG.twitter} Twitter / X</a>`);
+  if (!links.length) return '';
+  return `
+    <div class="p-social-section reveal">
+      <div class="p-social-inner">
+        <div class="p-social-tag">Follow Us</div>
+        <div class="p-social-title">Connect with <em>us</em></div>
+        <div class="p-social-links">${links.join('')}</div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
 // LOAD SITE
 // ══════════════════════════════════════════════
 async function loadSite() {
@@ -651,7 +898,7 @@ function renderSite(s) {
 }
 
 // ══════════════════════════════════════════════
-// RENDER BASIC — contact form REMOVED, info cards only
+// RENDER BASIC
 // ══════════════════════════════════════════════
 function renderBasic(s) {
   const t = BASIC_THEMES[s.website_theme] || BASIC_THEMES[s.design] || BASIC_THEMES['dark-blue'];
@@ -681,22 +928,27 @@ function renderBasic(s) {
   const why = [{icon:'⭐',t:'Trusted Quality',d:'Years of experience delivering excellence.'},{icon:'⚡',t:'Fast & Reliable',d:'Quick service without compromising quality.'},{icon:'💰',t:'Best Value',d:'Premium services at prices that work for you.'},{icon:'🤝',t:'Personal Touch',d:'We treat every customer like family.'}];
   const whyCards = why.map(w=>`<div class="b-why-card"><div class="b-why-icon">${w.icon}</div><div class="b-why-title">${w.t}</div><div class="b-why-text">${w.d}</div></div>`).join('');
 
-  /* ── Contact info cards (NO FORM) ── */
+  /* Contact info cards */
   const contactCards = [];
   if (s.phone)   contactCards.push(`<div class="b-ci-card"><div class="b-ci-icon">📞</div><div class="b-ci-label">Phone</div><div class="b-ci-val">${e(s.phone)}</div></div>`);
   if (s.email)   contactCards.push(`<div class="b-ci-card"><div class="b-ci-icon">✉️</div><div class="b-ci-label">Email</div><div class="b-ci-val">${e(s.email)}</div></div>`);
   if (s.address) contactCards.push(`<div class="b-ci-card"><div class="b-ci-icon">📍</div><div class="b-ci-label">Address</div><div class="b-ci-val">${e(s.address)}</div></div>`);
   if (!contactCards.length) contactCards.push(`<div class="b-ci-card"><div class="b-ci-icon">📍</div><div class="b-ci-label">Location</div><div class="b-ci-val">India</div></div>`);
 
-  /* WhatsApp button — only shown if phone exists */
-  const waPhone   = (s.phone || '').replace(/\D/g,'');
+  /* WhatsApp button */
+  const waPhone   = (s.socials?.whatsapp || s.phone || '').replace(/\D/g,'');
   const waMessage = encodeURIComponent(`Hi ${s.name}, I found your website and would like to know more!`);
   const whatsappBtn = waPhone
     ? `<a class="b-whatsapp-btn" href="https://wa.me/${waPhone}?text=${waMessage}" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Chat on WhatsApp
+        ${SVG.whatsapp}Chat on WhatsApp
       </a>`
     : '';
+
+  /* Social media section */
+  const socialSectionHtml = buildBasicSocialsHtml(s.socials || {});
+
+  /* Business hours section */
+  const hoursSectionHtml = buildBasicHoursHtml(s.hours || null);
 
   document.getElementById('site').innerHTML = `
     <div style="font-family:'DM Sans',sans-serif;">
@@ -788,7 +1040,7 @@ function renderBasic(s) {
         <div class="b-test-author">— A Happy Customer, India</div>
       </div>
 
-      <!-- CONTACT — info cards only, NO form -->
+      <!-- CONTACT -->
       <div class="b-contact-simple" id="b-contact">
         <div class="b-contact-inner">
           <div class="b-sec-eye" style="justify-content:center;margin:0 auto 12px;">✦ Contact Us</div>
@@ -800,6 +1052,12 @@ function renderBasic(s) {
           ${whatsappBtn}
         </div>
       </div>
+
+      <!-- SOCIAL MEDIA (optional) -->
+      ${socialSectionHtml}
+
+      <!-- BUSINESS HOURS (optional) -->
+      ${hoursSectionHtml}
 
       <div style="background:linear-gradient(135deg,#0a1628,#1a0a00);border-top:2px solid rgba(201,162,39,.3);padding:36px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
         <div><h3 style="font-family:'Syne',sans-serif;font-size:20px;color:#f0d060;margin-bottom:5px;">✦ Upgrade to Premium</h3><p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.5;">Real photos · Cinematic hero · Gallery · Animations · Luxury design</p></div>
@@ -879,6 +1137,21 @@ async function renderPremium(s) {
     s.address ? `<div class="p-contact-item reveal" style="transition-delay:.2s"><div class="p-contact-icon">📍</div><div><div class="p-contact-lbl">Address</div><div class="p-contact-val">${e(s.address)}</div></div></div>` : '',
     (!s.phone&&!s.email&&!s.address) ? `<div class="p-contact-item"><div class="p-contact-icon">📍</div><div><div class="p-contact-lbl">Location</div><div class="p-contact-val">India</div></div></div>` : ''
   ].join('');
+
+  /* Premium WhatsApp button */
+  const waPhone    = (s.socials?.whatsapp || s.phone || '').replace(/\D/g,'');
+  const waMessage  = encodeURIComponent(`Hi ${s.name}, I found your website and would like to know more!`);
+  const premiumWaBtn = waPhone
+    ? `<div class="p-whatsapp-wrap reveal" style="transition-delay:.3s">
+        <a class="p-whatsapp-btn" href="https://wa.me/${waPhone}?text=${waMessage}" target="_blank" rel="noopener">
+          ${SVG.whatsapp}Chat on WhatsApp
+        </a>
+      </div>`
+    : '';
+
+  /* Social media sections */
+  const premiumSocialsHtml = buildPremiumSocialsHtml(s.socials || {});
+  const premiumHoursHtml   = buildPremiumHoursHtml(s.hours || null);
 
   document.getElementById('site').innerHTML = `
     <div class="p-site">
@@ -969,6 +1242,7 @@ async function renderPremium(s) {
           <div class="p-sec-title">Let's <em>connect</em></div>
           <p style="font-size:13.5px;color:var(--ps-text2);line-height:1.8;font-family:'Outfit',sans-serif;font-weight:300;max-width:340px;margin-bottom:0;">We'd be delighted to hear from you.</p>
           <div class="p-contact-list">${contInfo}</div>
+          ${premiumWaBtn}
         </div>
         <div class="p-contact-visual reveal-scale">
           <div class="p-cv-icon">${icon}</div>
@@ -976,6 +1250,13 @@ async function renderPremium(s) {
           <div class="p-cv-type">${e(s.type)}</div>
         </div>
       </div>
+
+      <!-- SOCIAL MEDIA (optional) -->
+      ${premiumSocialsHtml}
+
+      <!-- BUSINESS HOURS (optional) -->
+      ${premiumHoursHtml}
+
       <footer class="p-footer">
         <div class="p-footer-top">
           <div>
